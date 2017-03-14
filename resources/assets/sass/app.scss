@@ -1,0 +1,42 @@
+
+// Fonts
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+
+
+.normal {
+	background-color: white;
+}
+
+
+.attacked {
+	background-color: red;
+}
+
+.possible {
+	background-color: yellow;
+}
+
+.public {
+	background-color: green;
+}
+
+
+.circle{
+
+width:100px;
+height:100px;
+border-radius:50px;
+font-size:20px;
+line-height:100px;
+text-align:center;
+}
+
+
