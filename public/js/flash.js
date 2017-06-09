@@ -1,0 +1,1 @@
+$('#flashmessage').delay(2500).fadeOut();

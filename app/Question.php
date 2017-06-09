@@ -1,0 +1,10 @@
+<?php
+
+namespace honeysec;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Question extends Model
+{
+    //
+}
