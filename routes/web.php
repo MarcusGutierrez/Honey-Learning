@@ -87,20 +87,9 @@ Route::post('/honeytotal/{gid}', function($id){
 
 //Route::get('/honey/{id}', 'GamesController@starthoneygame');
 Route::get('/honey/{gid}', function($id){
-    
-    //dd($id);
-    
     $honey_game = Honey_Game::find($id);
-    
-    
-    //dd($honey_game);
-    
     $honey_nodes = Honey_Node::inGameID($id)->get();
     
-    $h_nodes = Honey_Node::inGameID($id)->get();
-    
-    //dd($game);
-    // GET Request
     $rpath = '/defender/uni/' + $id;
     $request = Request::create("/defender/test/$id", 'GET');
     $responsestring = Route::dispatch($request)->getContent();
@@ -108,9 +97,8 @@ Route::get('/honey/{gid}', function($id){
     //$responsestring = $responsestring->content();
     $testvar = json_decode($responsestring, true);
     
-    $honey_game->gid = $testvar['details'];
-    //$lol = $responsedata['name'];
+    //$honey_game->gid = $testvar['details'];
     
-    return view('/honey.honey_one', compact('honey_game'), compact('honey_nodes'));
+    return view('honey.honey_one', compact('honey_game'), compact('honey_nodes'));
     
 });
