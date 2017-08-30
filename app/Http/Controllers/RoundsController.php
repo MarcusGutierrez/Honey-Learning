@@ -176,8 +176,9 @@ class RoundsController extends Controller
     
     public function practice_round(Request $request)
     {
-        $honey_network = Honey_Network::find(2);
-        $honey_nodes = Honey_Network::find(2)->nodes;
+        $practice_networks = Honey_Network::where('is_practice', 1)->get();
+        $honey_network = $practice_networks[mt_rand(0, count($practice_networks))];
+        $honey_nodes = $honey_network->nodes;
         
         $request->session()->put('network_id', 2);
         $request->session()->put('round_id', 0);

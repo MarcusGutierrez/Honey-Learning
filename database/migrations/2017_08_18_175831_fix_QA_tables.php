@@ -32,7 +32,7 @@ class FixQATables extends Migration
                     ->references('id')->on('users')
                     ->onDelete('cascade');
             $table->foreign('question_id')
-                    ->references('question_id')->on('questions')
+                    ->references('question_id')->on('question')
                     ->onDelete('cascade');
         });
     }
