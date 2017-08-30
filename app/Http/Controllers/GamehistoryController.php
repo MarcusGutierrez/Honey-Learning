@@ -7,91 +7,59 @@ use Illuminate\Http\Request;
 class GamehistoryController extends Controller
 {
     //
-
-    public function store()
-    {
-
-    	//return request()->all();
-
-
-    	$gamehistory = new \honeysec\Gamehistory;
-
-        $gamehistory->game_id = request('gameid');
-        $gamehistory->user_id = request('user_id');
-        $gamehistory->round = request('round');
-        $gamehistory->defender_action = request('defender_action');
-        $gamehistory->attacker_action = request('attacker_action');
-        $gamehistory->time_defender_moved = request('time_defender_moved');
-        $gamehistory->time_attacker_moved = request('time_attacker_moved');
-        $gamehistory->defender_points = request('defender_points');
-        $gamehistory->attacker_points = request('attacker_points');
-
-
-        $gamehistory->save();
-
-        return request()->all();
-
-
-
-    }
     
     
-    public function storehoneymove(){
-        $gamehistory = new \honeysec\Honey_History;
-        $gamehistory->user_id = request('uid');        
-        $gamehistory->game_id = request('gid');
-        $gamehistory->instance = request('instance');
-        $gamehistory->round = request('rnd');
-        $gamehistory->node_id = request('atk_move');
-        $gamehistory->attacker_points = request('atk_points');
-        $gamehistory->defender_points = request('def_points');
-        $gamehistory->triggered_honeypot = request('honeypotted');
-        $gamehistory->move_time = request('time_attacker_moved');
-        $gamehistory->save();
+    public function storehoneymove(Request $request){
+        
+        //$user_id = $request->session()->get('user_id');
+        $network_id = $request->session()->get('network_id', null);
+        $round_id = $request->session()->get('round_id', null);
+        $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
+        //$session_id = $request->session()->get('session_id');
+        
+        if($is_practice == 0){
+            $gamehistory = new \honeysec\Honey_History;
+            //$gamehistory->user_id = $user_id;
+            //$gamehistory->network_id = $network_id;
+            $gamehistory->round_id = $round_id;
+            //$gamehistory->session_id = $session_id;
+            $gamehistory->attack_attempt = request('atk_attempt');
+            $gamehistory->node_id = request('atk_target');
+            $gamehistory->attacker_points = request('atk_points');
+            $gamehistory->defender_points = request('def_points');
+            $gamehistory->triggered_honeypot = request('honeypotted');
+            $gamehistory->move_time = format(request('time_attacker_moved'));
+            //$gamehistory->move_time = 1502905735535;
+            $gamehistory->save();
 
-        return request()->all();
-    }
-
-
-
-    public function storetentative()
-    {
-
-    	//return request()->all();
-
-
-    	$gametentativehistory = new \honeysec\GameTentativeHistory;
-
-        $gametentativehistory->game_id = request('gameid');
-        $gametentativehistory->user_id = request('user_id');
-        $gametentativehistory->round = request('round');
-        $gametentativehistory->defender_action = request('defender_action');
-        $gametentativehistory->attacker_action = request('attacker_action');
-        $gametentativehistory->time_defender_moved = request('time_defender_moved');
-        $gametentativehistory->time_attacker_moved = request('time_attacker_moved');
-        $gametentativehistory->defender_points = request('defender_points');
-        $gametentativehistory->attacker_points = request('attacker_points');
-
-
-        $gametentativehistory->save();
-
-        return request()->all();
-
-
-
+            return request()->all();
+        }else{
+            return request()->all();
+        }
     }
     
-    public function storehoneytentative(){
-        $gamehistory = new \honeysec\Honey_Tentative;
-        $gamehistory->user_id = request('uid');        
-        $gamehistory->game_id = request('gid');
-        $gamehistory->instance = request('instance');
-        $gamehistory->round = request('rnd');
-        $gamehistory->node_id = request('atk_move');
-        $gamehistory->move_time = request('time_attacker_moved');
-        $gamehistory->save();
+    public function storehoneytentative(Request $request){
+        //$user_id = $request->session()->get('user_id');
+        $network_id = $request->session()->get('network_id', null);
+        $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
+        $round_id = $request->session()->get('round_id', null);
+        //$session_id = $request->session()->get('session_id');
+        
+        if($is_practice == 0){
+            $gamehistory = new \honeysec\Honey_Tentative;
+            //$gamehistory->user_id = $user_id;
+            //$gamehistory->network_id = $network_id;
+            $gamehistory->round_id = $round_id;
+            //$gamehistory->session_id = $session_id;
+            $gamehistory->attack_attempt = request('atk_attempt');
+            $gamehistory->node_id = request('atk_target');
+            $gamehistory->move_time = format(request('time_attacker_moved'));
+            $gamehistory->save();
 
-        return request()->all();
+            return request()->all();
+        }else{
+            return request()->all();
+        }
     }
     
 }

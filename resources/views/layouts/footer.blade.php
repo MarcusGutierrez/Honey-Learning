@@ -1,5 +1,5 @@
 
-<div class="card text-center" style="position: relative;">
+<div class="card text-center" style="position: relative; top: 5px">
   
   <div class="card-footer text-muted">
     

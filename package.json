@@ -11,10 +11,31 @@
     "axios": "^0.15.3",
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.4",
+    "css-loader": "^0.28.4",
+    "gulp": "^3.9.1",
     "jquery": "^3.1.1",
-    "laravel-mix": "^0.8.1",
+    "laravel-elixir-webpack-official": "^1.0.10",
+    "laravel-mix": "^0.8.9",
     "lodash": "^4.17.4",
+    "postcss-load-config": "^1.2.0",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
     "vue": "^2.1.10",
-    "webpack": "^2.3.3"
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.5.1"
+  },
+  "dependencies": {
+    "bootstrap-loader": "^2.1.0",
+    "file-loader": "^0.11.2",
+    "font-awesome": "^4.7.0",
+    "laravel-elixir": "^6.0.0-15",
+    "laravel-elixir-vue-2": "^0.3.0",
+    "loader-runner": "^2.3.0",
+    "moment": "^2.18.1",
+    "postcss-cssnext": "^3.0.2",
+    "postcss-import": "^10.0.0",
+    "postcss-loader": "^2.0.6",
+    "resolve-url-loader": "^2.1.0",
+    "vue-loader": "^12.2.2"
   }
 }

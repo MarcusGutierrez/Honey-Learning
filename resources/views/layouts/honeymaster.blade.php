@@ -13,13 +13,29 @@
             }
             
             .btn-circle {
-                width: 60px;
-                height: 60px;
+                width: 85px;
+                height: 85px;
+                text-align: center;
+                padding: 0px 0;
+                font-size: 28px;
+                line-height: 2.35;
+                border-radius: 50px;
+            }
+            
+            .btn-circle-key {
+                width: 75px;
+                height: 75px;
                 text-align: center;
                 padding: 0px 0;
                 font-size: 23px;
                 line-height: 2.35;
                 border-radius: 50px;
+            }
+            
+            
+            .node-key {
+                height: 85px;
+                width: 85px;
             }
 
 
@@ -55,6 +71,17 @@
             .tentative_attacked{
                 background-color: purple;
             }
+            
+            .node .tentative_attacked{
+                width: 105px;
+                height: 105px;
+            }
+            
+            .tentative_attacked .btn-circle {
+                width: 90px;
+                height: 90px;
+                font-size: 31px;
+            }
 
             .buton {
                 border-radius: 50%; 
@@ -62,91 +89,45 @@
                 height: 50px;
                 color: black;
             }
-
-            .node0-pos {
-                position: absolute;
-                left: 20px;
-                top: 100px;
-            }
-
-            .node1-pos {
-                position: absolute;
-                left: 150px;
-                top: 200px;
-            }
-
-            .node2-pos {
-                position: absolute;
-                left: 200px;
-                top: 10px;
-            }
-
-            .node3-pos {
-                position: absolute;
-                left: 420px;
-                top: 90px;
-            }
-
-            .node4-pos {
-                position: absolute;
-                left: 600px;
-                top: 150px;
-            }
-            .node5-pos {
-                position: absolute;
-                left: 400px;
-                top: 10px;
-            }
-            .node6-pos {
-                position: absolute;
-                left: 200px;
-                top: 200px;
-            }
-            .node7-pos {
-                position: absolute;
-                left: 300px;
-                top: 240px;
-            }
-            .node8-pos {
-                position: absolute;
-                left: 750px;
-                top: 30px;
-            }
-            .node9-pos {
-                position: absolute;
-                left: 750px;
-                top: 120px;
+            
+            .button {
+                font-size: 22px;
             }
 
             .nextbutton {
+                text-align: center;
+                position: absolute;
+                left: 495px;
+                top: 420px;
+            }
+            
+            .passbutton {
 
                 position: absolute;
-                left: 365px;
+                left: 600px;
                 top: 290px;
 
             }
 
             .startbutton {
-
+                text-align: center;
                 position: absolute;
-                left: 365px;
-                top: 120px;
+                left: 485px;
+                top: 420px;
                 background-color: white;
 
             }
 
             .confirmbutton {
-
+                text-align: center;
                 position: absolute;
-                left: 365px;
-                top: 290px;
-                height: 50px;
-                width: 100px;
+                left: 500px;
+                top: 420px;
             }
 
             .node {
-                height: 70px;
-                width: 70px;
+                height: 100px;
+                width: 100px;
             }
 
             .timerclass {
@@ -156,6 +137,36 @@
                 background-color: gray;
                 padding: 5px;
                 color: blue;
+            }
+            
+            .tooltip{
+                display: inline;
+                position: relative;
+            }
+            
+            .tooltip:hover:before{
+                border: solid;
+                border-color: #333 transparent;
+                border-width: 6px 6px 0 6px;
+                bottom: 20px;
+                content: "";
+                left: 50%;
+                position: absolute;
+                z-index: 99;
+            }
+            
+            .tooltip:hover:after{
+                background: #333;
+                background: rgba(0,0,0,.8);
+                border-radius: 5px;
+                bottom: 26px;
+                color: #fff;
+                content: attr(title);
+                left: 20%;
+                padding: 5px 15px;
+                position: absolute;
+                z-index: 98;
+                width: 220px;
             }
 	</style>
 </head>

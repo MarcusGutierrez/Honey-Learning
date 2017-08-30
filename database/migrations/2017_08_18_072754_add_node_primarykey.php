@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGamesTable extends Migration
+class AddNodePrimarykey extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,8 @@ class CreateGamesTable extends Migration
      */
     public function up()
     {
-        Schema::create('games', function (Blueprint $table) {
-            $table->integer('id');
-            $table->integer('gameid');
-            $table->string('userid');
-            $table->integer('action');
-            $table->integer('time');
-            $table->timestamps();
+        Schema::table('honey_node', function (Blueprint $table) {
+            $table->increments('id');
         });
     }
 
@@ -30,6 +25,6 @@ class CreateGamesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('games');
+        //
     }
 }

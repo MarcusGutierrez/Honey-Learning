@@ -15,17 +15,14 @@ class CreateHoneyAtentativeMoveTable extends Migration
     {
         Schema::create('honey_attack_tentative', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->string('user_id', 65);
-            $table->integer('game_id');
-            $table->integer('instance');
-            $table->integer('round');
-            $table->datetime('move_time');
+            $table->increments('move_id');
+            //$table->integer('user_id')->unsigned();
+            //$table->integer('network_id');
+            $table->integer('round_id')->unsigned();
+            //$table->integer('session_id')->unsigned();
+            $table->integer('attack_attempt');
+            $table->string('move_time', 26);
             $table->integer('node_id');
-            $table->boolean('submitted');
-            
-            $table->foreign('game_id')
-                    ->references('gid')->on('honey_game')
-                    ->onDelete('cascade');
         });
     }
 

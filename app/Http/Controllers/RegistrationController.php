@@ -31,93 +31,51 @@ class RegistrationController extends Controller
 
     public function store()
     {
-
-       // dd(request()->all());
-
-       // $userid =  hash("sha256",request('user_id'));
-
-
     	//validate the user
     	$this->validate(request(), [
-
-
     		'school' => 'required',
-
     		'favpet' => 'required',
-
-    		'age' => 'required|numeric',
-
-
-
+    		'age' => 'required',
     		]);
 
         $users = User::all();
-
         $matched = false;
+        
+        $input_id = strtolower(request('user_id'));
 
         foreach ($users as $user) 
         {
-            
-            //echo $user->user_id;
-
-            if(Hash::check(request('user_id'), $user->user_id))
+            if(Hash::check($input_id, $user->user_hash))
             {
                 echo "Matched with one";
                 $matched = true;
                 break;
-
             }
-
-
         }
 
         if($matched==false)
         {
             // create the user and save
-
-            $user = User::create(request(['user_id']));
-
-
-            //sign the user in
-            auth()->login($user);
-
-            // session variable
-
-            //dd($user->user_id);
-            session('user_id', '');
-            session(['user_id' => $user->user_id ]);
-             session()->flash('message' , 'Thank you so much for registering');
-            //dd(session('user_id', ''));
-
-
-            return redirect()->home();
-
-
+            $input_arr = array();
+            $input_arr['user_hash'] = bcrypt($input_id);
+            $user = User::create($input_arr);
         }
-        else
-        {
-            return redirect()->back()->withErrors([
+        
+        //sign the user in
+        auth()->login($user);
 
-                'message' => 'You are already registered'
+        // session variable
+        //dd($user->user_id);
+        session()->forget('user_id');
+        session()->put('user_id', $user->id);
+        
+        $taken = \honeysec\User::takenSurvey($user->id, 'pre');
+        if($taken)
+            session()->put('survey_completed', true);
+        
+        session()->flash('message' , 'Thanks for logging in');
+        //dd(session('user_id', ''));
 
-                ]);
-        }
-
-       // dd($users);
-
-
-
-
-
-
-    	
-    	// redirect to the instructions page
-
-
-    	
-
-
-
-
+        return redirect()->home();
     }
 }

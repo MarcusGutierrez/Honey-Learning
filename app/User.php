@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    protected $table = 'users'; //Defines which table to use
+    protected $primaryKey = 'id';
     use Notifiable;
 
     /**
@@ -15,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_id'
+        'user_hash'
     ];
 
     /**
@@ -36,7 +38,23 @@ class User extends Authenticatable
 
      public function setUseridAttribute($user_id)
     {   
-        $this->attributes['user_id'] = bcrypt($user_id);
+        $this->attributes['user_hash'] = bcrypt($user_id);
+    }
+    
+    public static function takenSurvey($user_id, $type)
+    {
+        $answered = static::find($user_id)->answers->where('type', $type)->count();
+        return $answered > 0;
+    }
+    
+    public function sessions()
+    {
+        return $this->hasMany('honeysec\Session');
+    }
+    
+    public function answers()
+    {
+        return $this->hasMany('honeysec\Answer', 'user_id');
     }
 
 

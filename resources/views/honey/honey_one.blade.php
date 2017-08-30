@@ -2,29 +2,44 @@
 
 @section('content')
 
+
 <div id="honeyapp">
+    
+    <!-- <img src="http://localhost/images/test.png"> -->
+    
     <div class="row" id="cardrow">
         <div class="col-sm-9">
-            <div class="card card-outline-primary" style="width: 52rem; height: 21.5rem;">
+            <div class="card card-outline-primary" style="left: -200px; width: 140%; height: 480px;">
                 <div class="card-block">
 
-                    <h5 class="card-title">Game ID: {{ $honey_game->gid }}</h5>
+                    @if ( $honey_network->network_id == 2)
+                        <h3 class="card-title">Practice Game</h3>
+                    @else 
+                        <h3 class="card-title">Game {{ $round_number }} / {{ $max_round }}</h3>
+                    @endif
 
                     <!-- <h4 class="timerclass">Timer: @{{ timer }}</h4> -->
 
-                    <a id="startbutton" class="btn btn-primary startbutton" style="cursor:pointer"  @click="startTimer">Click to start</a>
+                    <a id="startbutton" class="button btn btn-primary startbutton" style="cursor:pointer"  @click="startTimer">Click to start</a>
+                    
+                    <button onclick="window.location='{{ url('/honey/play/nextround') }}'" style="cursor:pointer" id="nextbutton" class="button btn btn-primary visible disable nextbutton">
+                        @if ( $honey_network->network_id == 2)
+                            Return Home
+                        @elseif ($lastround == true)
+                            Results
+                        @else
+                            Next Game
+                        @endif
+                    </button>
 
-                    <!--<a href='{{ url("honey/2") }}' id="nextbutton" class="btn btn-primary visible disable nextbutton">Next Game</a>-->
-
-                    <button id="confirmbutton" class="btn btn-primary confirmbutton visible" style="cursor:pointer" @click="confirmAttack">Confirm</button>
+                    <button id="confirmbutton" class="button btn btn-primary confirmbutton visible" style="cursor:pointer" @click="confirmAttack">Confirm</button>
 
                     <div id="nodebuttons" class="visible">
                         
                         @foreach ($honey_nodes as $node)
                         
-                        
                             <node
-                                :id="{{ $node->nid }}"
+                                :id="{{ $node->node_id }}"
                                 :val="{{ $node->value }}"
                                 :defcost="{{ $node->defender_cost }}"
                                 :atkcost="{{ $node->attacker_cost }}"
@@ -32,11 +47,14 @@
                                 :pub="{{ $node->is_public }}"
                                 :succ="{{ $node->probability }}"
                                 :disc="{{ $node->discount }}"
-                                :style="{ position: 'absolute', left: {{ $node->x_axis }}+'px', top: {{ $node->y_axis }}+'px' }"
+                                :style="{ position: 'absolute', left: {{ $node->node_id*15 + 10 }}+'%', top: '40%' }"
                                 :neighbors="[]"
                                 :nodevalues= "[{{ $node->value }}, 5, 1]"
                                 @:applied="onCouponApplied(id)"
                             >
+                            <div v-if="TIME_LIMIT - timer < 3">
+                                <h4>@{{ 3 - TIME_LIMIT + timer }}</h4>
+                            </div>
                             </node>
                             
                         @endforeach
@@ -47,45 +65,22 @@
         </div>
 
         <div class="col-sm-3">
-            <div class="card card-outline-primary ">
+            <div class="card card-outline-primary" style="left: 120px; width: 140%;">
                 <div class="card-block">
-                    <h3 class="card-title"> </h3>
-                    <h4>Round: @{{ numberofround }}</h4>
-                    <h5>Attacker Points: @{{ attackerpoints }}</h5>
-                    <h5>Attacks Remaining: @{{ attackAttempts }}</h5>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="row" id="cardrow2">
-        <div class="col-sm-9">
-            <div class="card card-outline-primary" style="width: 52rem; height: 16.5rem;">
-                <div class="card-block">
-
-                    <h5 class="card-title"><b>Defender View</b><br>Budget: {{ $honey_game->def_budget }}</h5>
-
-                    <div id="testid">
-                        
-                        @foreach ($honey_nodes as $node)
-                        
-                            <div style="position:absolute; left:{{ $node->x_axis }}px; top: {{ $node->y_axis }}px;">
-                                <button class="btn btn-circle node">
-                                    <span class="btn btn-circle normal">
-                                        {{ $node->value }}
-                                    </span>
-                                </button>
-                                <div style="text-align:center; font-size:25px">
-                                    C: {{ $node->defender_cost }}
-                                </div>
-                            </div>
-                            
-                        @endforeach
-                        
+                    <h3>Round: @{{ numberofround }} / @{{ attackAttemptsBase }}</h3>
+                    <h3>Time Remaining: @{{ timer }}</h3>
+                    <h3>Defender Budget: {{ $honey_network->def_budget }}</h3>
+                    <h3>Attacker Points: @{{ attackerpoints }}</h3>
+                    <br>
+                    <h3>Game History</h3>
+                    <div class="card card-outline-primary" style="left: -13px; top: 10px; width: 108%;">
+                        <h5><gamelog v-for="item in gamelog" :nid="item[0]" :val="item[1]" :atkcost="item[2]" :ishp="item[3]" :round="item[4]"></gamelog></h5>
                     </div>
+                    
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
                             

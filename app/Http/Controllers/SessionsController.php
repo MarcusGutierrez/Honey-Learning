@@ -32,27 +32,7 @@ class SessionsController extends Controller
 
     public function store()
     {
-
-    	//dd(request()->all());
-
-    	// attempt to auth the user
-    	//if(! auth()->attempt(request(['user_id'])))
-    	//{
-    	//	return back()->withErrors([
-
-    	//		'message' => 'pleasae check your credentials'
-
-    	//		]);
-    //	}
-
-        //dd(auth()->user()->id);
-
-
-
-
-
         $users = User::all();
-
         $matched = false;
 
         foreach ($users as $user) 
@@ -60,7 +40,7 @@ class SessionsController extends Controller
             
             //echo $user->user_id;
 
-            if(Hash::check(request('user_id'), $user->user_id))
+            if(Hash::check(request('user_id'), $user->user_hash))
             {
                // echo "Matched with one";
                 $matched = true;
@@ -69,7 +49,7 @@ class SessionsController extends Controller
                 //session variable 
 
                 session('user_id', '');
-                session(['user_id' => $user->user_id ]);
+                session(['user_id' => $user->user_hash ]);
                 session()->flash('message' , 'Welcome! You are now logged in');
                 //dd(session('user_id', ''));
 
@@ -106,20 +86,29 @@ class SessionsController extends Controller
 
 
 
-    public function destroy()
+    public function destroy(Request $request)
     {
 
 
     	auth()->logout();
+        
+        $request->session()->forget('session_id');
+        $request->session()->forget('session_completed');
+        $request->session()->forget('network_id');
+        $request->session()->forget('round_id');
+        $request->session()->forget('round_number');
+        $request->session()->forget('concept_completed');
+        $request->session()->forget('practice_completed');
+        $request->session()->forget('survey_completed');
 
         session()->flash('message' , 'You are successfully logged out');
 
-    	return redirect()->home();
+    	return redirect('/');
 
     }
 
     public function username()
     {
-        return 'user_id';
+        return 'user_hash';
     }
 }

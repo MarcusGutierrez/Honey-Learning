@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHoneyGamesTable extends Migration
+class AddNetworkType extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateHoneyGamesTable extends Migration
      */
     public function up()
     {
-        Schema::create('honey_game', function (Blueprint $table) {
-            $table->integer('gid');
-            $table->integer('def_budget');
-            $table->integer('atk_budget');
-            $table->integer('atk_attempts');
-            $table->timestamps();
+        Schema::table('honey_network', function (Blueprint $table) {
+            $table->boolean('is_practice')->default(false);
         });
     }
 
@@ -29,6 +25,6 @@ class CreateHoneyGamesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('honey_game');
+        //
     }
 }

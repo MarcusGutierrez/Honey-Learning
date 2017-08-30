@@ -15,12 +15,10 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            //$table->increments('id');
-            $table->string('user_id', 65)->primary();
+            $table->increments('id');
+            $table->string('user_hash', 65);
             $table->rememberToken();
             $table->timestamps();
-            
-            
         });
         
         Schema::enableForeignKeyConstraints();

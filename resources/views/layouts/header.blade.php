@@ -4,13 +4,11 @@
 
 
 
-          <a class="nav-link active" href="#">Home</a>
-          <a class="nav-link active" href="#">About Us</a>
+          <a class="nav-link active" href="{{ url("/") }}">Home</a>
+          <!-- <a class="nav-link active" href="#">About Us</a> -->
 
 
           @if(Auth::check())
-
-          	<a class="nav-link ml-auto" href="#">Welcome!</a>
             <a class="nav-link" href='{{ url("/logout") }}'>Logout</a>
 
           @endif	
@@ -26,7 +24,7 @@
 <div class="card text-center" style="position: relative;">
   
   <div class="card-footer text-muted">
-    Risk VS Reward Game 
+      <h2>Honey Intrusion</h2>
   </div>
 </div>
 
