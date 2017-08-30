@@ -31,7 +31,7 @@ class GameSessionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request, $def_type, $network_id)
-    {   
+    {
         if($request->session()->get('session_id') == null) {
             $game_session = new \honeysec\Session;
             $game_session->defender_type = $def_type;
@@ -43,6 +43,10 @@ class GameSessionsController extends Controller
                 $request->session()->put('defender_type', $def_type); //set session ID
                 $request->session()->put('session_completed', false); //set session ID
                 $request->session()->put('round_number', 1);
+                
+                $networks = Honey_Network::where('is_practice', 0)->get();
+                $network_id = $networks[mt_rand(0, count($networks) - 1)]->network_id;
+                
                 $request->session()->put('network_id', $network_id);
 
                 //$round_hash = str_replace("%","_", rawurlencode(bcrypt($request->session()->get('user_id', null))));

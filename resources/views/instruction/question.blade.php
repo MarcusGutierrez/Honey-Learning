@@ -1,5 +1,5 @@
 <fieldset class="form-group row">
-    <legend class="col-form-legend col-sm-10"><b>Question {{$question->question_number}}.</b> {{ $question->body }}</legend>
+    <legend class="col-form-legend col-sm-10"><b>Question {{$question->question_number}})</b> {{ $question->body }}</legend>
         <div class="col-sm-10">
             <div class="form-check">
                 <label class="form-check-label">
