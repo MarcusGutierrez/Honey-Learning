@@ -12,7 +12,7 @@
             <div class="card card-outline-primary" style="left: -200px; width: 140%; height: 480px;">
                 <div class="card-block">
 
-                    @if ( $honey_network->network_id == 2)
+                    @if ( $honey_network->is_practice == 1)
                         <h3 class="card-title">Practice Game</h3>
                     @else 
                         <h3 class="card-title">Game {{ $round_number }} / {{ $max_round }}</h3>
@@ -23,7 +23,7 @@
                     <a id="startbutton" class="button btn btn-primary startbutton" style="cursor:pointer"  @click="startTimer">Click to start</a>
                     
                     <button onclick="window.location='{{ url('/honey/play/nextround') }}'" style="cursor:pointer" id="nextbutton" class="button btn btn-primary visible disable nextbutton">
-                        @if ( $honey_network->network_id == 2)
+                        @if ( $honey_network->is_practice == 1)
                             Return Home
                         @elseif ($lastround == true)
                             Results
