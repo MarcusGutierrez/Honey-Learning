@@ -19,9 +19,9 @@ Route::get('/instruction/concept', 'GamesController@concept');
 
 Route::post('/instruction/concept', 'GamesController@store_concept');
 
-Route::get('/survey', 'GamesController@startsurvey');
+Route::get('/survey/{type}', 'GamesController@startsurvey');
 
-Route::post('storesurvey', 'GamesController@storesurvey');
+Route::post('storesurvey/{type}', 'GamesController@storesurvey');
 
 Route::post('/instruction', 'GamesController@showinstruction');
 

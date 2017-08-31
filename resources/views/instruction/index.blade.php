@@ -23,6 +23,7 @@ $has_played = \honeysec\User::find($user_id)->sessions->count() > 0;
 if($has_played){
     $first_session_id = \honeysec\User::find($user_id)->sessions->first();
     $session_code = "a".substr(md5($first_session_id."b73"), 0, 10)."7";
+    $completion += 25;
 }
 
 @endphp
@@ -37,6 +38,8 @@ if($has_played){
 
 
 <div class="" style="margin: auto; padding: 10px; align: center">
+    
+    {{ csrf_field()}}
 
     <div class="card text-center" style="width: 50rem; height: 17rem; align: center; margin: 0auto">
 
@@ -55,7 +58,7 @@ if($has_played){
                 </div>
             </div>
 
-            <button type="button" onclick="window.location ='{{ url("/survey") }}'" style="cursor:pointer"  class="btn btn-outline-primary">Take survey</button>
+            <button type="button" onclick="window.location ='{{ url("/survey/pre") }}'" style="cursor:pointer"  class="btn btn-outline-primary">Take survey</button>
             <button type="button" onclick="window.location ='{{ url("/instruction") }}'" style="cursor:pointer;" class="btn btn-outline-primary
                     @if(Session::get('survey_completed') != true)
                     disabled
@@ -79,7 +82,7 @@ if($has_played){
         </div>
         
         @if($has_played)
-        Session Code: {{ $session_code }}
+        Turk Code: {{ $session_code }}
         @endif
 
     </div>

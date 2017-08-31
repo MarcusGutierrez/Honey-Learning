@@ -43,8 +43,12 @@ class User extends Authenticatable
     
     public static function takenSurvey($user_id, $type)
     {
-        $answered = static::find($user_id)->answers->where('type', $type)->count();
-        return $answered > 0;
+        $answers = static::find($user_id)->answers;
+        foreach($answers as $answer){
+            if($answer->question->type == $type)
+                return true;
+        }
+        return false;
     }
     
     public function sessions()

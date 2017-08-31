@@ -11,6 +11,7 @@ class GamesController extends Controller {
     public function __construct() {
 
         $this->middleware('auth');
+        $this->middleware('game_session')->only('start_session_survey', 'store_session_survey');
     }
 
     public function index() {
@@ -20,32 +21,71 @@ class GamesController extends Controller {
         $buttons['play'] = "pointer-events: none; opacity: 0.4;";
         return view('instruction.index', compact('booleans'), compact('buttons'));
     }
-
-    public function startsurvey() {
-
-        $questions = Question::where('type', 'pre')->get();
-
-        return view('instruction.survey', compact('questions'));
+    
+    public function start_session_survey(Request $request, $type){
+        $this->startsurvey($request, $type)->with($params);
+    }
+    
+    public function store_session_survey(Request $request, $type){
+        $this->storesurvey($request, $type);
     }
 
-    public function storesurvey(Request $request) {
-        $user_id = $request->session()->get('user_id', null);
-        $questions = Question::where('type', 'pre')->get();
+    public function startsurvey(Request $request, $type) {
+        $params['survey_type'] = $type;
+        $questions = Question::where('type', $type)->get();
 
-        $taken = \honeysec\User::takenSurvey($user_id, 'pre');
-        if ($taken == false) { //If survey has not been taken yet
+        return view('instruction.survey', compact('questions'))->with($params);
+    }
+
+    public function storesurvey(Request $request, $type) {
+        $user_id = $request->session()->get('user_id', null);
+        $questions = Question::where('type', $type)->get();
+
+        $taken = \honeysec\User::takenSurvey($user_id, $type);
+        $flagged = [];
+        //if ($taken == false) { //If survey has not been taken yet
             foreach ($questions as $q) {
                 $answer = new \honeysec\Answer;
                 $answer->user_id = $user_id;
                 $answer->question_id = $q->question_id;
                 $answer->body = request($q->question_id);
+                
+                if($type = 'post')
+                    $answer->session_id = session()->get('session_id');
+                
                 $answer->save();
+                
+                if(request($q->question_id) == null)
+                    $flagged[] = $q->question_id;
             }
+        //}
+        
+        if (count($flagged) > 1) {
+            $message = "Questions (";
+            foreach($flagged as $key => $question){
+                if($key == count($flagged)-1){
+                    $message .= "and ".$question.")";
+                }else{
+                    $message .= $question.", ";
+                }
+            }
+            $message .= " have not been answered. Press 'Skip Remaining Survey' to avoid answering remaining questions.";
+            return redirect()->back()->withErrors([
+                        'message' => $message
+            ]);
+        }else if (count($flagged) == 1) {
+            $message = "Question (".$flagged[0].") has not been answered. Press 'Skip Remaining Survey' to avoid answering remaining questions.";
+            return redirect()->back()->withErrors([
+                        'message' => $message
+            ]);
         }
         
         session()->put('survey_completed', true);
 
-        return view('instruction.index')->with('message', 'Thank you for taking our survey');
+        if($type == 'pre')
+            return view('instruction.index')->with('message', 'Thank you for taking our survey');
+        else if($type = 'post')
+            return redirect('/results/')->with('message', 'Thanks for playing');
     }
 
     public function concept(Request $request) {

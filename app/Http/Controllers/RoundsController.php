@@ -223,7 +223,7 @@ class RoundsController extends Controller
 
             return redirect("/play/defender/".$def."/network/".$network_id."/round/".$round_number);
         } else {
-            return redirect('/results/')->with('message', 'Thanks for playing');
+            return redirect('/survey/post')->with('message', 'Please complete our post game survey');
         }
     }
     

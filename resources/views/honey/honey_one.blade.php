@@ -5,6 +5,7 @@
 
 <div id="honeyapp">
     
+    {{ csrf_field()}}
     <!-- <img src="http://localhost/images/test.png"> -->
     
     <div class="row" id="cardrow">
@@ -26,7 +27,7 @@
                         @if ( $honey_network->is_practice == 1)
                             Return Home
                         @elseif ($lastround == true)
-                            Results
+                            Post Survey
                         @else
                             Next Game
                         @endif
