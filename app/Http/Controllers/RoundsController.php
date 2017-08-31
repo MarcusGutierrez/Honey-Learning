@@ -180,7 +180,7 @@ class RoundsController extends Controller
         $honey_network = $practice_networks[mt_rand(0, count($practice_networks) - 1)];
         $honey_nodes = $honey_network->nodes;
         
-        $request->session()->put('network_id', $honey_network);
+        $request->session()->put('network_id', $honey_network->network_id);
         $request->session()->put('round_id', 0);
         
         $rounds = array();
