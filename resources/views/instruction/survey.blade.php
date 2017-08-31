@@ -8,10 +8,10 @@
 
         <div>
             @include('layouts.errors')
-            If you wish to leave the unanswered questions blank, press the 'Skip Remaining Survey' button
         </div>
         <div>
             @if(count($errors))
+                <h5>If you wish to leave the unanswered questions blank, press the 'Skip Remaining Survey' button</h5>
                 <a href='{{ url("/") }}' id="nextbutton" class="btn btn-primary" style="margin-bottom: 20px;">Skip Remaining Survey</a>
             @endif
          </div>
