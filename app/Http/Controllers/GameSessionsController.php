@@ -44,7 +44,7 @@ class GameSessionsController extends Controller
                 $request->session()->put('session_completed', false); //set session ID
                 $request->session()->put('round_number', 1);
                 
-                $networks = Honey_Network::where('is_practice', 0)->get();
+                $networks = \honeysec\Honey_Network::where('is_practice', 0)->get();
                 $network_id = $networks[mt_rand(0, count($networks) - 1)]->network_id;
                 
                 $request->session()->put('network_id', $network_id);

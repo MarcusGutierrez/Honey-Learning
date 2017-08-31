@@ -17,7 +17,7 @@ class RoundsController extends Controller
     }
     
     public function network_params(Request $request){
-        $network_id = $request->session()->get('network_id', 2);
+        $network_id = $request->session()->get('network_id', -1);
         
         $atkAttempts = Honey_Network::find($network_id)->atk_attempts;
         $totalValue = Honey_Node::inGameID($network_id)->valueSum();
