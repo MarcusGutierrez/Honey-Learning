@@ -47,7 +47,7 @@ class GamesController extends Controller {
                 $answer = new \honeysec\Answer;
                 $answer->user_id = $user_id;
                 $answer->question_id = $q->question_id;
-                $answer->body = request($q->question_id);
+                $answer->body = request("q".$q->question_number);
                 
                 if($type == 'post')
                     $answer->session_id = session()->get('session_id');
@@ -58,8 +58,14 @@ class GamesController extends Controller {
                     $flagged[] = $q->question_id;
             }
         //}
-        
-        if (count($flagged) > 1) {
+            $reqQ = [];
+            foreach($questions as $question){
+                $reqQ['q'.$question->question_number] = 'required';
+            }
+
+            $validator = $this->validate(request(), $reqQ);
+        /*
+        if (count($flagged) > 3) {
             $message = "Questions (";
             foreach($flagged as $key => $question){
                 if($key == count($flagged)-1){
@@ -72,13 +78,19 @@ class GamesController extends Controller {
             return redirect()->back()->withErrors([
                         'message' => $message
             ]);
-        }else if (count($flagged) == 1) {
+        }else if (count($flagged) == 2) {
+            $message = "Question (".$flagged[0]." and ".$flagged[1].") has not been answered. Press 'Skip Remaining Survey' to avoid answering remaining questions.";
+            return redirect()->back()->withErrors([
+                        'message' => $message
+            ]);
+        }
+        else if (count($flagged) == 1) {
             $message = "Question (".$flagged[0].") has not been answered. Press 'Skip Remaining Survey' to avoid answering remaining questions.";
             return redirect()->back()->withErrors([
                         'message' => $message
             ]);
         }
-        
+        */
         session()->put('survey_completed', true);
 
         if($type == 'pre')
