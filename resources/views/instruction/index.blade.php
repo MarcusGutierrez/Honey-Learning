@@ -80,10 +80,6 @@ if($has_played){
                     @endif
                     ">Play Defender 2</button>
         </div>
-        
-        @if($has_played)
-        Turk Code: {{ $session_code }}
-        @endif
 
     </div>
 

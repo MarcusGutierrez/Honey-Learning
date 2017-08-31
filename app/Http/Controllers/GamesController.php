@@ -11,7 +11,6 @@ class GamesController extends Controller {
     public function __construct() {
 
         $this->middleware('auth');
-        $this->middleware('game_session')->only('start_session_survey', 'store_session_survey');
     }
 
     public function index() {
@@ -21,16 +20,12 @@ class GamesController extends Controller {
         $buttons['play'] = "pointer-events: none; opacity: 0.4;";
         return view('instruction.index', compact('booleans'), compact('buttons'));
     }
-    
-    public function start_session_survey(Request $request, $type){
-        $this->startsurvey($request, $type)->with($params);
-    }
-    
-    public function store_session_survey(Request $request, $type){
-        $this->storesurvey($request, $type);
-    }
 
     public function startsurvey(Request $request, $type) {
+        if($type == 'post' && session()->get('session_id', null) == null){
+            return redirect('/')->with('message', 'Must start a game session to complete that action');
+        }
+        
         $params['survey_type'] = $type;
         $questions = Question::where('type', $type)->get();
 
@@ -38,10 +33,14 @@ class GamesController extends Controller {
     }
 
     public function storesurvey(Request $request, $type) {
+        if($type == 'post' && session()->get('session_id', null) == null){
+            return redirect('/')->with('message', 'Must start a game session to complete that action');
+        }
+        
         $user_id = $request->session()->get('user_id', null);
         $questions = Question::where('type', $type)->get();
 
-        $taken = \honeysec\User::takenSurvey($user_id, $type);
+        //$taken = \honeysec\User::takenSurvey($user_id, $type);
         $flagged = [];
         //if ($taken == false) { //If survey has not been taken yet
             foreach ($questions as $q) {
@@ -50,7 +49,7 @@ class GamesController extends Controller {
                 $answer->question_id = $q->question_id;
                 $answer->body = request($q->question_id);
                 
-                if($type = 'post')
+                if($type == 'post')
                     $answer->session_id = session()->get('session_id');
                 
                 $answer->save();
@@ -84,7 +83,7 @@ class GamesController extends Controller {
 
         if($type == 'pre')
             return view('instruction.index')->with('message', 'Thank you for taking our survey');
-        else if($type = 'post')
+        else if($type == 'post')
             return redirect('/results/')->with('message', 'Thanks for playing');
     }
 
