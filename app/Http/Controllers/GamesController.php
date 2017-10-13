@@ -83,10 +83,10 @@ class GamesController extends Controller {
     }
 
     public function concept(Request $request) {
-        $this->store_section("instruction");
-        session()->put('instruction_completed', true);
+        //$this->store_section("instruction");
+        //session()->put('instruction_completed', true);
         
-        $this->store_section("concept");
+        //$this->create_section("concept");
         return view('instruction.concept');
     }
 

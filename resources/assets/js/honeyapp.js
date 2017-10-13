@@ -745,6 +745,10 @@ new Vue({
             vm.gamehistory.time_attacker_moved = time_attacker_moved;
             vm.gamehistory.attacker_action = id;
             vm.attackerbudget -= vm.attackerbudget / vm.attackAttempts;
+            vm.attackAttempts -= 1;
+            if(vm.attackAttempts == 0){
+                $("#nodebuttons").addClass("disable");
+            }
         });
 
 
@@ -787,7 +791,7 @@ new Vue({
                 // reset the timer 
                 vm.timer = vm.TIME_LIMIT;
                 vm.numberofround = Math.min(vm.numberofround + 1, vm.attackAttemptsBase);
-                vm.attackAttempts -= 1;
+                //vm.attackAttempts -= 1;
             }
             vm.attackeraction = '';
             vm.defenderaction = '';
