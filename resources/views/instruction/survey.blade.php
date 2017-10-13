@@ -12,15 +12,14 @@
         <div>
             @if(count($errors))
                 <h5>If you wish to leave the unanswered questions blank, press the 'Skip Remaining Survey' button</h5>
-                <a href='{{ url("/") }}' id="nextbutton" class="btn btn-primary" style="margin-bottom: 20px;">Skip Remaining Survey</a>
+                <a href='{{ url("/next") }}' id="nextbutton" class="btn btn-primary" style="margin-bottom: 20px;">Skip Remaining Survey</a>
             @endif
          </div>
         
         <div class="card-header">
-            Survey
+            <h4 class="card-title">Instructions</h4>
         </div>
         <div class="card-block">
-            <h4 class="card-title">Instructions</h4>
             <p class="card-text">Please indicate how much you agree with the following questions using the scale below:</p>
             <p class="card-text">Strongly Disagree(1)   Disagree(2) Neither Agree nor Disagree(3) Agree(4) Strongly Agree(5)</p>
 

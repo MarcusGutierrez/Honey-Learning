@@ -9,7 +9,7 @@ use JavaScript;
 class GamesController extends Controller {
 
     public function __construct() {
-
+        $this->middleware('preventBackHistory');
         $this->middleware('auth');
     }
 
@@ -25,17 +25,23 @@ class GamesController extends Controller {
         if($type == 'post' && session()->get('session_id', null) == null){
             return redirect('/')->with('message', 'Must start a game session to complete that action');
         }
+        $this->create_section($type." survey");
         
         $params['survey_type'] = $type;
+        
+        if($type == 'background'){
+            return view('instruction.background')->with($params);
+        }
+        
         $questions = Question::where('type', $type)->get();
 
         return view('instruction.survey', compact('questions'))->with($params);
     }
 
     public function storesurvey(Request $request, $type) {
-        if($type == 'post' && session()->get('session_id', null) == null){
+        /*if($type == 'post' && session()->get('session_id', null) == null){
             return redirect('/')->with('message', 'Must start a game session to complete that action');
-        }
+        }*/
         
         $user_id = $request->session()->get('user_id', null);
         $questions = Question::where('type', $type)->get();
@@ -48,6 +54,7 @@ class GamesController extends Controller {
                 $answer->user_id = $user_id;
                 $answer->question_id = $q->question_id;
                 $answer->body = request("q".$q->question_number);
+                $answer->time_answered = current_time();
                 
                 if($type == 'post')
                     $answer->session_id = session()->get('session_id');
@@ -57,49 +64,29 @@ class GamesController extends Controller {
                 if(request($q->question_id) == null)
                     $flagged[] = $q->question_id;
             }
-        //}
-            $reqQ = [];
-            foreach($questions as $question){
-                $reqQ['q'.$question->question_number] = 'required';
-            }
-
-            $validator = $this->validate(request(), $reqQ);
-        /*
-        if (count($flagged) > 3) {
-            $message = "Questions (";
-            foreach($flagged as $key => $question){
-                if($key == count($flagged)-1){
-                    $message .= "and ".$question.")";
-                }else{
-                    $message .= $question.", ";
-                }
-            }
-            $message .= " have not been answered. Press 'Skip Remaining Survey' to avoid answering remaining questions.";
-            return redirect()->back()->withErrors([
-                        'message' => $message
-            ]);
-        }else if (count($flagged) == 2) {
-            $message = "Question (".$flagged[0]." and ".$flagged[1].") has not been answered. Press 'Skip Remaining Survey' to avoid answering remaining questions.";
-            return redirect()->back()->withErrors([
-                        'message' => $message
-            ]);
+            //}
+        $reqQ = [];
+        foreach($questions as $question){
+            $reqQ['q'.$question->question_number] = 'required';
         }
-        else if (count($flagged) == 1) {
-            $message = "Question (".$flagged[0].") has not been answered. Press 'Skip Remaining Survey' to avoid answering remaining questions.";
-            return redirect()->back()->withErrors([
-                        'message' => $message
-            ]);
-        }
-        */
-        session()->put('survey_completed', true);
 
-        if($type == 'pre')
-            return view('instruction.index')->with('message', 'Thank you for taking our survey');
+        $validator = $this->validate(request(), $reqQ);
+        
+        if($type == 'background')
+            $request->session()->put('background_completed', true);
         else if($type == 'post')
-            return redirect('/results/')->with('message', 'Thanks for playing');
+            session()->put('post_completed', true);
+        else if($type == 'triad')
+            session()->put('triad_completed', true);
+
+        return redirect('/next');
     }
 
     public function concept(Request $request) {
+        $this->store_section("instruction");
+        session()->put('instruction_completed', true);
+        
+        $this->store_section("concept");
         return view('instruction.concept');
     }
 
@@ -144,7 +131,7 @@ class GamesController extends Controller {
         // 	$wrongques2 = $wrongques2 . 'Question 2: Correct!'; 
         // }
         if ($flag == false) {
-            return redirect()->back()->withErrors([
+            return redirect()->back()->withInput()->withErrors([
                         'message' => $wrongques1,
                         'message2' => $wrongques2,
                         'message3' => $wrongques3,
@@ -152,7 +139,8 @@ class GamesController extends Controller {
         }
         session()->put('concept_completed', true);
         session()->flash('message', 'Everything is correct. Thanks!');
-        return view("instruction.index");
+        $this->store_section("concept");
+        return redirect('/next');
     }
 
     public function showinstruction() {
@@ -173,6 +161,8 @@ class GamesController extends Controller {
 
         //dd("hello");
 
+        $this->create_section("instruction");
+        
         return view('instruction.slideshow');
     }
 
@@ -213,6 +203,15 @@ class GamesController extends Controller {
         } else {
             return view('honey.honey_three', compact('id'));
         }
+    }
+    
+    
+    public function next(){ //pops the page path
+        $page_path = session()->pull('page_path', null);
+        $next_page = array_shift($page_path);
+        session()->put('page_path', $page_path);
+        
+        return redirect("$next_page");
     }
 
 }

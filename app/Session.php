@@ -24,8 +24,11 @@ class Session extends Model
     {
         $sum = 0;
         $rounds = static::find($session_id)->rounds;
-        foreach($rounds as $round){
-            $sum += $round->moves->last()->attacker_points;
+        if($rounds != null){
+            foreach($rounds as $round){
+                if($round->moves->last() != null)
+                    $sum += $round->moves->last()->attacker_points;
+            }
         }
         return $sum;
     }

@@ -10,7 +10,7 @@
     
     <div class="row" id="cardrow">
         <div class="col-sm-9">
-            <div class="card card-outline-primary" style="left: -200px; width: 140%; height: 480px;">
+            <div class="card card-outline-primary" style="left: -10vw; width: 60vw; height: 50vh;">
                 <div class="card-block">
 
                     @if ( $honey_network->is_practice == 1)
@@ -22,16 +22,6 @@
                     <!-- <h4 class="timerclass">Timer: @{{ timer }}</h4> -->
 
                     <a id="startbutton" class="button btn btn-primary startbutton" style="cursor:pointer"  @click="startTimer">Click to start</a>
-                    
-                    <button onclick="window.location='{{ url('/honey/play/nextround') }}'" style="cursor:pointer" id="nextbutton" class="button btn btn-primary visible disable nextbutton">
-                        @if ( $honey_network->is_practice == 1)
-                            Return Home
-                        @elseif ($lastround == true)
-                            Post Survey
-                        @else
-                            Next Game
-                        @endif
-                    </button>
 
                     <button id="confirmbutton" class="button btn btn-primary confirmbutton visible" style="cursor:pointer" @click="confirmAttack">Confirm</button>
 
@@ -53,9 +43,6 @@
                                 :nodevalues= "[{{ $node->value }}, 5, 1]"
                                 @:applied="onCouponApplied(id)"
                             >
-                            <div v-if="TIME_LIMIT - timer < 3">
-                                <h4>@{{ 3 - TIME_LIMIT + timer }}</h4>
-                            </div>
                             </node>
                             
                         @endforeach
@@ -66,15 +53,29 @@
         </div>
 
         <div class="col-sm-3">
-            <div class="card card-outline-primary" style="left: 120px; width: 140%;">
+            <div class="card card-outline-primary" style="left: 6vw; width: 19vw;">
                 <div class="card-block">
-                    <h3>Round: @{{ numberofround }} / @{{ attackAttemptsBase }}</h3>
-                    <h3>Time Remaining: @{{ timer }}</h3>
                     <h3>Defender Budget: {{ $honey_network->def_budget }}</h3>
-                    <h3>Attacker Points: @{{ attackerpoints }}</h3>
+                    <h3 v-if="attackAttemptsBase != 1">Round: @{{ numberofround }} / @{{ attackAttemptsBase }}</h3>
+                    <h3>Current Points: @{{ attackerpoints }}</h3>
+                    <h3>Total Points: @{{ totalattackerpoints }}</h3>
+                    <h3>Time Remaining: @{{ timer }}</h3>
+                    
+                    <div style="text-align: center;">
+                        <button onclick="window.location='{{ url('/honey/play/nextround') }}'" style="cursor:pointer;" id="nextbutton" class="button btn btn-primary visible disable nextbutton">
+                            @if ( $honey_network->is_practice == 1)
+                                Start Real Game
+                            @elseif ($lastround == true)
+                                Post Survey
+                            @else
+                                Next Game
+                            @endif
+                        </button>
+                    </div>
+                    
                     <br>
                     <h3>Game History</h3>
-                    <div class="card card-outline-primary" style="left: -13px; top: 10px; width: 108%;">
+                    <div class="card card-outline-primary" style="left: -0.5vw; top: 0.5vw; width: 18vw;">
                         <h5><gamelog v-for="item in gamelog" :nid="item[0]" :val="item[1]" :atkcost="item[2]" :ishp="item[3]" :round="item[4]"></gamelog></h5>
                     </div>
                     

@@ -10,6 +10,10 @@ class Round extends Model
     protected $table = 'round';
     public $timestamps = false;
     
+    public static function findWithNumber($session_id, $round_number){
+        return static::where('session_id', $session_id)->get()->where('round_number', $round_number)->first();
+    }
+    
     public function session()
     {
         return $this->belongsTo('honeysec\Session', 'session_id');

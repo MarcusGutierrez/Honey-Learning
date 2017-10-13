@@ -144,9 +144,6 @@ Vue.component('node',{
                         }
 
                         EventListeners.$emit('attackerMovedtentative', vm.id, vm.neighbors, Date.now());
-                    } else{
-                    //console.log('Need to attack public or possible or tentative nodes');
-
                     }
                 }
             },
@@ -191,14 +188,11 @@ Vue.component('node',{
             });
 
             EventListeners.$on('sendtimer', function(time){
-                //vm.nodetimer = (vm.nodevalues[2]/time)*100;
-                //vm.styleObjectTime.width = vm.nodetimer + '%';
-               // console.log('nodetimer '+ vm.nodetimer);
+                
             });
 
             EventListeners.$on('restore-previous-class', function(id){
                 if(vm.id == id){
-                    console.log('restore-previous-class '+ vm.previous_class + ' id '+ id);
                     vm.classObject.tentative_attacked = false;
                     if(vm.previous_class == 'attacked'){
                             vm.classObject.attacked = true;
@@ -274,8 +268,6 @@ Vue.component('node',{
             EventListeners.$on('defender-change-to-normal', function(idd){
                 // if this event id mean to be for the id
                 if(vm.id == idd){
-
-                    console.log('on defender-change-to-normal event....node '+ idd);
                     // change color if not public 
                     //if(vm.classObject.public != true)
                     //{
@@ -302,10 +294,8 @@ Vue.component('node',{
 
             EventListeners.$on('change-to-attacked', function(idd){
                 // if this event id mean to be for the id
-                //console.log('here i am .....fcuk u ######### this-id '  +vm.id + ' idd '+ idd);
                 if(vm.id == idd){
                     vm.previous_class = 'attacked';
-                    console.log('change-to-attacked event....node '+ idd);
                     // change color if not public 
                     //if(vm.classObject.public != true)
                     //{
@@ -324,8 +314,6 @@ Vue.component('node',{
             });
 
             EventListeners.$on('collectpoints', function(){
-                console.log('ON...... event   collectpoints');
-                console.log( 'id: ' + vm.nid + ' vm.possessioncounter '+ vm.possessioncounter + ' owner '+ vm.owner);
                 if(vm.owner == 1){
                     EventListeners.$emit('returningpoint', vm.id, vm.value, vm.atkCost, vm.isHP);
                     vm.owner = 0;
@@ -345,22 +333,6 @@ Vue.component('node',{
                     vm.classObject.public = true;
                     vm.classObject.tentative_attacked = false;
                 }
-                /*
-                if(vm.possessioncounter < vm.timerequired 
-                && vm.owner==1 && vm.classObject.attacked==true){ // else if possessioncounter >= 0, and owner is attckr then just increment the possessioncounter
-                    vm.possessioncounter += 1;
-                    console.log('Incrmenting possessioncounter to ' + vm.possessioncounter  + ', node  '+ vm.id);
-                }
-
-                if((vm.possessioncounter==vm.timerequired) && vm.owner==1 && vm.classObject.attacked==true){ // owner is attckr
-                    // reset the counter
-                    vm.possessioncounter = 0;
-                    // emit event returningpoint
-
-                    console.log('emitting event returningpoint from '+vm.id + ', value '+ vm.value);
-                   EventListeners.$emit('returningpoint', vm.value, vm.id);
-                }
-                */
             });
             
             
@@ -396,6 +368,7 @@ new Vue({
         //Attacker params
         attackerbudget : 0,
         attackerpoints : 0,
+        totalattackerpoints: 0,
         attackAttempts : 0,
         attackAttemptsBase : 0,
         attackProb : 1.0,
@@ -441,6 +414,7 @@ new Vue({
             this.attackAttempts = params['atk_attempts'];
             this.attackAttemptsBase = params['atk_attempts'];
             this.defenderpoints = params['total_value'];
+            this.totalattackerpoints = params['total_attacker_points'];
             //this.instance = params['round_id'];
             //return this.test;
         })
@@ -461,12 +435,6 @@ new Vue({
 
         saveToDataBase: function(){
             var vm = this;
-
-            /*if(vm.defenderaction === ''){
-                vm.makeDefenderMove();
-            }*/
-
-            console.log('*********** saving in database vm.gamehistory.defender_action '+ vm.defenderaction);
 	   			
             axios.post('/gamehistory/save', {
                     //uid: vm.gamehistory.uid,
@@ -485,7 +453,6 @@ new Vue({
 
         saveToDataBaseTentative: function(){
             var vm = this;
-            console.log('*********** saving in database vm.gamehistory.defender_action '+ vm.defenderaction);
             axios.post('/gamehistory/savetentative', {
                     //uid : vm.gamehistory.uid,
                     //gid : vm.gamehistory.gid,
@@ -519,76 +486,48 @@ new Vue({
             vm.msgtoplayer = 'Move before timer goes down to 0';
             $("#nodebuttons").removeClass("disable");
             $("#nodebuttons").removeClass("visible");
+            EventListeners.$emit('enable-pass-button');
             $("#startbutton").addClass("disable");
             $("#startbutton").addClass("visible");
             $("#confirmbutton").removeClass("visible");
 
-            console.log('userid ************ '+ vm.gamehistory.userid);
-
             EventListeners.$emit('sendtimer', vm.timer);
             EventListeners.$emit('getID');
-            EventListeners.$emit('disable-pass-button');
+            //EventListeners.$emit('disable-pass-button');
             
             //axios.post('/defender/uni/1');
             
             timer = setInterval(function() {
-                console.log('Round ****************** '+ vm.numberofround);
                 if(vm.timer==vm.TIME_LIMIT) {
                     /*if(vm.defenderaction === ''){
                         vm.makeDefenderMove();
                     }*/
                 }
                 
-                if(vm.timer == vm.TIME_LIMIT - 2){
+                /*if(vm.timer == vm.TIME_LIMIT){
                     EventListeners.$emit('enable-pass-button');
-                }
-
-                if(vm.timer==0 || vm.attackAttempts == 0){
-                    //vm.timer = 'Done...!'
-                    //EventListeners.$emit('last-round-update');
-                    vm.msgtoplayer = 'Game End';
-                    console.log('Game end , numberofround ' + vm.numberofround);
-                    $("#startbutton").addClass("disable");
-                    $("#confirmbutton").addClass("disable");
-
-                    $("#nodebuttons").addClass("disable");
-                    $('#nextbutton').removeClass("visible");
-                    $('#nextbutton').removeClass("disable");
-                    $("#confirmbutton").addClass("visible");
-                    
-                    //END HERE!
-                    axios.post('/round/store').then(function (response){
-                        console.log(response)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
-                    return clearInterval(timer);
-                }
+                }*/
 
                 if(vm.timer>0){
                     vm.timer -= 1;
+                }else{
+                    vm.attacker_tentative_move = 0;
                 }
 
-                if(vm.timer < 1){
+                /*if(vm.timer < 1){
                     EventListeners.$emit('set_nomoveallowed', true);
                 }
 
                 if(vm.timer == 0 && vm.numberofround <= vm.attackAttemptsBase) {
-                    console.log('>>>>>>>>> vm.attacker_tentative_move '+ vm.attacker_tentative_move );
 
                     if(vm.attacker_tentative_move !== ''){
                         //EventListeners.$emit('attackerMovedconfirmed', vm.attacker_tentative_move, vm.newattackneighbors, vm.tentative_time_attacker_moved);
                     }else{
-                        //console.log('checking exit conditionss &&&&&&&&&&&&&&&&&&');
                         //vm.timer = 'wait...!';
                         EventListeners.$emit('checkExitCondition');
                     }
                     //return clearInterval(timer)
-                }
-
-                //console.log('vm.defendermoved '+vm.defendermoved + ', vm.attackermoved '+ vm.attackermoved);
+                }*/
 
                 if((vm.attackermoved==true) || (vm.attacker_tentative_move !== '' && vm.timer==0)){
                     // the attack is possible if it's inside possivle attack set
@@ -596,7 +535,6 @@ new Vue({
                     $("#nodebuttons").addClass("disable");
                     if(vm.timer==0){
                         vm.attackermoved = true;
-                        //console.log('attackermoved is set to ' + vm.attackermoved );
                         vm.attackeraction = vm.attacker_tentative_move;
                         //vm.newattackneighbors = neighbors; 
                         vm.gamehistory.time_attacker_moved = vm.tentative_time_attacker_moved;
@@ -608,14 +546,33 @@ new Vue({
                     var possibleindex = vm.isInPossibleAttackSet(vm.possibleattackset, vm.attackeraction);
                     var attackindex = vm.isInAttackSet(vm.currentattackset, vm.attackeraction);
                     
-                    //console.log('%%%%%%%  possibleindex '+ possibleindex + ' attackindex '+ attackindex);
                     if(possibleindex > -1 || attackindex > -1){
                         vm.attackermoved = false;
                         //vm.defendermoved = false;
                         EventListeners.$emit('movemade',vm.attackeraction);
-                    }else{
-                        alert('HI!');
-                        //console.log('Invalid attack ##########');
+                    }
+                    
+                    if(vm.attackAttempts == 0){
+                        //vm.timer = 'Done...!'
+                        //EventListeners.$emit('last-round-update');
+                        vm.msgtoplayer = 'Game End';
+                        $("#startbutton").addClass("disable");
+                        $("#confirmbutton").addClass("disable");
+
+                        $("#nodebuttons").addClass("disable");
+                        $('#nextbutton').removeClass("visible");
+                        $('#nextbutton').removeClass("disable");
+                        $("#confirmbutton").addClass("visible");
+
+                        //END HERE!
+                        axios.post('/round/store').then(function (response){
+                            console.log(response)
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+                        return clearInterval(timer);
                     }
                 }
 
@@ -625,13 +582,10 @@ new Vue({
         //checks whether the attacked 
         isInPossibleAttackSet : function(possibleattackset, attackeraction){
             for(var i =0; i<possibleattackset.length; i++){
-                //console.log('innnn ******* i '+ i);
                 if(possibleattackset[i] == attackeraction){
-                    //console.log('found '+attackeraction+' in possible attack set ');
                     return i;
                 }
             }
-            //console.log('didnt found '+attackeraction+' in possible attack set ');
             return -1;
         },
         
@@ -639,11 +593,9 @@ new Vue({
         isInAttackSet : function(attackset, attackeraction){
             for(var i=0; i<attackset.length; i++){
                 if(attackset[i] == attackeraction){
-                        //console.log('found '+attackeraction+' in  attack set ');
                         return i;
                 }
             }
-            //console.log('didnt found '+attackeraction+' in  attack set ');
             return -1;
         },
 
@@ -671,21 +623,10 @@ new Vue({
             var foundinattackset = false;
             if(index > -1 ){
                 foundinattackset = true;
-                //console.log('removing node '+ vm.defenderaction + ' index '+ index);
                 vm.currentattackset.splice(index, 1);
-                //console.log(' $$$$$$$ Current attack set ');
-                /*for (var i = 0; i <vm.currentattackset.length ; i++) {
-                    console.log(vm.currentattackset[i] + ' ');
-                }*/
 
-            }/*else{
-                console.log('defender action is not in current attack set ');
-            }*/
-            //console.log(' $$$$$$$ Current attack set ');
-            /*for (var i = 0; i <vm.currentattackset.length ; i++) 
-            {
-                console.log(vm.currentattackset[i] + ' ');
-            }*/
+            }
+            
             return foundinattackset;
         },
 
@@ -717,8 +658,6 @@ new Vue({
                     // first check if it;s in possible atatckset
                     var possibleindex = vm.isInPossibleAttackSet(vm.possibleattackset, neighbor);
                     if(possibleindex > -1){
-                        //console.log('neighbor ' + neighbor + ' is in possibleattackset ');
-                        //console.log('need to update as normal ifffffff  doesnt have any neighbor in attackset');
                         // check if neighbor has any neighbor who is in attackset
 
                         var neighborhasattacksetneighbor = false;
@@ -728,28 +667,16 @@ new Vue({
                                 // check if neineighbor is in attackset
                                 var attackindex = vm.isInAttackSet(vm.currentattackset, neineighbor);
                                 if(attackindex > -1){
-                                    //console.log('%%%%% found neighbor of node '+ neineighbor + ' in attackset');
-                                    //console.log('No need to update as normal it  has  neighbor  in atatckset');
                                     neighborhasattacksetneighbor = true;
                                     break;
                                 }
                             }
                         }
                         if(!neighborhasattacksetneighbor){
-                            //console.log('%%%%% found no neighbor of node '+ neineighbor + ' in attackset');
-                            //console.log('need to update as normal it  has  neighbor  in atatckset');
                             EventListeners.$emit('change-to-normal', neighbor);
-                            //console.log('removing node '+neighbor+' from possible attackset'); 
                             vm.possibleattackset.splice(possibleindex, 1);
-                            //console.log(' $$$$$$$ possible attack set ');
-                            for (var i = 0; i <vm.possibleattackset.length ; i++){
-                            //console.log(vm.possibleattackset[i]);
-                            }
                         }
-                    }/*else{
-                        console.log('neighbor ' + neighbor + ' is not in possibleattackset ');
-                        console.log('Dont need to update');
-                    }*/
+                    }
                 }
             }
         }
@@ -766,8 +693,6 @@ new Vue({
     
         EventListeners.$on('checkExitCondition', function(){
 
-            //console.log('checking exit condition...timer ' + vm.timer + ' vm.attackermoved  ' + vm.attackermoved );
-
             var foundinattackset = vm.isInAttackSet(vm.currentattackset, vm.defenderaction);
             if(foundinattackset==true){
                 EventListeners.$emit('change-to-normal', vm.defenderaction);
@@ -778,7 +703,6 @@ new Vue({
             // if attacker didn't move end the game
             if(vm.attackermoved == false && vm.timer==0){
                 vm.numberofround = vm.attackAttemptsBase;
-                //console.log(' Game end ...attacker didnt move' );
             }
         });
 
@@ -787,25 +711,22 @@ new Vue({
         EventListeners.$on('returningpoint', function(nodeid, nodevalue, atkcost, ishp){
             if(ishp == 1){
                 vm.attackerpoints -= atkcost;
+                vm.totalattackerpoints -= atkcost;
                 vm.valueHP = 'H';
                 vm.gamehistory.triggered_honeypot = 1;
             }else{
                 vm.attackerpoints += nodevalue - atkcost;
+                vm.totalattackerpoints += nodevalue - atkcost;
                 vm.defenderpoints -= nodevalue;
             }
             vm.gamelog.unshift([nodeid, nodevalue, atkcost, ishp, vm.numberofround]);
-            console.log('received points '+ nodevalue + ' from node '+ nodeid);
         });
 
         EventListeners.$on('attackerMovedtentative', function(id, neighbors, tentative_time_attacker_moved){
             // just update the tentative move
             $("#confirmbutton").removeClass("disable");
-            console.log('attacker tentative move '+ id);
             vm.attacker_tentative_move = id;
             vm.tentative_time_attacker_moved = tentative_time_attacker_moved;
-
-            //console.log('tttttttttt   attacker tentative attacked  node ' + id + ', tentative time' + vm.tentative_time_attacker_moved);
-            //console.log('attacker_tentative_move is ' + vm.attacker_tentative_move );
 
             vm.attackeraction = id;
             vm.newattackneighbors = neighbors; 
@@ -818,10 +739,7 @@ new Vue({
 
         // Event when attacker made a move and we need to set the attackermoved : true;
         EventListeners.$on('attackerMovedconfirmed', function(id, neighbors, time_attacker_moved){
-            //console.log('222222222   confirming attack......attacker attacked  node ' + id );
-            //console.log('attackermoved is ' + vm.attackermoved );
             vm.attackermoved = true;
-            //console.log('attackermoved is set to ' + vm.attackermoved );
             vm.attackeraction = id;
             vm.newattackneighbors = neighbors; 
             vm.gamehistory.time_attacker_moved = time_attacker_moved;
@@ -836,11 +754,8 @@ new Vue({
         //event listener when both defender and atatcker completed their moves
         // handler for bothmoved
         EventListeners.$on('movemade', function(attackeraction){
-            console.log('%%%%%%%%% attackeraction '+ attackeraction);
-            //console.log('Timer is '+ vm.timer);
             vm.msgtoplayer = 'wait...';
             vm.timer = 0;
-            //console.log('Timer is reset to '+ vm.timer);
             //TODO disable every button click or disable the whole div :D
             //$("#app2").addClass("disable");
             // save the data to the server
@@ -850,22 +765,9 @@ new Vue({
             EventListeners.$emit('change-to-attacked', vm.attackeraction);
             // update the attack sets
             var foundinattackset = vm.updateAttackSets();
-            //console.log('foundinattackset '+ foundinattackset);
 
-            
             // we need to dispatch event to collect points
             EventListeners.$emit('collectpoints');
-            
-            //console.log('after collecting points ************** numberofround '+ vm.numberofround + ' timer '+ vm.timer);
-            console.log(' $$$$$$$ Current attack set ');
-            for (var i = 0; i < vm.currentattackset.length ; i++){
-                console.log(vm.currentattackset[i] + ' ');
-            }
-
-            console.log(' $$$$$$$ possible attack set ');
-            for (var i = 0; i < vm.possibleattackset.length ; i++){
-                console.log(vm.possibleattackset[i]);
-            }
             
             while (vm.currentattackset.length > 0) {
                 vm.currentattackset.pop();
@@ -873,9 +775,6 @@ new Vue({
 
             //save to database
             vm.saveToDataBase();
-
-            // reset gamehisotry variables
-            // Is it necessary???
 
             vm.attacker_tentative_move = '';
             vm.gamehistory.triggered_honeypot = 0;
@@ -890,12 +789,12 @@ new Vue({
                 vm.numberofround = Math.min(vm.numberofround + 1, vm.attackAttemptsBase);
                 vm.attackAttempts -= 1;
             }
-            //console.log('after collecting points ************** numberofround '+ vm.numberofround + ' timer '+ vm.timer);
             vm.attackeraction = '';
             vm.defenderaction = '';
             vm.msgtoplayer = 'make a move before timer goes down to 0';
 
             $("#nodebuttons").removeClass("disable");
+            EventListeners.$emit('enable-pass-button');
             $("#confirmbutton").addClass("disable");
         });
         

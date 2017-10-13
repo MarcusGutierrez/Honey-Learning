@@ -96,9 +96,6 @@
 
             .nextbutton {
                 text-align: center;
-                position: absolute;
-                left: 495px;
-                top: 420px;
             }
             
             .passbutton {

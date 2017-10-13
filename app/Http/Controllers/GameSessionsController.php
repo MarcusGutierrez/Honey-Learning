@@ -11,6 +11,7 @@ class GameSessionsController extends Controller
     
     public function __construct()
     {
+        $this->middleware('preventBackHistory');
         $this->middleware('auth');
         $this->middleware('game_session')->except('create');
     }
@@ -24,17 +25,29 @@ class GameSessionsController extends Controller
     {
         //
     }
-
+    
+    private function get_defender_name($def_type){
+        if($def_type == "def1")
+            return "pure highest";
+        else if($def_type == "def2")
+            return "fixed equilibria";
+        return null;
+    }
+    
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $def_type, $network_id)
+    public function create(Request $request, $def_type)
     {
         if($request->session()->get('session_id') == null) {
+            $this->create_section("game session");
+            
             $game_session = new \honeysec\Session;
-            $game_session->defender_type = $def_type;
+            $game_session->session_start = current_time();
+            $game_session->defender_type = $this->get_defender_name($def_type);
+            $game_session->round_amount = 50;
             $game_session->user_id = $request->session()->get('user_id', null);
             //$game_session->session_start = date('Y/m/d h:i:s', time());
             if($game_session->save()){ //game session started
@@ -51,16 +64,16 @@ class GameSessionsController extends Controller
 
                 //$round_hash = str_replace("%","_", rawurlencode(bcrypt($request->session()->get('user_id', null))));
 
-                $request->session()->pull('pagepath', null); //empty page path
-                $request->session()->push('pagepath', "/play/defender/".$def_type."/network/".$network_id."/round/1");
-                $pagepath = $request->session()->get('pagepath', null);
+                //$request->session()->pull('pagepath', null); //empty page path
+                //$request->session()->push('pagepath', "/play/defender/".$def_type."/network/".$network_id."/round/1");
+                //$pagepath = $request->session()->get('pagepath', null);
                 //return redirect()->route('play', ['gid' => 1]);
-                return redirect("/play/defender/".$def_type."/network/".$network_id."/round/1");
+                return redirect("/play/round/1");
             }
         } else {
             $request->session()->flash('message' , 'Cannot create new session when current session is running');
             $round_number = $request->session()->get('round_number', 1);
-            return redirect("/play/defender/".$def_type."/network/".$network_id."/round/".$round_number);
+            return redirect("/play/round/".$round_number);
         }
     }
 
@@ -113,7 +126,7 @@ class GameSessionsController extends Controller
     {
         $session_id = $request->session()->get('session_id', false);
         $completed = $request->session()->get('session_completed', false);
-        $def_type = $request->session()->get('defender_type', false);
+        $def_type = $this->get_defender_name($request->session()->get('defender_type', false));
         $network_id = $request->session()->get('network_id', false);
         $round_number = $request->session()->get('round_number', false);
         
@@ -125,12 +138,38 @@ class GameSessionsController extends Controller
             $params['honeypots_total'] = \honeysec\Session::totalHoneypots($session_id);
             $params['total_passes'] = \honeysec\Session::totalPasses($session_id);
             $params['defender_type'] = $def_type;
-            $params['session_code'] = "a".substr(md5($session_id."b73"), 0, 10)."7";
+            $params['session_code'] = "a".md5($session_id."b73")."7";
+            
+            $game_session = \honeysec\Session::find($request->session()->get('session_id', null));
+            if($request->session()->get('session_completed', false) == true) {
+                $game_session->completed = 1;
+            }
+            $game_session->session_end = current_time();
+            $game_session->save();
+            
+            $request->session()->forget('session_id');
+            $request->session()->forget('session_completed');
+            $request->session()->forget('concept_completed');
+            $request->session()->forget('instruction_completed');
+            $request->session()->forget('practice_completed');
+            $request->session()->forget('consent_completed');
+            $request->session()->forget('background_completed');
+            $request->session()->forget('post_completed');
+            $request->session()->forget('triad_completed');
+            $request->session()->forget('defender_type');
+            $request->session()->forget('network_id');
+            $request->session()->forget('round_id');
+            $request->session()->forget('round_number');
+            $request->session()->forget('network_id');
+            $request->session()->forget('user_id');
+            
+            auth()->logout();
+            $request->session()->put('experiment_completed', true);
             
             return view('honey.results')->with($params);
         } else {
             $request->session()->flash('message' , 'Please complete your session before reviewing the results page');
-            return redirect("/play/defender/".$def_type."/network/".$network_id."/round/".$round_number);
+            return redirect("/play/round/".$round_number);
         }
     }
 

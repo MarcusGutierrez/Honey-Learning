@@ -2,20 +2,11 @@
 
 @section('content')
 
-<a href='{{ url("/instruction/concept") }}' style="margin-left: 440px; margin-bottom: 10px;" id="nextbutton" class="btn btn-primary">Basic Questions and answers</a>
-
 <div id="app">
     <div class="container" style="background-color: gray;">
         <div id="Carousel" class="carousel slide carousel-fade" data-ride="carousel">
   
-            <ol class="carousel-indicators ">
-                <li data-target="#Carousel" data-slide-to="0" class="active"></li>
-                <li data-target="#Carousel" data-slide-to="1" ></li>
-                <li data-target="#Carousel" data-slide-to="2" ></li>
-                <li data-target="#Carousel" data-slide-to="3" ></li>
-                <li data-target="#Carousel" data-slide-to="4" ></li>
-                <li data-target="#Carousel" data-slide-to="5" ></li>
-            </ol>
+            
 
             <div class="carousel-inner" role="listbox">
                 <div class="carousel-item item active" style="margin: 100px;" id="0">
@@ -36,14 +27,19 @@
                 <div class="carousel-item  item" style="margin: 100px;" id="5">
                     <img class="d-block img-fluid" style="width: 80%; height: 100%" src="{{URL::asset('/images/instr6.png')}}" alt="Sixth slide">
                 </div>
+                <div class="carousel-item  item" style="margin: 100px;" id="6">
+                    <div class="col-md-10 hover-slide text-center"> 
+                        <a href='{{ url("/next") }}' id="nextbutton" class="btn btn-primary">Basic Questions and answers</a>
+                    </div>
+                </div>
             </div>
   
  
-            <a class="carousel-control-prev" href="#Carousel" role="button" data-slide="prev">
+            <a class="left carousel-control-prev" href="#Carousel" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
-            <a class="carousel-control-next" href="#Carousel" role="button" data-slide="next">
+            <a class="right carousel-control-next" href="#Carousel" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
@@ -76,39 +72,35 @@
 
 <script type="text/javascript">
   
-$(document).ready(function() { 
-  $("#nextbutton").addClass("disable");
+$('.carousel').carousel({
+    interval: false,
+    wrap: false
+})
+
+$(document).ready(function () {               // on document ready
+    checkitem();
 });
-$('#Carousel').carousel({
-     interval: false
-  });
-var slides = [1, 0, 0, 0, 0, 0];
-$('#Carousel').on('slid.bs.carousel', function (e) {
-  
-  var currentItem = $(e.relatedTarget);
-  slides[parseFloat($(currentItem).attr('id'))] = 1;
-  //if($(currentItem).attr('id') === "5")
- // {
-    //$("#nextbutton").removeClass("disable");
- // }
- //// else
- // {
-    var flag = true;
-    for(var i=0; i<6; i++)
-    {
-      if(slides[i] === 0)
-      {
-        flag=false;
-        break;
-      }
+
+$('#Carousel').on('slid.bs.carousel', checkitem);
+
+function checkitem()                        // check function
+{
+    var $this = $('#Carousel');
+    if ($('.carousel-inner .item:first').hasClass('active')) {
+        // Hide left arrow
+        $this.children('.left.carousel-control-prev').hide();
+        // But show right arrow
+        $this.children('.right.carousel-control-next').show();
+    } else if ($('.carousel-inner .item:last').hasClass('active')) {
+        // Hide right arrow
+        $this.children('.right.carousel-control-next').hide();
+        // But show left arrow
+        $this.children('.left.carousel-control-prev').show();
+    } else {
+        $this.children('.carousel-control-prev').show();
+        $this.children('.carousel-control-next').show();
     }
-    if(flag==true)
-    {
-      $("#nextbutton").removeClass("disable");
-    }
- // }
-  
-});
+}
 </script>
 
   <!-- Carousel -->

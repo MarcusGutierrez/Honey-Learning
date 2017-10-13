@@ -12,6 +12,7 @@ class RoundsController extends Controller
     
     public function __construct()
     {
+        $this->middleware('preventBackHistory');
         $this->middleware('auth');
         $this->middleware('game_session')->except('practice_round', 'network_params', 'next_round');
     }
@@ -25,6 +26,12 @@ class RoundsController extends Controller
         $params = array();
         $params['atk_attempts'] = $atkAttempts;
         $params['total_value'] = $totalValue;
+        
+        
+        if(session()->get('session_id', false)){
+            $params['total_attacker_points'] = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
+        }else
+            $params['total_attacker_points'] = 0;
 
         return $params;
     }
@@ -62,11 +69,26 @@ class RoundsController extends Controller
                 //echo "Max Value:".$maxValue."<br>";
             }
             if($maxNode > -1){ //If a node was selected
-                //$honey_nodes[$maxNode]['is_honeypot'] = 1;
+                $honey_nodes[$maxNode]['is_honeypot'] = 1;
                 $hpArr[] = $maxNode;
                 $budget -= $honey_nodes[$maxNode]['defender_cost'];
             }else{
                 $budget = 0;
+            }
+        }
+        return $hpArr;
+    }
+    
+    private function oneshotEquilibria($network_id){
+        $possible_moves = \honeysec\Equilibria::where('network_id', $network_id)->get();
+        $hpArr = array();
+        $fixed = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax();
+        $cumulative = 0.0;
+        foreach($possible_moves as $move){
+            $cumulative += $move->probability;
+            if($fixed <= $cumulative){
+                $hpArr = explode("-", $move->defender_move);
+                break;
             }
         }
         return $hpArr;
@@ -77,10 +99,10 @@ class RoundsController extends Controller
         $data = null;
         switch($defender_type){
             case "def1":
-                $honey_nodes = $this->uniRand($network_id);
+                $honey_nodes = $this->highestValue($network_id);
                 break;
             case "def2":
-                $honey_nodes = $this->highestValue($network_id);
+                $honey_nodes = $this->oneshotEquilibria($network_id);
                 break;
             default:
                 $honey_nodes = array();
@@ -111,11 +133,16 @@ class RoundsController extends Controller
         return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'));
     }
     
-    public function round_create(Request $request, $defender_type, $network_id, $round_number){
+    public function round_create(Request $request, $round_number){
         $session_completed = $request->session()->get('session_completed', false);
+        $defender_type = session()->get('defender_type', null);
+        $network_id = session()->get('network_id', null);
         if($session_completed == false){
             
+            $session_id = session()->get('session_id');
+            $round_amount = \honeysec\Session::find($session_id)->round_amount;
             $correct_round = $request->session()->get('round_number');
+            
             if($correct_round == $round_number){
                 $honey_network = Honey_Network::find($network_id);
                 $honey_nodes = Honey_Node::inGameID($network_id)->get();
@@ -135,7 +162,7 @@ class RoundsController extends Controller
                 $round_id = $request->session()->get('round_id');
                 $round_number = $request->session()->get('round_number');
 
-                $is_round = \honeysec\Round::where('session_id', $session_id)->where('network_id', $network_id)->where('round_id', $round_id)->first();
+                $is_round = \honeysec\Round::where('session_id', $session_id)->get()->where('round_number', $round_number)->first();
 
                 if($is_round == null){ //Create round if it has not been created yet
                     $round = new \honeysec\Round;
@@ -146,25 +173,25 @@ class RoundsController extends Controller
                     $round->round_start = current_time();
                     $round->save();
                     
-                    $r = \honeysec\Round::where('session_id', $session_id)->where('network_id', $network_id)->where('round_number', $round_number)->first();
+                    $r = \honeysec\Round::where('session_id', $session_id)->where('round_number', $round_number)->first();
                     $round_id = $r->round_id;
                     $request->session()->put('round_id', $round_id);
                 }
 
             } else {
                 $request->session()->flash('message' , "Current round: ".$correct_round);
-                return redirect("/play/defender/".$defender_type."/network/".$network_id."/round/".$correct_round);
+                return redirect("/play/round/".$correct_round);
             }
             
             $lastround = false;
-            if($round_number == 5){
+            if($round_number == $round_amount){
                 $lastround = true;
             }
             
             $rounds = array();
             $rounds['round_number'] = $round_number;
             $rounds['lastround'] = $lastround;
-            $rounds['max_round'] = 5;
+            $rounds['max_round'] = $round_amount;
 
             //return $this->defround($request, $defender_type, $network_id);
             return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'))->with($rounds);
@@ -193,10 +220,16 @@ class RoundsController extends Controller
     }
     
     public function round_store(Request $request){
-        $round_number = $request->session()->get('round_number');
+        $session_id = session()->get('session_id');
+        $round_number = session()->get('round_number');
+        $round_amount = \honeysec\Session::find($session_id)->round_amount;
+        $round = \honeysec\Round::findWithNumber($session_id, $round_number);
+        $round->round_end = current_time();
+        $round->save();
+        
         $request->session()->forget('round_id');
         //console.log("STORE TEST: ".$round_id);
-        if($round_number == 5) { //END session
+        if($round_number == $round_amount) { //END session
             $request->session()->put('session_completed', true);
             return "completed";
         } else {
@@ -211,7 +244,7 @@ class RoundsController extends Controller
         $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
         if($is_practice == 1){
             $request->session()->put('practice_completed', true);
-            return redirect('/')->with('message', 'You may now play the real game');
+            return redirect('/next');
         }
         
         $session_completed = $request->session()->get('session_completed', false);
@@ -221,9 +254,10 @@ class RoundsController extends Controller
             $network_id = $request->session()->get('network_id');
             $round_number = $request->session()->get('round_number');
 
-            return redirect("/play/defender/".$def."/network/".$network_id."/round/".$round_number);
+            return redirect("/play/round/".$round_number);
         } else {
-            return redirect('/survey/post')->with('message', 'Please complete our post game survey');
+            $this->store_section("game session");
+            return redirect('/next')->with('message', 'Please complete our post game survey');
         }
     }
     

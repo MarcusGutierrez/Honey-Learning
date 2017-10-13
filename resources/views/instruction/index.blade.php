@@ -69,12 +69,12 @@ if($has_played){
                     disabled
                     @endif
                     ">Practice Game</button>
-            <button type="button" onclick="window.location ='{{ url("/session/create/def1/1") }}'" style="cursor:pointer;"  class="btn btn-outline-primary
+            <button type="button" onclick="window.location ='{{ url("/session/create/def1") }}'" style="cursor:pointer;"  class="btn btn-outline-primary
                     @if(Session::get('practice_completed') != true)
                     disabled
                     @endif
                     ">Play Defender 1</button>
-            <button type="button" onclick="window.location ='{{ url("/session/create/def2/1") }}'" style="cursor:pointer;"  class="btn btn-outline-primary
+            <button type="button" onclick="window.location ='{{ url("/session/create/def2") }}'" style="cursor:pointer;"  class="btn btn-outline-primary
                     @if(Session::get('practice_completed') != true)
                     disabled
                     @endif

@@ -60,6 +60,11 @@ class User extends Authenticatable
     {
         return $this->hasMany('honeysec\Answer', 'user_id');
     }
+    
+    public function sectionStamps()
+    {
+        return $this->hasMany('honeysec\Section_Stamp', 'user_id');
+    }
 
 
 }

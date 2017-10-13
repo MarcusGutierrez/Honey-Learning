@@ -94,12 +94,19 @@ class SessionsController extends Controller
         
         $request->session()->forget('session_id');
         $request->session()->forget('session_completed');
+        $request->session()->forget('concept_completed');
+        $request->session()->forget('instruction_completed');
+        $request->session()->forget('practice_completed');
+        $request->session()->forget('consent_completed');
+        $request->session()->forget('background_completed');
+        $request->session()->forget('post_completed');
+        $request->session()->forget('triad_completed');
+        $request->session()->forget('defender_type');
         $request->session()->forget('network_id');
         $request->session()->forget('round_id');
         $request->session()->forget('round_number');
-        $request->session()->forget('concept_completed');
-        $request->session()->forget('practice_completed');
-        $request->session()->forget('survey_completed');
+        $request->session()->forget('network_id');
+        $request->session()->forget('user_id');
 
         session()->flash('message' , 'You are successfully logged out');
 
