@@ -139,7 +139,7 @@ class GamesController extends Controller {
         }
         session()->put('concept_completed', true);
         session()->flash('message', 'Everything is correct. Thanks!');
-        $this->store_section("concept");
+        //$this->store_section("concept");
         return redirect('/next');
     }
 

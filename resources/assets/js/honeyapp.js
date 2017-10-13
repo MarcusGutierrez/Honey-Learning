@@ -748,6 +748,7 @@ new Vue({
             vm.attackAttempts -= 1;
             if(vm.attackAttempts == 0){
                 $("#nodebuttons").addClass("disable");
+                $("#confirmbutton").addClass("disable");
             }
         });
 
