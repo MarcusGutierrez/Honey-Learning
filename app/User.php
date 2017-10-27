@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    protected $table = 'users'; //Defines which table to use
+    protected $table = 'turk_user'; //Defines which table to use
     protected $primaryKey = 'id';
     use Notifiable;
 
@@ -17,7 +17,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_hash'
+        'turk_id',
+        'consented',
+        'completed_experiments'
     ];
 
     /**
@@ -25,7 +27,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
+    /*protected $hidden = [
          'remember_token',
     ];
 
@@ -33,12 +35,36 @@ class User extends Authenticatable
     public function setPasswordAttribute($password)
     {   
         $this->attributes['password'] = bcrypt($password);
+    }*/
+
+    public function getRememberToken(){
+      return null; // not supported
+    }
+
+    public function setRememberToken($value){
+      // not supported
+    }
+
+    public function getRememberTokenName(){
+      return null; // not supported
+    }
+
+    /**
+     * Overrides the method to ignore the remember token.
+     */
+    public function setAttribute($key, $value)
+    {
+      $isRememberTokenAttribute = $key == $this->getRememberTokenName();
+      if (!$isRememberTokenAttribute)
+      {
+        parent::setAttribute($key, $value);
+      }
     }
 
 
      public function setUseridAttribute($user_id)
     {   
-        $this->attributes['user_hash'] = bcrypt($user_id);
+        $this->attributes['turk_id'] = bcrypt($user_id);
     }
     
     public static function takenSurvey($user_id, $type)

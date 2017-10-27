@@ -1,31 +1,45 @@
 @extends('layouts.master')
 
-
-
-
-
 @section('content')
+    
+<div class="col-sm-8">
+    <h2>Welcome</h2>
+    <p style="text-align: justify; text-justify: inner-word; font-size: 1.1em;">
+        In this study you will be making repeated decisions in a cyber-security game. 
+        Every cyber-security situation involves at least two players: one that aims 
+        at attacking a network (i.e., Attacker), and another one that aims at 
+        defending a network (i.e., Defender).   In this game you will play the role 
+        of the Attacker, while the Defender is played by the computer.
+    </p>
 
-<div  id="regform"  class="col-sm-8">
+    <p style="text-align: justify; text-justify: inner-word; font-size: 1.1em;">
+        Each decision you make can result in gaining or losing points. Your goal is 
+        to earn as many points as possible by attacking “real” nodes in the 
+        network and avoiding “honeypots”. Honeypots are nodes a defender assigns to 
+        deceive an attacker. These fake nodes may look like real nodes, but they 
+        cause you to <b>lose</b> points rather than <b>gain</b> points in the game.
+    </p>
 
-    <h1>Sign In</h1>
+    <p style="text-align: justify; text-justify: inner-word; font-size: 1.1em;">
+        You make decisions for 50 rounds of the game. After completing the game, you
+        will also be asked to answer a short questionnaire. This study is expected 
+        to take 30 minutes.  You will be paid $XX for your time, but you 
+        will also be given $XX for every point accumulated in the game.  Every point 
+        counts, and thus, you need to pay attention to every decision while aiming 
+        to avoid honeypots.
+    </p>
+</div>
+
+<div  id="regform" class="col-sm-4">
+
+    <h2>Sign In</h2>
     <form method="POST" action="/signin">
 
         {{ csrf_field()}}
 
         <div class="form-group">
-            <label for="school">Elementary School</label>
-            <input type="text" class="form-control" @change="createId"  v-model="school" name="school" id="school" required>
-        </div>
-
-        <div class="form-group">
-            <label for="favpet">Favorite Pet Name</label>
-            <input type="text" class="form-control" @change="createId" v-model="favpet" name="favpet" id="favpet" required>
-        </div>
-
-        <div class="form-group">
-            <label for="age">Favorite Band</label>
-            <input type="text" class="form-control" @change="createId" v-model="age" name="age" id="age" required>
+            <label for="turk_id" style="font-size: 1.1em;">Mechanical Turk Worker ID</label>
+            <input type="text" class="form-control" @change="createId" name="turk_id" id="school" required>
         </div>
 
         <div class="form-group">
@@ -43,14 +57,6 @@
     </form>
 
 
-</div>
-
-<div class='col-sm-7'>
-    <h5 style="text-align: justify;">
-        Please fill out above to participate in our experiment.
-        <br><br>
-        <b>NOTE:</b> If you are new and see the survey is already taken or a turk code, please log out try new/unique login information.
-    </h5>
 </div>
 
 <script src="https://unpkg.com/vue" ></script>

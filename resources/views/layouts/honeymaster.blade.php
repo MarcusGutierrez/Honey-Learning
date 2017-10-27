@@ -56,28 +56,39 @@
             }
 
 
-            .attacked {
+            .attacked_honeypot {
                 background-color: red;
             }
 
-            .possible {
-                background-color: yellow;
+            .attacked_regular {
+                background-color: green;
             }
 
             .public {
-                background-color: green;
+                background-color: purple;
             }
 
             .tentative_attacked{
                 background-color: purple;
             }
             
-            .node .tentative_attacked{
+            .node .attacked_honeypot{
                 width: 105px;
                 height: 105px;
             }
             
-            .tentative_attacked .btn-circle {
+            .node .attacked_regular{
+                width: 105px;
+                height: 105px;
+            }
+            
+            .attacked_honeypot .btn-circle {
+                width: 90px;
+                height: 90px;
+                font-size: 31px;
+            }
+            
+            .attacked_regular .btn-circle {
                 width: 90px;
                 height: 90px;
                 font-size: 31px;
@@ -104,22 +115,6 @@
                 left: 600px;
                 top: 290px;
 
-            }
-
-            .startbutton {
-                text-align: center;
-                position: absolute;
-                left: 485px;
-                top: 420px;
-                background-color: white;
-
-            }
-
-            .confirmbutton {
-                text-align: center;
-                position: absolute;
-                left: 500px;
-                top: 420px;
             }
 
             .node {

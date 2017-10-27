@@ -36,12 +36,79 @@ class RoundsController extends Controller
         return $params;
     }
     
+    private function LLR_Bandit($network_id){
+        $game = Honey_Network::find($network_id);
+        $nodes = Honey_Network::find($network_id)->nodes;
+        $L = count($nodes)-1;
+        $hpArr = array();
+        $round_number = session()->get('round_number', null);
+        
+        if($round_number <= $L){ //Initialization
+            $hpArr[] = $round_number;
+            $budget = $game->def_budget - $nodes[$round_number]->defender_cost;
+            
+            $keys = array_keys(json_decode($nodes, true));
+            foreach($nodes as $key => $node){
+                if($node->is_honeypot == 1 || $node->defender_cost > $budget || $node->node_id == 0 || $node->node_id == $round_number){
+                    unset($keys[$key]);
+                }
+            }
+            
+            $keys = array_values($keys);
+            
+            while($budget > 0){
+                $rand_node = mt_rand(0, count($keys) - 1);
+                $budget -= $nodes[$keys[$rand_node]]->defender_cost;
+                $hpArr[] = $keys[$rand_node];
+                unset($keys[$rand_node]);
+                
+                foreach($keys as $k => $key_item){
+                    if($nodes[$key_item]->defender_cost > $budget)
+                        unset($keys[$k]);
+                }
+            }
+            session()->put('LLR_latest_arm', $hpArr);
+            return $hpArr;
+        }else{ //Majority of algorithm
+            $LLR_combinations = session()->get('LLR_combinations', null);
+            $LLR_values = array();
+            $LLR_L = session()->get('LLR_L', null);
+            $LLR_theta = session()->get('LLR_theta', null);
+            $LLR_m = session()->get('LLR_m', null);
+            
+            foreach($nodes as $key => $arm){
+                if($arm->defender_cost == 0)
+                    continue;
+                
+                $numerator = ($L + 1)*log($round_number);
+                $LLR_values[$key] = $LLR_theta[$key] + sqrt($numerator / $LLR_m[$key]);
+            }
+            $max_combination = array();
+            $max_value = 0;
+            foreach($LLR_combinations as $comb){
+                $llr_val = 0;
+                $comb_string = "";
+                foreach($comb as $arm){
+                    $llr_val += $LLR_values[$arm];
+                    $comb_string .= $arm."-";
+                }
+                substr($comb_string, 0, -1);
+                if($llr_val > $max_value){
+                    $max_value = $llr_val;
+                    $max_combination = $comb;
+                }
+            }
+            session()->put('LLR_latest_arm', $max_combination);
+            return $max_combination;
+        }
+    }
+    
     private function uniRand($network_id){
         $hpArr = array();
         $game = Honey_Network::find($network_id);
         $honey_nodes = Honey_Node::inGameID($network_id)->get();
         $numNodes = Honey_Node::inGameID($network_id)->get()->count();
-        $hp = rand(1, $numNodes - 1);
+        $hp = mt_rand(1, $numNodes - 1);
         //$honey_nodes[$hp]['is_honeypot'] = 1;
         //return $honey_nodes;
         $hpArr[] = $hp;
@@ -103,6 +170,9 @@ class RoundsController extends Controller
                 break;
             case "def2":
                 $honey_nodes = $this->oneshotEquilibria($network_id);
+                break;
+            case "def3":
+                $honey_nodes = $this->LLR_Bandit($network_id);
                 break;
             default:
                 $honey_nodes = array();
@@ -233,14 +303,46 @@ class RoundsController extends Controller
             $request->session()->put('session_completed', true);
             return "completed";
         } else {
+            $def = session()->get('defender_type');
+
+            if($def == 'def3'){
+                $LLR_latest_arm = session()->get('LLR_latest_arm', null);
+                
+                $LLR_m = session()->get('LLR_m', null);
+                $LLR_theta = session()->get('LLR_theta', null);
+                $LLR_rewards = session()->get('LLR_rewards', null);
+                
+                $max_value = session()->get('LLR_max_value', null);
+                $user_id = session()->get('user_id', null);
+                $session_id = session()->get('session_id', null);
+                $nodes = \honeysec\Honey_Network::find(session()->get('network_id', null))->nodes;
+                $last_round = \honeysec\Session::where('session_id', $session_id)->first()->rounds->where('round_number', $round_number)->first()->moves;
+                
+                for($i = 0; $i < count($LLR_latest_arm); $i++){
+                    $LLR_m[$LLR_latest_arm[$i]] += 1;
+                    
+                    foreach($last_round as $move){
+                        if($move->node_id == $LLR_latest_arm[$i]){
+                            $LLR_rewards[$LLR_latest_arm[$i]] += $nodes[$LLR_latest_arm[$i]]->value / $max_value;
+                            break;
+                        }
+                    }
+                    $LLR_theta[$LLR_latest_arm[$i]] = $LLR_rewards[$LLR_latest_arm[$i]]/$LLR_m[$LLR_latest_arm[$i]];
+                }
+                
+                session()->put('LLR_m', $LLR_m);
+                session()->put('LLR_rewards', $LLR_rewards);
+                session()->put('LLR_theta', $LLR_theta);
+            }
+            
             $round_number++;
-            $request->session()->put('round_number', $round_number);
+            session()->put('round_number', $round_number);
             return $round_number;
         }
     }
     
     public function next_round(Request $request){
-        $network_id = $request->session()->get('network_id', null);
+        $network_id = session()->get('network_id', null);
         $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
         if($is_practice == 1){
             $request->session()->put('practice_completed', true);
@@ -250,10 +352,10 @@ class RoundsController extends Controller
         $session_completed = $request->session()->get('session_completed', false);
         
         if($session_completed == false) {
-            $def = $request->session()->get('defender_type');
-            $network_id = $request->session()->get('network_id');
-            $round_number = $request->session()->get('round_number');
-
+            $def = session()->get('defender_type');
+            $network_id = session()->get('network_id');
+            $round_number = session()->get('round_number');
+            
             return redirect("/play/round/".$round_number);
         } else {
             $this->store_section("game session");

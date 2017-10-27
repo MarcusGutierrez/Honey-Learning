@@ -8,9 +8,9 @@
     {{ csrf_field()}}
     <!-- <img src="http://localhost/images/test.png"> -->
     
-    <div class="row" id="cardrow">
+    <div class="row" id="cardrow" style="width: 80vw; left: -10vw; position: relative;">
         <div class="col-sm-9">
-            <div class="card card-outline-primary" style="left: -10vw; width: 60vw; height: 50vh;">
+            <div class="card card-outline-primary" style="height: 50vh;">
                 <div class="card-block">
 
                     @if ( $honey_network->is_practice == 1)
@@ -21,10 +21,16 @@
 
                     <!-- <h4 class="timerclass">Timer: @{{ timer }}</h4> -->
 
-                    <a id="startbutton" class="button btn btn-primary startbutton" style="cursor:pointer"  @click="startTimer">Click to start</a>
-
-                    <button id="confirmbutton" class="button btn btn-primary confirmbutton visible" style="cursor:pointer" @click="confirmAttack">Confirm</button>
-
+                    <!-- <div style="text-align: center;">
+                        <a id="startbutton" class="button btn btn-primary" style="cursor:pointer; background-color: white; "  @click="startTimer">Click to start</a>
+                    </div>
+                    -->
+                    <!--
+                    <div style="text-align: center;">
+                        <button id="confirmbutton" class="button btn btn-primary visible" style="cursor:pointer; " @click="confirmAttack">Confirm</button>
+                    </div>
+                    -->
+                    
                     <div id="nodebuttons" class="visible">
                         
                         @foreach ($honey_nodes as $node)
@@ -53,11 +59,11 @@
         </div>
 
         <div class="col-sm-3">
-            <div class="card card-outline-primary" style="left: 6vw; width: 19vw;">
+            <div class="card card-outline-primary" style="">
                 <div class="card-block">
                     <h3>Defender Budget: {{ $honey_network->def_budget }}</h3>
                     <h3 v-if="attackAttemptsBase != 1">Round: @{{ numberofround }} / @{{ attackAttemptsBase }}</h3>
-                    <h3>Current Points: @{{ attackerpoints }}</h3>
+                    <!--<h3>Current Points: @{{ attackerpoints }}</h3>-->
                     <h3>Total Points: @{{ totalattackerpoints }}</h3>
                     <h3>Time Remaining: @{{ timer }}</h3>
                     
@@ -74,8 +80,8 @@
                     </div>
                     
                     <br>
-                    <h3>Game History</h3>
-                    <div class="card card-outline-primary" style="left: -0.5vw; top: 0.5vw; width: 18vw;">
+                    <h3>Game Log</h3>
+                    <div class="card card-outline-primary" style="">
                         <h5><gamelog v-for="item in gamelog" :nid="item[0]" :val="item[1]" :atkcost="item[2]" :ishp="item[3]" :round="item[4]"></gamelog></h5>
                     </div>
                     

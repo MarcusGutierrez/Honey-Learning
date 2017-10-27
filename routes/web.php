@@ -13,7 +13,7 @@ Route::get('/home', 'GamesController@index')->name('home');
 
 Route::get('/next', 'GamesController@next')->name('next');
 
-Route::get('/instruction', 'GamesController@showinstruction');
+Route::get('/instruction', 'InstructionsController@instruction');
 
 Route::get('/instruction/test', 'InstructionsController@show'); ////TESTING
 

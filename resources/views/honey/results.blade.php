@@ -7,7 +7,6 @@
         
         
         <h1>Games Results</h1>
-        <h4>Defender: {{ $defender_type }}</h4>
         <h4>Total Points: {{ $total_points }}</h4>
         <h4>Triggered Honeypots: {{ $honeypots_triggered }}</h4>
         <h4>Number of Passes: {{ $total_passes }}</h4>

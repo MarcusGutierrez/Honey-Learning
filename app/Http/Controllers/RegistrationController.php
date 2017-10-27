@@ -32,30 +32,17 @@ class RegistrationController extends Controller
     {
     	//validate the user
     	$this->validate(request(), [
-    		'school' => 'required',
-    		'favpet' => 'required',
-    		'age' => 'required',
-    		]);
+    		'turk_id' => 'required',
+    		]);        
+        $input_id = strtolower(request('turk_id'));
+        $user = User::where('turk_id', $input_id)->first();
 
-        $users = User::all();
-        $matched = false;
-        
-        $input_id = strtolower(request('user_id'));
-
-        foreach ($users as $user) 
-        {
-            if(Hash::check($input_id, $user->user_hash))
-            {
-                $matched = true;
-                break;
-            }
-        }
-
-        if($matched==false)
-        {
+        if($user === null){
             // create the user and save
             $input_arr = array();
-            $input_arr['user_hash'] = bcrypt($input_id);
+            $input_arr['turk_id'] = $input_id;
+            $input_arr['consented'] = 0;
+            $input_arr['completed_experiments'] = 0;
             $user = User::create($input_arr);
         }
         
@@ -77,10 +64,15 @@ class RegistrationController extends Controller
         session()->flash('message' , 'Thanks for logging in');
         
         $def;
-        if(mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax() > 0.5)
+        $rand_val = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax();
+        if($rand_val <= 1.0/3.0)
+            $def = 'def1';
+        else if($rand_val <= 2.0/3.0)
             $def = 'def2';
         else
-            $def = 'def1';
+            $def = 'def3';
+        
+        $def3 = 'def3';
         
         $page_path = [];
         $page_path[] = "/consent";

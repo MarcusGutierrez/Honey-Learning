@@ -83,7 +83,7 @@ class GamesController extends Controller {
     }
 
     public function concept(Request $request) {
-        //$this->store_section("instruction");
+        $this->store_section("instruction");
         //session()->put('instruction_completed', true);
         
         //$this->create_section("concept");
@@ -144,25 +144,7 @@ class GamesController extends Controller {
     }
 
     public function showinstruction() {
-
-        // store the form data
-        //dd(request()->all());
-
-
-        /* $game = new \honeysec\Game;
-
-          $game->gameid = 1;
-          $game->userid = 1;
-          $game->action = request('action');
-          $game->time = 0;
-
-
-          $game->save(); */
-
-        //dd("hello");
-
         $this->create_section("instruction");
-        
         return view('instruction.slideshow');
     }
 
@@ -171,43 +153,10 @@ class GamesController extends Controller {
 
         return view('instruction.index');
     }
-
-    public function startgame($id) {
-
-
-        JavaScript::put([
-            'user_id' => session('user_id', '')
-        ]);
-
-
-
-
-        if ($id == 1) {
-            //return view('honey.hone', compact('id'));
-            return view('games.one', compact('id'));
-        } else if ($id == 2) {
-            return view('games.two', compact('id'));
-        } else {
-            return view('games.three', compact('id'));
-        }
-    }
-
-    public function startHoneyGame($id) {
-        JavaScript::put(['user_id' => session('user_id', '')]);
-
-        if ($id == 1) {
-            //return view('honey.hone', compact('id'));
-            return view('honey.honey_one', compact('id'));
-        } else if ($id == 2) {
-            return view('honey.honey_two', compact('id'));
-        } else {
-            return view('honey.honey_three', compact('id'));
-        }
-    }
     
     
     public function next(){ //pops the page path
-        $page_path = session()->pull('page_path', null);
+        $page_path = session()->get('page_path', null);
         $next_page = array_shift($page_path);
         session()->put('page_path', $page_path);
         

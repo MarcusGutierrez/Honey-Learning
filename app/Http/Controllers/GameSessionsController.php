@@ -31,6 +31,8 @@ class GameSessionsController extends Controller
             return "pure highest";
         else if($def_type == "def2")
             return "fixed equilibria";
+        else if($def_type == "def3")
+            return "LLR Bandit";
         return null;
     }
     
@@ -61,7 +63,58 @@ class GameSessionsController extends Controller
                 $network_id = $networks[mt_rand(0, count($networks) - 1)]->network_id;
                 
                 $request->session()->put('network_id', $network_id);
-
+                
+                if($def_type == 'def3'){
+                    $nodes = \honeysec\Honey_Network::find($network_id)->nodes;
+                    $N = count($nodes);
+                    $LLR_max_value = \honeysec\Honey_Network::find($network_id)->nodes->where('node_id', '!=', 0)->max('value'); //bounds LLR to rewards [0, 1.0]
+                    $LLR_rewards = array();
+                    $LLR_theta = array();
+                    $LLR_m = array();
+                    for($i = 0; $i < $N; $i++){
+                        $LLR_theta[] = 0;
+                        $LLR_m[] = 0;
+                        $LLR_rewards[] = 0;
+                    }
+                    
+                    $LLR_combinations = array();
+                    $budget = \honeysec\Honey_Network::find($network_id)->def_budget;
+                    
+                    $LLR_combinations = $this->powerSet(array(1, 2, 3, 4, 5));
+                    foreach($LLR_combinations as $key => $comb){
+                        if(count($comb) == 0){
+                            unset($LLR_combinations[$key]);
+                            continue;
+                        }
+                        
+                        $b = $budget;
+                        foreach($comb as $item){
+                            $b -= $nodes[$item]->defender_cost;
+                            
+                            if($b < 0){
+                                unset($LLR_combinations[$key]);
+                                break;
+                            }
+                        }
+                        
+                        if($b > 0){
+                            for($i = 1; $i < count($nodes); $i++){
+                                if(in_array($i, $comb) != 1 && ($b - $nodes[$i]->defender_cost) >= 0)
+                                    unset($LLR_combinations[$key]);
+                            }
+                            //echo in_array($i, $comb);
+                        }
+                    }
+                    
+                    session()->put('LLR_combinations', $LLR_combinations);
+                    session()->put('LLR_rewards', $LLR_rewards);
+                    session()->put('LLR_theta', $LLR_theta);
+                    session()->put('LLR_m', $LLR_m);
+                    session()->put('LLR_max_value', $LLR_max_value);
+                    
+                }
+                
+                //dd($LLR_combinations);
                 //$round_hash = str_replace("%","_", rawurlencode(bcrypt($request->session()->get('user_id', null))));
 
                 //$request->session()->pull('pagepath', null); //empty page path
@@ -75,6 +128,19 @@ class GameSessionsController extends Controller
             $round_number = $request->session()->get('round_number', 1);
             return redirect("/play/round/".$round_number);
         }
+    }
+    
+    private function powerSet($array) {
+        // add the empty set
+        $results = array(array());
+
+        foreach ($array as $element) {
+            foreach ($results as $combination) {
+                $results[] = array_merge(array($element), $combination);
+            }
+        }
+
+        return $results;
     }
 
     /**

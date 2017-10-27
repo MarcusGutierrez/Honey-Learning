@@ -12,6 +12,11 @@ class InstructionsController extends Controller
         $this->middleware('auth');
     }
     
+    public function instruction(){
+        $this->create_section("instruction");
+        return view('instruction.instruction');
+    }
+    
     public function consent(Request $request){
         $this->create_section("consent");
         return view('instruction.consent');
@@ -34,8 +39,8 @@ class InstructionsController extends Controller
     }
     
     public function ineligible(Request $request){
-        $this->create_section("consent");
-        $this->store_section("ineligible");
+        //$this->create_section("consent");
+        $this->store_section("consent");
         return view('instruction.ineligible');
     }
     
