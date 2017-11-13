@@ -39,6 +39,7 @@ else{
   
     <div class="card-footer text-muted">
         <h2>Honey Intrusion</h2>
+        <!-- 
         <div style="padding-bottom: 20px;" class="container">
             <h4>Completion</h4>
             <div class="progress">
@@ -47,5 +48,6 @@ else{
                 </div>
             </div>
         </div>
+        -->
     </div>
 </div>

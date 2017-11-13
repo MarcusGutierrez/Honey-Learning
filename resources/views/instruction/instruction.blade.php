@@ -51,7 +51,10 @@
                 After each Attack decision you make, you will receive 
                 <b>feedback</b> regarding your outcome. The figures below show 
                 the case of a successful attack (upper figure) and the case of 
-                unsuccessful attack (lower figure). In the example below, if the 
+                unsuccessful attack (lower figure). 
+                <br>
+                <br>
+                In the example below, if the 
                 node you decided to attack was a 
                 <span style="color: green;"><b>real node</b></span>, you earned 
                 20 points, denoted in 
@@ -62,8 +65,6 @@
                 Therefore, when making the decision which node to attack, you 
                 should consider the value.
             </p>
-            
-            <br>
             
             <p class="card-text" style="font-size: 1.2em;"><u>Feedback after <span style="color: green;"><b>successful</b></span> attack decision</u></p>
             <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction2.png')}}">

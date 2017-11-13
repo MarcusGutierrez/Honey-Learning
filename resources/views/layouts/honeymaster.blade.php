@@ -13,22 +13,22 @@
             }
             
             .btn-circle {
-                width: 85px;
-                height: 85px;
+                width: 10vmin;
+                height: 10vmin;
                 text-align: center;
                 padding: 0px 0;
-                font-size: 28px;
-                line-height: 2.35;
+                font-size: 4vmin;
+                line-height: 50%;
                 border-radius: 50px;
             }
             
             .btn-circle-key {
-                width: 75px;
-                height: 75px;
+                width: 9.8vmin;
+                height: 9.8vmin;
                 text-align: center;
                 padding: 0px 0;
-                font-size: 23px;
-                line-height: 2.35;
+                font-size: 4vmin;
+                line-height: 0.9;
                 border-radius: 50px;
             }
             
@@ -73,25 +73,27 @@
             }
             
             .node .attacked_honeypot{
-                width: 105px;
-                height: 105px;
+                width: 12vmin;
+                height: 12vmin;
             }
             
             .node .attacked_regular{
-                width: 105px;
-                height: 105px;
+                width: 12vmin;
+                height: 12vmin;
             }
             
             .attacked_honeypot .btn-circle {
-                width: 90px;
-                height: 90px;
-                font-size: 31px;
+                width: 10.6vmin;
+                height: 10.6vmin;
+                line-height: 0.9;
+                font-size: 4.2vmin;
             }
             
             .attacked_regular .btn-circle {
-                width: 90px;
-                height: 90px;
-                font-size: 31px;
+                width: 10.6vmin;
+                height: 10.6vmin;
+                line-height: 0.9;
+                font-size: 4.2vmin;
             }
 
             .buton {
@@ -118,8 +120,8 @@
             }
 
             .node {
-                height: 100px;
-                width: 100px;
+                height: 11.5vmin;
+                width: 11.5vmin;
             }
 
             .timerclass {

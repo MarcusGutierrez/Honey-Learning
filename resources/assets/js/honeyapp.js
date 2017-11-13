@@ -25,10 +25,10 @@ Vue.component('gamelog',{
         template :
                 `
                 <div v-if="ishp == 0 && val > 0">
-                    <font color="green"><b>Successful</b></font> attack on node {{ nid }} (<font color="green"><b>+{{ val - atkcost }}</b></font>)
+                    <font color="green"><b>Successful</b></font> attack (<font color="green"><b>+{{ val - atkcost }}</b></font>)
                 </div>
                 <div v-else-if="ishp == 1">
-                    <font color="red"><b>Failed</b></font> attack on node {{ nid }} (<font color="red"><b>-{{ atkcost }}</b></font>)
+                    <font color="red"><b>Failed</b></font> attack {{ nid }} (<font color="red"><b>-{{ atkcost }}</b></font>)
                 </div>
                 <div v-else>
                     <font color="blue"><b>Passed</b></font> turn
@@ -48,8 +48,8 @@ Vue.component('node',{
 	template: 
             `<div class="node">
                 <button @click="tentativeattack" class="btn btn-circle node" v-bind:class="classobject" style="cursor:pointer">
-                    <span class="btn btn-circle normal" style="line-height:130%;">
-                        <div style="line-height:85%; font-size:22px;" v-if="id == 0">
+                    <span class="btn btn-circle normal" style="line-height:120%;">
+                        <div style="line-height:100%; font-size:3.1vh;" v-if="id == 0">
                             <font color="blue"><br>PASS</font>
                             <br><slot></slot>
                         </div>
