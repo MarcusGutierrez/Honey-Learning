@@ -258,10 +258,20 @@ class RoundsController extends Controller
                 $lastround = true;
             }
             
+            $atkAttempts = Honey_Network::find($network_id)->atk_attempts;
+            $totalValue = Honey_Node::inGameID($network_id)->valueSum();
+            
             $rounds = array();
             $rounds['round_number'] = $round_number;
             $rounds['lastround'] = $lastround;
             $rounds['max_round'] = $round_amount;
+            
+            $rounds['atk_attempts'] = $atkAttempts;
+            $rounds['total_value'] = $totalValue;
+            if(session()->get('session_id', false)){
+                $rounds['total_attacker_points'] = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
+            }else
+                $rounds['total_attacker_points'] = 0;
 
             //return $this->defround($request, $defender_type, $network_id);
             return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'))->with($rounds);

@@ -49,7 +49,7 @@ Vue.component('node',{
             `<div class="node">
                 <button @click="tentativeattack" class="btn btn-circle node" v-bind:class="classobject" style="cursor:pointer">
                     <span class="btn btn-circle normal" style="line-height:120%;">
-                        <div style="line-height:100%; font-size:3.1vh;" v-if="id == 0">
+                        <div style="line-height:100%; font-size:1.5vw;" v-if="id == 0">
                             <font color="blue"><br>PASS</font>
                             <br><slot></slot>
                         </div>
@@ -64,14 +64,16 @@ Vue.component('node',{
                                 <font color="green">+{{ baseValue - baseAtkCost }}</font>
                             </div>
                         </div>
-    
-                        
                     </span>
                 </button>
-                <div style="text-align:center; font-size:25px" v-if="id > 0">
-                    <b>{{ defCost }}</b>
-                </div>
             </div>`,
+
+    /*
+    <div style="text-align:center; font-size:25px" v-if="id > 0">
+        <b>{{ defCost }}</b>
+    </div>
+    */
+
 
 	data : function(){
             return {
@@ -396,12 +398,12 @@ new Vue({
         //Attacker params
         attackerbudget : 0,
         attackerpoints : 0,
-        totalattackerpoints: 0,
-        attackAttempts : 0,
-        attackAttemptsBase : 0,
+        totalattackerpoints: total_attacker_points,
+        attackAttempts : atk_attempts,
+        attackAttemptsBase : atk_attempts,
         attackProb : 1.0,
         
-        defenderpoints : 0,
+        defenderpoints : total_value,
         attackeraction : '',
         msgtoplayer : 'Click start',
         gamelog : [],
@@ -436,7 +438,11 @@ new Vue({
     },
     
     mounted(){
-        axios.post('/honeytotal').then( response => {
+        //this.attackAttempts = {!! json_encode($rounds->toArray()) !!}['atk_attempts'];
+        //this.attackAttemptsBase = this.attackAttempts;
+        //this.defenderpoints = {!! json_encode($rounds->toArray()) !!}['total_value'];
+        //this.totalattackerpoints = {!! json_encode($rounds->toArray()) !!}['total_attacker_points'];
+        /*axios.post('/honeytotal').then( response => {
             params = response.data;
             //this.attackerbudget = params['atk_budget'];
             this.attackAttempts = params['atk_attempts'];
@@ -448,7 +454,7 @@ new Vue({
         })
         .catch(function (error) {
             console.log(error);
-        });
+        });*/
         this.startTimer();
     },
 

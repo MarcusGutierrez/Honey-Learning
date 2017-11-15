@@ -204,7 +204,7 @@ class GameSessionsController extends Controller
             $params['honeypots_total'] = \honeysec\Session::totalHoneypots($session_id);
             $params['total_passes'] = \honeysec\Session::totalPasses($session_id);
             $params['defender_type'] = $def_type;
-            $params['session_code'] = "a".md5($session_id."b73")."7";
+            $params['session_code'] = "a".substr(md5($session_id."b73"), 0, 8)."7";
             
             $game_session = \honeysec\Session::find($request->session()->get('session_id', null));
             if($request->session()->get('session_completed', false) == true) {

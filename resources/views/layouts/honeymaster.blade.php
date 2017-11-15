@@ -13,21 +13,21 @@
             }
             
             .btn-circle {
-                width: 10vmin;
-                height: 10vmin;
+                width: 5vw;
+                height: 5vw;
                 text-align: center;
                 padding: 0px 0;
-                font-size: 4vmin;
+                font-size: 2vw;
                 line-height: 50%;
                 border-radius: 50px;
             }
             
             .btn-circle-key {
-                width: 9.8vmin;
-                height: 9.8vmin;
+                width: 5.3vw;
+                height: 5.3vw;
                 text-align: center;
                 padding: 0px 0;
-                font-size: 4vmin;
+                font-size: 2vw;
                 line-height: 0.9;
                 border-radius: 50px;
             }
@@ -38,6 +38,14 @@
                 width: 85px;
             }
 
+            
+            h3 {
+                font-size: 1.8vw;
+            }
+            
+            h5 {
+                font-size: 1.2vw;
+            }
 
             .visible {
                 visibility: hidden;
@@ -73,27 +81,29 @@
             }
             
             .node .attacked_honeypot{
-                width: 12vmin;
-                height: 12vmin;
+                width: 6vw;
+                height: 6vw;
             }
             
             .node .attacked_regular{
-                width: 12vmin;
-                height: 12vmin;
+                width: 6vw;
+                height: 6vw;
             }
             
             .attacked_honeypot .btn-circle {
-                width: 10.6vmin;
-                height: 10.6vmin;
+                width: 5.5vw;
+                height: 5.5vw;
                 line-height: 0.9;
-                font-size: 4.2vmin;
+                border-radius: 60px;
+                font-size: 110%;
             }
             
             .attacked_regular .btn-circle {
-                width: 10.6vmin;
-                height: 10.6vmin;
+                width: 5.5vw;
+                height: 5.5vw;
                 line-height: 0.9;
-                font-size: 4.2vmin;
+                border-radius: 60px;
+                font-size: 110%;
             }
 
             .buton {
@@ -102,13 +112,12 @@
                 height: 50px;
                 color: black;
             }
-            
-            .button {
-                font-size: 22px;
-            }
 
             .nextbutton {
                 text-align: center;
+                font-size: 1.5vw;
+                width: 10vw;
+                height: 3vw;
             }
             
             .passbutton {
@@ -120,8 +129,8 @@
             }
 
             .node {
-                height: 11.5vmin;
-                width: 11.5vmin;
+                height: 5.5vw;
+                width: 5.5vw;
             }
 
             .timerclass {

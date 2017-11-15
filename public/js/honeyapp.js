@@ -57525,7 +57525,13 @@ Vue.component('gamelog', {
 
 Vue.component('node', {
     props: ['id', 'val', 'hp', 'pub', 'defcost', 'atkcost', 'succ', 'disc', 'neighbors'],
-    template: '<div class="node">\n                <button @click="tentativeattack" class="btn btn-circle node" v-bind:class="classobject" style="cursor:pointer">\n                    <span class="btn btn-circle normal" style="line-height:120%;">\n                        <div style="line-height:100%; font-size:3.1vh;" v-if="id == 0">\n                            <font color="blue"><br>PASS</font>\n                            <br><slot></slot>\n                        </div>\n                        <div v-else>\n                            <div v-if="value > 0">\n                                <font color="green">+{{ valueHP }}</font><br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else-if="valueHP === \'H\'">\n                                <br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else>\n                                <font color="green">+{{ baseValue - baseAtkCost }}</font>\n                            </div>\n                        </div>\n    \n                        \n                    </span>\n                </button>\n                <div style="text-align:center; font-size:25px" v-if="id > 0">\n                    <b>{{ defCost }}</b>\n                </div>\n            </div>',
+    template: '<div class="node">\n                <button @click="tentativeattack" class="btn btn-circle node" v-bind:class="classobject" style="cursor:pointer">\n                    <span class="btn btn-circle normal" style="line-height:120%;">\n                        <div style="line-height:100%; font-size:1.5vw;" v-if="id == 0">\n                            <font color="blue"><br>PASS</font>\n                            <br><slot></slot>\n                        </div>\n                        <div v-else>\n                            <div v-if="value > 0">\n                                <font color="green">+{{ valueHP }}</font><br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else-if="valueHP === \'H\'">\n                                <br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else>\n                                <font color="green">+{{ baseValue - baseAtkCost }}</font>\n                            </div>\n                        </div>\n                    </span>\n                </button>\n            </div>',
+
+    /*
+    <div style="text-align:center; font-size:25px" v-if="id > 0">
+        <b>{{ defCost }}</b>
+    </div>
+    */
 
     data: function data() {
         return {
@@ -57836,12 +57842,12 @@ new Vue({
         //Attacker params
         attackerbudget: 0,
         attackerpoints: 0,
-        totalattackerpoints: 0,
-        attackAttempts: 0,
-        attackAttemptsBase: 0,
+        totalattackerpoints: total_attacker_points,
+        attackAttempts: atk_attempts,
+        attackAttemptsBase: atk_attempts,
         attackProb: 1.0,
 
-        defenderpoints: 0,
+        defenderpoints: total_value,
         attackeraction: '',
         msgtoplayer: 'Click start',
         gamelog: [],
@@ -57871,20 +57877,23 @@ new Vue({
     },
 
     mounted: function mounted() {
-        var _this = this;
-
-        axios.post('/honeytotal').then(function (response) {
+        //this.attackAttempts = {!! json_encode($rounds->toArray()) !!}['atk_attempts'];
+        //this.attackAttemptsBase = this.attackAttempts;
+        //this.defenderpoints = {!! json_encode($rounds->toArray()) !!}['total_value'];
+        //this.totalattackerpoints = {!! json_encode($rounds->toArray()) !!}['total_attacker_points'];
+        /*axios.post('/honeytotal').then( response => {
             params = response.data;
             //this.attackerbudget = params['atk_budget'];
-            _this.attackAttempts = params['atk_attempts'];
-            _this.attackAttemptsBase = params['atk_attempts'];
-            _this.defenderpoints = params['total_value'];
-            _this.totalattackerpoints = params['total_attacker_points'];
+            this.attackAttempts = params['atk_attempts'];
+            this.attackAttemptsBase = params['atk_attempts'];
+            this.defenderpoints = params['total_value'];
+            this.totalattackerpoints = params['total_attacker_points'];
             //this.instance = params['round_id'];
             //return this.test;
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
             console.log(error);
-        });
+        });*/
         this.startTimer();
     },
 
@@ -57910,7 +57919,7 @@ new Vue({
         },
 
         saveToDataBase: function saveToDataBase() {
-            var _this2 = this;
+            var _this = this;
 
             var vm = this;
 
@@ -57927,12 +57936,12 @@ new Vue({
                 atk_points: vm.attackerpoints,
                 honeypotted: vm.gamehistory.triggered_honeypot
             }).then(function (response) {
-                return _this2.returndata = response.data;
+                return _this.returndata = response.data;
             });
         },
 
         saveToDataBaseTentative: function saveToDataBaseTentative() {
-            var _this3 = this;
+            var _this2 = this;
 
             var vm = this;
             axios.post('/gamehistory/savetentative', {
@@ -57944,7 +57953,7 @@ new Vue({
                 //time_attacker_moved : vm.gamehistory.time_attacker_moved,
                 time_attacker_moved: Date.now()
             }).then(function (response) {
-                return _this3.returndata = response.data;
+                return _this2.returndata = response.data;
             });
         },
 

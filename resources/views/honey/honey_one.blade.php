@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div id="honeyapp">
     
     {{ csrf_field()}}
@@ -10,7 +9,7 @@
     
     <div class="row" id="cardrow" style="width: 80vw; position: relative;">
         <div class="col-sm-9">
-            <div class="card card-outline-primary" style="height: 50vh;">
+            <div class="card card-outline-primary" style="height: 25vw;">
                 <div class="card-block">
 
                     @if ( $honey_network->is_practice == 1)
@@ -93,7 +92,7 @@
                     
                     <br>
                     <h3>Game Log</h3>
-                    <div class="card card-outline-primary" style="">
+                    <div class="card card-outline-primary" style="font-size: 1.6vw;">
                         <h5><gamelog v-for="item in gamelog" :nid="item[0]" :val="item[1]" :atkcost="item[2]" :ishp="item[3]" :round="item[4]"></gamelog></h5>
                     </div>
                     
@@ -104,7 +103,11 @@
     </div>
 </div>
                             
-                            
+<script>
+        var atk_attempts = {{ $atk_attempts }};
+        var total_value = {{ $total_value }};
+        var total_attacker_points = {{ $total_attacker_points }};
+</script>
 
 <script src="{{ asset('js/honeyapp.js') }}" ></script>
 
