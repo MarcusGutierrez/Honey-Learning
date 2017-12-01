@@ -66,7 +66,7 @@ Vue.component('node',{
                         </div>
                     </span>
                 </button>
-                <div style="text-align:center; font-size:25px" v-if="id > 0">
+                <div style="text-align:center; font-size:1.3vw" v-if="id > 0">
                     <b>node {{ id }}</b>
                 </div>
             </div>`,

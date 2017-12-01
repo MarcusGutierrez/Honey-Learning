@@ -31,6 +31,12 @@ class GamesController extends Controller {
         
         if($type == 'background'){
             return view('instruction.background')->with($params);
+        }else if($type == 'post'){
+            if(session()->get('current_idx', null) == 4)
+                session()->put('current_idx', 5);
+        }else if($type == 'triad'){
+            if(session()->get('current_idx', null) == 5)
+                session()->put('current_idx', 6);
         }
         
         $questions = Question::where('type', $type)->get();
@@ -88,7 +94,9 @@ class GamesController extends Controller {
     public function concept(Request $request) {
         $this->store_section("instruction");
         //session()->put('instruction_completed', true);
-        
+        if(session()->get('current_idx', null) == 1){
+            session()->put('current_idx', 2);
+        }
         //$this->create_section("concept");
         return view('instruction.concept');
     }
@@ -142,6 +150,11 @@ class GamesController extends Controller {
         }
         session()->put('concept_completed', true);
         session()->flash('message', 'Everything is correct. Thanks!');
+        
+        if(session()->get('current_idx', null) == 2){
+            session()->put('current_idx', 3);
+        }
+        
         //$this->store_section("concept");
         return redirect('/play/practice');
     }
@@ -158,10 +171,10 @@ class GamesController extends Controller {
     }
     
     
-    public function next(){ //pops the page path
+    public function current(){ //pops the page path
         $page_path = session()->get('page_path', null);
-        $next_page = array_shift($page_path);
-        session()->put('page_path', $page_path);
+        $current_idx = session()->get('current_idx', null);
+        $next_page = $page_path[$current_idx];
         
         return redirect("$next_page");
     }

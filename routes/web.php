@@ -9,13 +9,15 @@ Auth::routes();
 
 Route::get('/', 'RegistrationController@create')->name('login');
 
-Route::get('/home', 'GamesController@index')->name('home');
+//Route::get('/home', 'GamesController@index')->name('home');
 
-Route::get('/next', 'GamesController@next')->name('next');
+//Route::get('/next', 'GamesController@next')->name('next');
+
+Route::get('/home', 'GamesController@current')->name('home');
 
 Route::get('/instruction', 'InstructionsController@instruction');
 
-Route::get('/instruction/test', 'InstructionsController@show'); ////TESTING
+//Route::get('/instruction/test', 'InstructionsController@show'); ////TESTING
 
 Route::get('/instruction/concept', 'GamesController@concept');
 
@@ -27,7 +29,7 @@ Route::post('storesurvey/{type}', 'GamesController@storesurvey');
 
 Route::post('/instruction', 'GamesController@showinstruction');
 
-Route::get('/games/{id}', 'GamesController@startgame');
+//Route::get('/games/{id}', 'GamesController@startgame');
 
 Route::post('/gamehistory/save', 'GamehistoryController@storehoneymove');
 
@@ -45,7 +47,7 @@ Route::get('/logout', 'SessionsController@destroy');
 
 Route::get('/signout', 'SessionsController@destroy');
 
-Route::get('/defender/{dtype}/{gid}', 'RoundsController@defender_move');
+//Route::get('/defender/{dtype}/{gid}', 'RoundsController@defender_move');
 
 use honeysec\Honey_Network;
 use honeysec\Honey_Node;

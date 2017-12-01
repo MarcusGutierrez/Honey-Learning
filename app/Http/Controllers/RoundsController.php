@@ -79,7 +79,15 @@ class RoundsController extends Controller
                         unset($keys[$k]);
                 }
                 
-                //dd("hi");
+                $has_more = false;
+                foreach($keys as $remaining_node){
+                    if($nodes[$remaining_node]->defender_cost <= $budget){
+                        $has_more = true;
+                        break;
+                    }
+                }
+                if($has_more == false)
+                    $budget = 0;
             }
             session()->put('LLR_latest_arm', $hpArr);
             return $hpArr;

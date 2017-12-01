@@ -77,7 +77,6 @@ class RegistrationController extends Controller
         
         $page_path = [];
         $page_path[] = "/consent";
-        //$page_path[] = "/survey/background";
         $page_path[] = "/instruction";
         $page_path[] = "/instruction/concept";
         $page_path[] = "/play/practice";
@@ -86,6 +85,7 @@ class RegistrationController extends Controller
         $page_path[] = "/survey/triad";
         $page_path[] = "/results";
         session()->put('page_path', $page_path);
+        session()->put('current_idx', 0);
         //dd(session('user_id', ''));
 
         return redirect('/consent');

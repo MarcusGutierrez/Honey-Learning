@@ -4,6 +4,8 @@ namespace honeysec\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use honeysec\User;
+
 class InstructionsController extends Controller
 {
     
@@ -30,11 +32,22 @@ class InstructionsController extends Controller
             'q3' => 'required',
         ]);
         
+        $user = User::find(session()->get('user_id', null));
+        
         if(request('q1') === 'no' || request('q2') === 'no' || request('q3') === 'no'){
             session()->put('consented', false);
+            $user->consented = false;
+            $user->save();
             return redirect('/ineligible');
         }
         session()->put('consented', true);
+        $user->consented = true;
+        $user->save();
+        
+        if(session()->get('current_idx', null) == 0){
+            session()->put('current_idx', 1);
+        }
+        
         $this->store_section("consent");
         return redirect('/instruction');
     }

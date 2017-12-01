@@ -133,6 +133,11 @@ class GameSessionsController extends Controller
                 //$request->session()->push('pagepath', "/play/defender/".$def_type."/network/".$network_id."/round/1");
                 //$pagepath = $request->session()->get('pagepath', null);
                 //return redirect()->route('play', ['gid' => 1]);
+                
+                if(session()->get('current_idx', null) == 3){
+                    session()->put('current_idx', 4);
+                }
+                
                 return redirect("/play/round/1");
             }
         } else {
@@ -243,6 +248,9 @@ class GameSessionsController extends Controller
             
             auth()->logout();
             $request->session()->put('experiment_completed', true);
+            
+            if(session()->get('current_idx', null) == 6)
+                session()->put('current_idx', 7);
             
             return view('honey.results')->with($params);
         } else {
