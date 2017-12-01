@@ -72,13 +72,16 @@ class GamesController extends Controller {
 
         $validator = $this->validate(request(), $reqQ);
         
-        if($type == 'background')
+        if($type == 'background'){
             $request->session()->put('background_completed', true);
-        else if($type == 'post')
+        } else if($type == 'post'){
             session()->put('post_completed', true);
-        else if($type == 'triad')
+            return redirect('/survey/triad');
+        }else if($type == 'triad'){
             session()->put('triad_completed', true);
-
+            return redirect('/results');
+        }
+        
         return redirect('/next');
     }
 
@@ -103,8 +106,8 @@ class GamesController extends Controller {
         $wrongques3 = '';
         $flag = true;
 
-        if (request('question_1') !== "4") {
-            $wrongques1 = $wrongques1 . 'Question 1: Wrong! Correct answer is 3, because the defender can select one 10-cost node and two 5-cost nodes.';
+        if (request('question_1') !== "3") {
+            $wrongques1 = $wrongques1 . 'Question 1: Wrong! With a budget of 25, the defender can only select 2 nodes at most';
             $flag = false;
         } else {
             $wrongques1 = $wrongques1 . 'Question 1: Correct answer.';
@@ -114,8 +117,8 @@ class GamesController extends Controller {
         // 	$wrongques1 = $wrongques1 . 'Question 1: Correct!'; 
         // }
 
-        if (request('question_2') !== "2") {
-            $wrongques2 = $wrongques2 . ' Question 2: Wrong! The bottom negative number inside the node is the amount you lose if the node is a honeypot.';
+        if (request('question_2') !== "3") {
+            $wrongques2 = $wrongques2 . ' Question 2: Wrong! The bottom/negative number inside the node is the amount you lose if the node is a honeypot.';
             $flag = false;
         } else {
             $wrongques2 = $wrongques2 . 'Question 2: Correct answer.';
@@ -140,7 +143,7 @@ class GamesController extends Controller {
         session()->put('concept_completed', true);
         session()->flash('message', 'Everything is correct. Thanks!');
         //$this->store_section("concept");
-        return redirect('/next');
+        return redirect('/play/practice');
     }
 
     public function showinstruction() {

@@ -57525,7 +57525,7 @@ Vue.component('gamelog', {
 
 Vue.component('node', {
     props: ['id', 'val', 'hp', 'pub', 'defcost', 'atkcost', 'succ', 'disc', 'neighbors'],
-    template: '<div class="node">\n                <button @click="tentativeattack" class="btn btn-circle node" v-bind:class="classobject" style="cursor:pointer">\n                    <span class="btn btn-circle normal" style="line-height:120%;">\n                        <div style="line-height:100%; font-size:1.5vw;" v-if="id == 0">\n                            <font color="blue"><br>PASS</font>\n                            <br><slot></slot>\n                        </div>\n                        <div v-else>\n                            <div v-if="value > 0">\n                                <font color="green">+{{ valueHP }}</font><br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else-if="valueHP === \'H\'">\n                                <br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else>\n                                <font color="green">+{{ baseValue - baseAtkCost }}</font>\n                            </div>\n                        </div>\n                    </span>\n                </button>\n            </div>',
+    template: '<div class="node">\n                <button @click="tentativeattack" class="btn btn-circle node" v-bind:class="classobject" style="cursor:pointer">\n                    <span class="btn btn-circle normal" style="line-height:120%;">\n                        <div style="line-height:100%; font-size:1.5vw;" v-if="id == 0">\n                            <font color="blue"><br>PASS</font>\n                            <br><slot></slot>\n                        </div>\n                        <div v-else>\n                            <div v-if="value > 0">\n                                <font color="green">+{{ valueHP }}</font><br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else-if="valueHP === \'H\'">\n                                <br><font color="red">-{{ atkCost }}</font>\n                            </div>\n                            <div v-else>\n                                <font color="green">+{{ baseValue - baseAtkCost }}</font>\n                            </div>\n                        </div>\n                    </span>\n                </button>\n                <div style="text-align:center; font-size:25px" v-if="id > 0">\n                    <b>node {{ id }}</b>\n                </div>\n            </div>',
 
     /*
     <div style="text-align:center; font-size:25px" v-if="id > 0">
@@ -57832,8 +57832,8 @@ new Vue({
         returndata: '',
         datetime: '',
 
-        TIME_LIMIT: 30,
-        timer: 30,
+        TIME_LIMIT: 10,
+        timer: 10,
         ROUND_LIMIT: 3,
         numberofround: 1,
         attackermoved: false,

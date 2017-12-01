@@ -36,7 +36,7 @@ class GameSessionsController extends Controller
         return null;
     }
     
-    /**
+    /**$request->session()->put('defender_type', $def_type); //set session ID
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -106,7 +106,19 @@ class GameSessionsController extends Controller
                         }
                     }
                     
+                    $LLR_initial_order = array();
+                    for($i = 1; $i < $N; $i++){ //array initialization
+                        $LLR_initial_order[] = $i;
+                    }
+                    for($i = 0; $i < $N - 2; $i++){ //Fisher-Yates shuffle
+                        $j = mt_rand($i, $N - 2);
+                        $tmp = $LLR_initial_order[$j];
+                        $LLR_initial_order[$j] = $LLR_initial_order[$i];
+                        $LLR_initial_order[$i] = $tmp;
+                    }
+                    
                     session()->put('LLR_combinations', $LLR_combinations);
+                    session()->put('LLR_initial_order', $LLR_initial_order);
                     session()->put('LLR_rewards', $LLR_rewards);
                     session()->put('LLR_theta', $LLR_theta);
                     session()->put('LLR_m', $LLR_m);

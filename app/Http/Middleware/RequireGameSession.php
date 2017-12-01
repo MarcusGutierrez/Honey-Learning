@@ -15,7 +15,7 @@ class RequireGameSession
      */
     public function handle($request, Closure $next)
     {
-        $user_id = $request->session()->get('user_id', null);;
+        $user_id = $request->session()->get('user_id', null);
         $session_id = $request->session()->get('session_id', null);
         if($user_id == null || $session_id == null){
             $request->session()->flash('message', 'A game session must be initiated to perform this action');

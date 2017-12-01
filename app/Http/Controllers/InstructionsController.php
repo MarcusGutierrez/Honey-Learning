@@ -10,6 +10,7 @@ class InstructionsController extends Controller
     public function __construct() {
         $this->middleware('preventBackHistory');
         $this->middleware('auth');
+        $this->middleware('consented')->only('instruction');
     }
     
     public function instruction(){
@@ -30,12 +31,12 @@ class InstructionsController extends Controller
         ]);
         
         if(request('q1') === 'no' || request('q2') === 'no' || request('q3') === 'no'){
-            session()->put('ineligible', true);
+            session()->put('consented', false);
             return redirect('/ineligible');
         }
-        session()->put('consent_completed', true);
+        session()->put('consented', true);
         $this->store_section("consent");
-        return redirect('/next');
+        return redirect('/instruction');
     }
     
     public function ineligible(Request $request){

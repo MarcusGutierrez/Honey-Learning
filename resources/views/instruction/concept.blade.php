@@ -53,34 +53,34 @@
         </fieldset>	
 
         <fieldset class="form-group row">
-            <legend class="col-form-legend col-sm-10">2. How many points will be <b>lost</b> if you attack the right most node and it were a honeypot?</legend>
+            <legend class="col-form-legend col-sm-10">2. How many points will be <b>lost</b> if you attack <b>node 4</b> and it were a honeypot?</legend>
             <div class="col-sm-10">
                 <div class="form-check">
                     <label class="form-check-label">
                         <input class="form-check-inputon 2')" type="radio" name="question_2"  value="1" 
                             {{ old('question_2') == "1" ? 'checked="checked"' : '' }}>
-                        15
+                        5
                     </label>
                 </div>
                 <div class="form-check">
                     <label class="form-check-label">
                         <input class="form-check-input" type="radio" name="question_2"  value="2"
                             {{ old('question_2') == "2" ? 'checked="checked"' : '' }}>
-                        20
+                        10
                     </label>
                 </div>
                 <div class="form-check">
                     <label class="form-check-label">
                         <input class="form-check-input" type="radio" name="question_2" value="3" 
                             {{ old('question_2') == "3" ? 'checked="checked"' : '' }}>
-                        10
+                        15
                     </label>
                 </div>
                 <div class="form-check">
                     <label class="form-check-label">
                         <input class="form-check-input" type="radio" name="question_2" value="4" 
                             {{ old('question_2') == "4" ? 'checked="checked"' : '' }}>
-                        0
+                        20
                     </label>
                 </div>
 

@@ -66,6 +66,9 @@ Vue.component('node',{
                         </div>
                     </span>
                 </button>
+                <div style="text-align:center; font-size:25px" v-if="id > 0">
+                    <b>node {{ id }}</b>
+                </div>
             </div>`,
 
     /*
@@ -388,8 +391,8 @@ new Vue({
         returndata : '',
         datetime : '',
         
-        TIME_LIMIT : 30,
-        timer : 30,
+        TIME_LIMIT : 10,
+        timer : 10,
         ROUND_LIMIT : 3,
         numberofround : 1,
         attackermoved : false,

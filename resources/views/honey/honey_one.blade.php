@@ -59,7 +59,7 @@
                     <div style="text-align: center;">
                         <button onclick="window.location='{{ url('/honey/play/nextround') }}'" style="cursor:pointer;" id="nextbutton" class="button btn btn-primary visible disable nextbutton">
                             @if ( $honey_network->is_practice == 1)
-                                Start Real Game
+                                Continue
                             @elseif ($lastround == true)
                                 Continue
                             @else
@@ -104,9 +104,9 @@
 </div>
                             
 <script>
-        var atk_attempts = {{ $atk_attempts }};
-        var total_value = {{ $total_value }};
-        var total_attacker_points = {{ $total_attacker_points }};
+    var atk_attempts = {{ $atk_attempts }};
+    var total_value = {{ $total_value }};
+    var total_attacker_points = {{ $total_attacker_points }};
 </script>
 
 <script src="{{ asset('js/honeyapp.js') }}" ></script>

@@ -13,6 +13,7 @@ class RoundsController extends Controller
     public function __construct()
     {
         $this->middleware('preventBackHistory');
+        $this->middleware('consented');
         $this->middleware('auth');
         $this->middleware('game_session')->except('practice_round', 'network_params', 'next_round');
     }
@@ -44,19 +45,30 @@ class RoundsController extends Controller
         $round_number = session()->get('round_number', null);
         
         if($round_number <= $L){ //Initialization
-            $hpArr[] = $round_number;
-            $budget = $game->def_budget - $nodes[$round_number]->defender_cost;
+            $LLR_initial_order = session()->get('LLR_initial_order', null);
+            $hpArr[] = $LLR_initial_order[$round_number-1];
+            $budget = $game->def_budget - $nodes[$LLR_initial_order[$round_number-1]]->defender_cost;
             
             $keys = array_keys(json_decode($nodes, true));
             foreach($nodes as $key => $node){
-                if($node->is_honeypot == 1 || $node->defender_cost > $budget || $node->node_id == 0 || $node->node_id == $round_number){
+                if($node->is_honeypot == 1 || $node->defender_cost > $budget || $node->node_id == 0 || $node->node_id == $hpArr[0]){
                     unset($keys[$key]);
                 }
             }
             
-            $keys = array_values($keys);
+            $has_more = false;
+            foreach($keys as $remaining_node){
+                if($nodes[$remaining_node]->defender_cost <= $budget){
+                    $has_more = true;
+                    break;
+                }
+            }
+            if($has_more == false)
+                $budget = 0;
             
             while($budget > 0){
+                $keys = array_values($keys);
+                
                 $rand_node = mt_rand(0, count($keys) - 1);
                 $budget -= $nodes[$keys[$rand_node]]->defender_cost;
                 $hpArr[] = $keys[$rand_node];
@@ -66,6 +78,8 @@ class RoundsController extends Controller
                     if($nodes[$key_item]->defender_cost > $budget)
                         unset($keys[$k]);
                 }
+                
+                //dd("hi");
             }
             session()->put('LLR_latest_arm', $hpArr);
             return $hpArr;
@@ -290,10 +304,20 @@ class RoundsController extends Controller
         $request->session()->put('network_id', $honey_network->network_id);
         $request->session()->put('round_id', 0);
         
+        $atkAttempts = Honey_Network::find($honey_network)->atk_attempts;
+        $totalValue = Honey_Node::inGameID($honey_network)->valueSum();
+        
         $rounds = array();
         $rounds['round_number'] = 1;
         $rounds['lastround'] = true;
         $rounds['max_round'] = 1;
+        
+        $rounds['atk_attempts'] = $atkAttempts;
+        $rounds['total_value'] = $totalValue;
+        if(session()->get('session_id', false)){
+            $rounds['total_attacker_points'] = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
+        }else
+            $rounds['total_attacker_points'] = 0;
 
         //return $this->defround($request, $defender_type, $network_id);
         return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'))->with($rounds);
@@ -355,8 +379,9 @@ class RoundsController extends Controller
         $network_id = session()->get('network_id', null);
         $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
         if($is_practice == 1){
-            $request->session()->put('practice_completed', true);
-            return redirect('/next');
+            $def = session()->get('defender_type', 'def3');
+            session()->put('practice_completed', true);
+            return redirect('/session/create/def3');
         }
         
         $session_completed = $request->session()->get('session_completed', false);
@@ -369,7 +394,7 @@ class RoundsController extends Controller
             return redirect("/play/round/".$round_number);
         } else {
             $this->store_section("game session");
-            return redirect('/next')->with('message', 'Please complete our post game survey');
+            return redirect('/survey/post')->with('message', 'Please complete our post game survey');
         }
     }
     

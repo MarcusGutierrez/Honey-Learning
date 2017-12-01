@@ -57,6 +57,7 @@ class Kernel extends HttpKernel
         'guest' => \honeysec\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'game_session' => \honeysec\Http\Middleware\RequireGameSession::class,
+        'consented' => \honeysec\Http\Middleware\RequireConsent::class,
         'preventBackHistory' => \honeysec\Http\Middleware\PreventBackHistory::class,
     ];
 }
