@@ -4,6 +4,8 @@ namespace honeysec\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use honeysec\User;
+
 class GameSessionsController extends Controller
 {
     
@@ -230,21 +232,39 @@ class GameSessionsController extends Controller
             $game_session->session_end = current_time();
             $game_session->save();
             
-            $request->session()->forget('session_id');
-            $request->session()->forget('session_completed');
-            $request->session()->forget('concept_completed');
-            $request->session()->forget('instruction_completed');
-            $request->session()->forget('practice_completed');
-            $request->session()->forget('consent_completed');
-            $request->session()->forget('background_completed');
-            $request->session()->forget('post_completed');
-            $request->session()->forget('triad_completed');
-            $request->session()->forget('defender_type');
-            $request->session()->forget('network_id');
-            $request->session()->forget('round_id');
-            $request->session()->forget('round_number');
-            $request->session()->forget('network_id');
-            $request->session()->forget('user_id');
+            $user = User::find(session()->get('user_id'), null);
+            $user->completed_experiments = $user->completed_experiments + 1;
+            $user->save();
+            
+            session()->forget('session_id');
+            session()->forget('network_id');
+            session()->forget('round_id');
+            session()->forget('network_id');
+            session()->forget('user_id');
+            
+            session()->forget('session_completed');
+            session()->forget('concept_completed');
+            session()->forget('instruction_completed');
+            session()->forget('practice_completed');
+            session()->forget('consent_completed');
+            session()->forget('background_completed');
+            session()->forget('post_completed');
+            session()->forget('triad_completed');
+            
+            session()->forget('consented');
+            session()->forget('defender_type');
+            session()->forget('round_number');
+            
+            session()->forget('page_path');
+            //session()->forget('current_idx');
+            
+            session()->forget('LLR_combinations');
+            session()->forget('LLR_initial_order');
+            session()->forget('LLR_rewards');
+            session()->forget('LLR_theta');
+            session()->forget('LLR_m');
+            session()->forget('LLR_max_value');
+            
             
             auth()->logout();
             $request->session()->put('experiment_completed', true);

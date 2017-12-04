@@ -55,6 +55,10 @@ use honeysec\Honey_History;
 use honeysec\Honey_Tentative;
 use Illuminate\Http\Request;
 
+Route::get('/pregame', 'InstructionsController@pregame');
+
+Route::post('/pregame', 'InstructionsController@store_pregame');
+
 Route::get('/sessions/create', 'GameSessionsController@create');
 
 Route::post('/honeytotal', 'RoundsController@network_params');

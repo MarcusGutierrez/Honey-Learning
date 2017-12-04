@@ -11,7 +11,7 @@
         </div>
         <div class="card-block">
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
-                The figure below shows one round of the game. Each circle denotes 
+                <b>Figure 1</b> below shows one round of the game. Each circle denotes 
                 a node in the network. In each round of this game, you decide
                 where to attack a real node in the network or to 
                 “<span style="color: blue;"><b>pass</b></span>”
@@ -19,8 +19,8 @@
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
                 Attacking a <span style="color: green;"><b>real</b></span> node earns you points,
-                shown in  <span style="color: green;"><b>green</b></span> in the 
-                figure below. These points reflect how <b>valuable</b> is the 
+                shown in  <span style="color: green;"><b>green</b></span> in 
+                <b>Figure 1</b>. These points reflect how <b>valuable</b> is the 
                 information in the node. The more  points, the more potentially 
                 valuable it is.
             </p>
@@ -39,6 +39,17 @@
                 you will not attack any node in this round. Although this is a
                 safe option, <span style="color: blue;"><b>passing</b></span> 
                 will not earn you any points.
+            </p>
+            
+            <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
+                You will have a limited time to make each decision; the amount 
+                of time remaining (in seconds) is presented in the 
+                “Time Remaining:” on the right hand side of the interface.  
+                For example, in this case seen in <b>Figure 1</b>, you have 
+                <b>7 seconds</b> to make your decision.  If you don’t make a 
+                decision within the allocated time, we will assume that your 
+                decision is "<span style="color: blue;"><b>Pass</b></span>", 
+                and will be given 0 points for that round.
             </p>
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
@@ -63,14 +74,14 @@
             <br>
             
             <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction1.png')}}">
-            
+            <span style="text-align: center"><p class="card-text" style="font-size: 1.2em; "><u><b>Figure 1.  </b>Game Interface</u></p></span>
             <br>
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
                 After each Attack decision you make, you will receive 
                 <b>feedback</b> regarding your outcome. The figures below show 
-                the case of a successful attack (upper figure) and the case of 
-                unsuccessful attack (lower figure). 
+                the case of a successful attack (<b>Figure 2</b>) and the case of 
+                unsuccessful attack (<b>Figure 3</b>). 
                 <br>
                 <br>
                 In the example below, if the 
@@ -85,14 +96,13 @@
                 should consider the value.
             </p>
             
-            <p class="card-text" style="font-size: 1.2em;"><u>Feedback after <span style="color: green;"><b>successful</b></span> attack decision</u></p>
             <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction2.png')}}">
-            
+            <span style="text-align: center"><p class="card-text" style="font-size: 1.2em;"><u><b>Figure 2.  </b>Feedback after <span style="color: green;"><b>successful</b></span> attack decision</u></p></span>
             <br>
             <br>
             
-            <p class="card-text" style="font-size: 1.2em;"><u>Feedback after <span style="color: red;"><b>unsuccessful</b></span> attack decision</u></p>
             <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction3.png')}}">
+            <span style="text-align: center"><p class="card-text" style="font-size: 1.2em;"><u><b>Figure 3.  </b>Feedback after <span style="color: red;"><b>unsuccessful</b></span> attack decision</u></p></span>
             
             <br>
             

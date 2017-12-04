@@ -25,6 +25,17 @@ class InstructionsController extends Controller
         return view('instruction.consent');
     }
     
+    public function pregame(){
+        $this->create_section("pregame");
+        return view('honey.pregame');
+    }
+    
+    public function store_pregame(){
+        $this->store_section("pregame");
+        $def = session()->get('defender_type', null);
+        return redirect('/session/create/'.$def);
+    }
+    
     public function consent_store(Request $request){
         $this->validate(request(), [
             'q1' => 'required',

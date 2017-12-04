@@ -13,7 +13,7 @@
                 <div class="card-block">
 
                     @if ( $honey_network->is_practice == 1)
-                        <h3 class="card-title">Practice Game</h3>
+                        <h4 class="card-title">Practice Game: Please Make your selection by clicking on the node to Attack or “Pass”</h4>
                     @else 
                         <h3 class="card-title">Game {{ $round_number }} / {{ $max_round }}</h3>
                     @endif

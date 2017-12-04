@@ -43,6 +43,10 @@
                 font-size: 1.8vw;
             }
             
+            h4 {
+                font-size: 1.4vw;
+            }
+            
             h5 {
                 font-size: 1.2vw;
             }

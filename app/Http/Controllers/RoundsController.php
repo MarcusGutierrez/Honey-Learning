@@ -387,9 +387,8 @@ class RoundsController extends Controller
         $network_id = session()->get('network_id', null);
         $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
         if($is_practice == 1){
-            $def = session()->get('defender_type', 'def3');
             session()->put('practice_completed', true);
-            return redirect('/session/create/def3');
+            return redirect('/pregame');
         }
         
         $session_completed = $request->session()->get('session_completed', false);

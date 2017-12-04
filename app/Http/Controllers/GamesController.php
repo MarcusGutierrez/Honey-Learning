@@ -176,6 +176,9 @@ class GamesController extends Controller {
         $current_idx = session()->get('current_idx', null);
         $next_page = $page_path[$current_idx];
         
+        if($next_page == '/play/round/')
+            $next_page .= session()->get('round_number');
+        
         return redirect("$next_page");
     }
 

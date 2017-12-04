@@ -3,9 +3,8 @@
 @section('content')
     
 <div class="col-sm-8">
-    <h2>Welcome</h2>
     <p style="text-align: justify; text-justify: inner-word; font-size: 1.1em;">
-        In this study you will be making repeated decisions in a cyber-security game. 
+        In this study you will be making repeated decisions in the honey intrusion cybersecurity game. 
         Every cyber-security situation involves at least two players: one that aims 
         at attacking a network (i.e., Attacker), and another one that aims at 
         defending a network (i.e., Defender).   In this game you will play the role 
