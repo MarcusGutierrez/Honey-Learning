@@ -22,7 +22,7 @@ class UpdateStampForeign extends Migration
                     ->onDelete('cascade');
         });
         Schema::table('section_stamp', function (Blueprint $table) {
-            $table->dropForeign('section_stamp_user_id');
+            $table->dropForeign('section_stamp_user_id_foreign');
             $table->foreign('user_id')
                     ->references('id')->on('turk_user')
                     ->onDelete('cascade');
