@@ -2,12 +2,6 @@
 
 @section('content')
 
-@php
-
-    $def = session()->get('defender_type', null);
-
-@endphp
-
 <div class="col-md-10 col-md-offset-2">
 
     <div class="card">
@@ -20,11 +14,11 @@
                 attention to each decision.
             </h3>
             
-            <!-- <a href='{{ url("/session/create/$def") }}' id="nextbutton" class="btn btn-primary">Continue</a> -->
+            
             
             <br>
             
-            <form method="POST" action="/pregame/">
+            <form method="POST" action="/pregame/store">
                 {{ csrf_field()}}
                 
                 <button type="submit" class="btn btn-primary" style="cursor:pointer">Continue</button>

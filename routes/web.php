@@ -57,7 +57,7 @@ use Illuminate\Http\Request;
 
 Route::get('/pregame', 'InstructionsController@pregame');
 
-Route::post('/pregame', 'InstructionsController@store_pregame');
+Route::post('/pregame/store', 'InstructionsController@store_pregame');
 
 Route::get('/sessions/create', 'GameSessionsController@create');
 
