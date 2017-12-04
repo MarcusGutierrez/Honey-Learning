@@ -11,7 +11,7 @@
         </div>
         
         <div class="card-header">
-            <h4 class="card-title">Instructions</h4>
+            <h4 class="card-title">Survey</h4>
         </div>
         <div class="card-block">
             <p class="card-text">Please indicate how much you agree with the following questions using the scale below:</p>
