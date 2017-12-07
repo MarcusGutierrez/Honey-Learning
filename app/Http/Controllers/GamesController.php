@@ -81,9 +81,11 @@ class GamesController extends Controller {
         if($type == 'background'){
             $request->session()->put('background_completed', true);
         } else if($type == 'post'){
+            $this->store_section($type." survey");
             session()->put('post_completed', true);
             return redirect('/survey/triad');
         }else if($type == 'triad'){
+            $this->store_section($type." survey");
             session()->put('triad_completed', true);
             return redirect('/results');
         }
@@ -97,7 +99,7 @@ class GamesController extends Controller {
         if(session()->get('current_idx', null) == 1){
             session()->put('current_idx', 2);
         }
-        //$this->create_section("concept");
+        $this->create_section("concept");
         return view('instruction.concept');
     }
 
@@ -155,7 +157,7 @@ class GamesController extends Controller {
             session()->put('current_idx', 3);
         }
         
-        //$this->store_section("concept");
+        $this->store_section("concept");
         return redirect('/play/practice');
     }
 

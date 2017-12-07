@@ -65,7 +65,7 @@ class GameSessionsController extends Controller
                 $network_id = $networks[mt_rand(0, count($networks) - 1)]->network_id;
                 
                 $request->session()->put('network_id', $network_id);
-                
+
                 if($def_type == 'def3'){
                     $nodes = \honeysec\Honey_Network::find($network_id)->nodes;
                     $N = count($nodes);
@@ -73,6 +73,8 @@ class GameSessionsController extends Controller
                     $LLR_rewards = array();
                     $LLR_theta = array();
                     $LLR_m = array();
+                    $LLR_L = 0;
+                    
                     for($i = 0; $i < $N; $i++){
                         $LLR_theta[] = 0;
                         $LLR_m[] = 0;
@@ -108,6 +110,13 @@ class GameSessionsController extends Controller
                         }
                     }
                     
+                    $LLR_L = 0;
+                    foreach($LLR_combinations as $item){
+                        if(count($item) > $LLR_L){
+                            $LLR_L = count($item);
+                        }
+                    }
+                    
                     $LLR_initial_order = array();
                     for($i = 1; $i < $N; $i++){ //array initialization
                         $LLR_initial_order[] = $i;
@@ -122,6 +131,7 @@ class GameSessionsController extends Controller
                     session()->put('LLR_combinations', $LLR_combinations);
                     session()->put('LLR_initial_order', $LLR_initial_order);
                     session()->put('LLR_rewards', $LLR_rewards);
+                    session()->put('LLR_L', $LLR_L);
                     session()->put('LLR_theta', $LLR_theta);
                     session()->put('LLR_m', $LLR_m);
                     session()->put('LLR_max_value', $LLR_max_value);
