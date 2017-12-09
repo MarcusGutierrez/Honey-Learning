@@ -148,6 +148,14 @@
             
             
             
+            th, td {
+                text-align: center;
+            }
+            
+            th {
+                width: 12%;
+            }
+            
 	</style>
 </head>
 <body>

@@ -28,6 +28,7 @@ class GamesController extends Controller {
         $this->create_section($type." survey");
         
         $params['survey_type'] = $type;
+        $params['defender_type'] = session()->get('defender_type', null);
         
         if($type == 'background'){
             return view('instruction.background')->with($params);
