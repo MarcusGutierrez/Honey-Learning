@@ -150,6 +150,7 @@
             
             th, td {
                 text-align: center;
+                font-size: 18px;
             }
             
             th {

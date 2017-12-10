@@ -1,8 +1,8 @@
-<fieldset class="form-group row">
+<fieldset>
     <tr>
-        <th style="border-right: 1px solid #000; width: 40%;">
-            <legend class="col-form-legend col-sm-12"><b>{{$question->question_number}}.</b> {{ $question->body }}</legend>
-        </th>
+        <td style="border-right: 1px solid #000; width: 40%; text-align: left;">
+            <legend style="font-size: 18px;"><b>{{$question->question_number}}.</b> {{ $question->body }}</legend>
+        </td>
         <td>
             <span class="form-check form-check-inline" style="text-align: center;>
                 <label class="form-check-label">

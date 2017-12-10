@@ -52,32 +52,37 @@ class GamesController extends Controller {
         
         $user_id = $request->session()->get('user_id', null);
         $questions = Question::where('type', $type)->get();
-
-        //$taken = \honeysec\User::takenSurvey($user_id, $type);
-        $flagged = [];
-        //if ($taken == false) { //If survey has not been taken yet
-            foreach ($questions as $q) {
-                $answer = new \honeysec\Answer;
-                $answer->user_id = $user_id;
-                $answer->question_id = $q->question_id;
-                $answer->body = request("q".$q->question_number);
-                $answer->time_answered = current_time();
-                
-                if($type == 'post')
-                    $answer->session_id = session()->get('session_id');
-                
-                $answer->save();
-                
-                if(request($q->question_id) == null)
-                    $flagged[] = $q->question_id;
-            }
-            //}
-        $reqQ = [];
-        foreach($questions as $question){
-            $reqQ['q'.$question->question_number] = 'required';
+        if($type == 'post'){
+            $defender_type = session()->get('defender_type', null);
+            $questions[] = \honeysec\Question::where('type', $defender_type)->first();
         }
 
-        $validator = $this->validate(request(), $reqQ);
+        
+        $reqQ = [];
+        $errors = [];
+        foreach($questions as $question){
+            //$reqQ['q'.$question->question_number] = 'required';
+            if(request('q'.$question->question_number) == null){
+                $errors[] = "Question ".$question->question_number." required! Please answer to continue.";
+            }
+        }
+        
+        if(count($errors) > 0){
+            return redirect()->back()->withInput()->withErrors($errors);
+        }
+        
+        foreach ($questions as $q) {
+            $answer = new \honeysec\Answer;
+            $answer->user_id = $user_id;
+            $answer->question_id = $q->question_id;
+            $answer->body = request("q".$q->question_number);
+            $answer->time_answered = current_time();
+
+            if($type == 'post')
+                $answer->session_id = session()->get('session_id');
+
+            $answer->save();
+        }
         
         if($type == 'background'){
             $request->session()->put('background_completed', true);

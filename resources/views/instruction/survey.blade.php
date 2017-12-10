@@ -16,7 +16,6 @@
         <div class="card-block">
 
             <form method="POST" action="/storesurvey/{{ $survey_type }}">
-                {{ csrf_field()}}
                 
                 <table style="width: 100%; border-collapse:collapse;">
                     <tr>
@@ -83,6 +82,10 @@
                     @endif
                 
                 </table>
+                
+                {{ csrf_field()}}
+                
+                <br><br>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary" style="cursor:pointer">Submit</button>
