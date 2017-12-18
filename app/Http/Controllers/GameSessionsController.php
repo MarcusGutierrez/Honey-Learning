@@ -16,6 +16,7 @@ class GameSessionsController extends Controller
         $this->middleware('preventBackHistory');
         $this->middleware('auth');
         $this->middleware('game_session')->except('create');
+        $this->middleware('consented');
     }
     
     /**
@@ -48,6 +49,7 @@ class GameSessionsController extends Controller
         if($request->session()->get('session_id') == null) {
             $this->create_section("game session");
             
+            
             $game_session = new \honeysec\Session;
             $game_session->session_start = current_time();
             $game_session->defender_type = $this->get_defender_name($def_type);
@@ -56,10 +58,10 @@ class GameSessionsController extends Controller
             //$game_session->session_start = date('Y/m/d h:i:s', time());
             if($game_session->save()){ //game session started
                 $session_id = \honeysec\Session::latest($request->session()->get('user_id', null)); //acquire current session ID
-                $request->session()->put('session_id', $session_id); //set session ID
-                $request->session()->put('defender_type', $def_type); //set session ID
-                $request->session()->put('session_completed', false); //set session ID
-                $request->session()->put('round_number', 1);
+                session()->put('session_id', $session_id); //set session ID
+                session()->put('defender_type', $def_type); //set session defender
+                session()->put('session_completed', false); //set session completed to false
+                session()->put('round_number', 1);
                 
                 $networks = \honeysec\Honey_Network::where('is_practice', 0)->get();
                 $network_id = $networks[mt_rand(0, count($networks) - 1)]->network_id;

@@ -11,6 +11,7 @@ class GamesController extends Controller {
     public function __construct() {
         $this->middleware('preventBackHistory');
         $this->middleware('auth');
+        $this->middleware('consented');
     }
 
     public function index() {

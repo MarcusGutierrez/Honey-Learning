@@ -7,9 +7,9 @@
     {{ csrf_field()}}
     <!-- <img src="http://localhost/images/test.png"> -->
     
-    <div class="row" id="cardrow" style="width: 80vw; position: relative;">
-        <div class="col-sm-9">
-            <div class="card card-outline-primary" style="height: 25vw;">
+    <div class="row" id="cardrow">
+        <div class="col-sm-12">
+            <div class="card card-outline-primary" style="height: 30vw;">
                 <div class="card-block">
 
                     @if ( $honey_network->is_practice == 1)
@@ -45,7 +45,7 @@
                                 :pub="{{ $node->is_public }}"
                                 :succ="{{ $node->probability }}"
                                 :disc="{{ $node->discount }}"
-                                :style="{ position: 'absolute', left: {{ $node->node_id*15 + 10 }}+'%', top: '40%' }"
+                                :style="{ position: 'absolute', left: {{ $node->node_id*15 + 10 }}+'%', top: '45%' }"
                                 :neighbors="[]"
                                 :nodevalues= "[{{ $node->value }}, 5, 1]"
                                 @:applied="onCouponApplied(id)"
@@ -57,26 +57,43 @@
                     </div>
                     
                     <div style="text-align: center;">
+                        <h3><b>Defender Budget:</b> {{ $honey_network->def_budget }}</h3>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <h3>
+                            <b>Time Remaining:</b> @{{ timer }}
+                            <span v-if="timer != 1">
+                                seconds
+                            </span>
+                            <span v-else>
+                                second
+                            </span>
+                        </h3>
+                    </div>
+                    
+                    <div style="position: absolute; text-align: center; top: 80%; left: 42%;">
                         <button onclick="window.location='{{ url('/honey/play/nextround') }}'" style="cursor:pointer;" id="nextbutton" class="button btn btn-primary visible disable nextbutton">
-                            @if ( $honey_network->is_practice == 1)
-                                Continue
-                            @elseif ($lastround == true)
-                                Continue
-                            @else
-                                Next Game
-                            @endif
+                            <span style="width: 10vw; height: 3vw;">
+                                @if ( $honey_network->is_practice == 1 || $lastround == true)
+                                    Continue
+                                @else
+                                    Next Game
+                                @endif
+                            </span>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!--
+        
         <div class="col-sm-3">
             <div class="card card-outline-primary" style="">
                 <div class="card-block">
                     <h3>Defender Budget: {{ $honey_network->def_budget }}</h3>
                     <h3 v-if="attackAttemptsBase != 1">Round: @{{ numberofround }} / @{{ attackAttemptsBase }}</h3>
-                    <!--<h3>Current Points: @{{ attackerpoints }}</h3>-->
                     <h3>Total Points: 
                         <span style="color: green;" v-if="totalattackerpoints > 0">
                         @{{ totalattackerpoints }}
@@ -100,6 +117,21 @@
             </div>
         </div>
         
+        -->
+        
+    </div>
+    <div style="text-align: center;">
+        <h3>Total Points: 
+            <span style="color: green;" v-if="totalattackerpoints > 0">
+            @{{ totalattackerpoints }}
+            </span>
+            <span style="color: red;" v-if="totalattackerpoints < 0">
+            @{{ totalattackerpoints }}
+            </span>
+            <span style="color: black;" v-if="totalattackerpoints == 0">
+            @{{ totalattackerpoints }}
+            </span>
+        </h3>
     </div>
 </div>
                             

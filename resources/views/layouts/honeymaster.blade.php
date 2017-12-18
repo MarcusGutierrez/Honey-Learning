@@ -41,6 +41,7 @@
             
             h3 {
                 font-size: 1.8vw;
+                line-height: 1.8vw;
             }
             
             h4 {
@@ -118,10 +119,12 @@
             }
 
             .nextbutton {
+                line-height: 0;
                 text-align: center;
                 font-size: 1.5vw;
                 width: 10vw;
                 height: 3vw;
+                padding-left: 1.1vw;
             }
             
             .passbutton {

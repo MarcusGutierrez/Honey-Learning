@@ -15,10 +15,11 @@ class RequireConsent
      */
     public function handle($request, Closure $next)
     {
+        $path = $request->route()->uri;
         $consented = $request->session()->get('consented', null);
-        if($consented == null){
+        if($consented === null && $path !== "consent"){
             return redirect('/consent');
-        }elseif($consented == false){
+        }elseif($consented === false){
             return redirect('/ineligible');
         }else{
             return $next($request);
