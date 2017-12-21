@@ -14,7 +14,7 @@
                 <b>Figure 1</b> below shows one round of the game. Each circle denotes 
                 a node in the network. In each round of this game, you decide
                 where to attack a real node in the network or to 
-                “<span style="color: blue;"><b>pass</b></span>”
+                “<span style="color: blue;"><b>pass</b></span>”.
             </p>
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
@@ -29,7 +29,7 @@
                 However, attacking a <span style="color: red;"><b>honeypot</b></span>
                 will cause you to lose points, denoted in 
                 <span style="color: red;"><b>red</b></span>. The problem is that
-                you don't know which nodes the defender assigned as honeypots
+                you don't know which nodes the Defender assigned as honeypots
                 and which nodes are real. You will need to discover that by
                 playing this game.
             </p>

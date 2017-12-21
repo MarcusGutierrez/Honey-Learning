@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 
 use honeysec\User;
+use honeysec\Session;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -17,6 +18,7 @@ class RegistrationController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->middleware('preventBackHistory');
     }
 
 
@@ -64,7 +66,29 @@ class RegistrationController extends Controller
          */
         session()->flash('message' , 'Thanks for logging in');
         
-        $def;
+        $pure_count = Session::where('defender_type', 'pure highest')->count();
+        $fixed_count = Session::where('defender_type', 'fixed equilibria')->count();
+        $bandit_count = Session::where('defender_type', 'LLR Bandit')->count();
+        $min_count = min($pure_count, $fixed_count, $bandit_count);
+        $min_arr = array();
+        
+        if($pure_count == $min_count)
+            $min_arr[] = "def1";
+        if($fixed_count == $min_count)
+            $min_arr[] = "def2";
+        if($bandit_count == $min_count)
+            $min_arr[] = "def3";
+        
+        $rand_val = mt_rand(0, mt_getrandmax() -1) / mt_getrandmax();
+        foreach($min_arr as $idx => $item){
+            if($rand_val <= ($idx + 1)/count($min_arr)){
+                $def = $item;
+                break;
+            }
+        }
+        
+        /*
+        $def;$pure_count = Session::where('defender_type', 'pure highest')->count();
         $rand_val = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax();
         if($rand_val <= 1.0/3.0)
             $def = 'def1';
@@ -72,18 +96,23 @@ class RegistrationController extends Controller
             $def = 'def2';
         else
             $def = 'def3';
+        */
         
-        session()->put('defender_type', $def); //set session ID
+        
+        session()->put('defender_type', $def); //set session defender type
         
         $page_path = [];
-        $page_path[] = "/consent";
-        $page_path[] = "/instruction";
-        $page_path[] = "/instruction/concept";
-        $page_path[] = "/play/practice";
-        $page_path[] = "/play/round/";
-        $page_path[] = "/survey/post";
-        $page_path[] = "/survey/triad";
-        $page_path[] = "/results";
+        $page_path[] = "/consent"; //0
+        $page_path[] = "/instruction/1"; //1
+        $page_path[] = "/instruction/2"; //2
+        $page_path[] = "/instruction/3"; //3
+        $page_path[] = "/instruction/concept"; //4
+        $page_path[] = "/play/practice"; //5
+        $page_path[] = "/play/round/"; //6
+        $page_path[] = "/survey/post"; //7
+        $page_path[] = "/survey/background"; //8
+        $page_path[] = "/survey/triad"; //9
+        $page_path[] = "/results"; //10
         session()->put('page_path', $page_path);
         session()->put('current_idx', 0);
         //dd(session('user_id', ''));

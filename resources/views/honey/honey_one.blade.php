@@ -121,7 +121,8 @@
         
     </div>
     <div style="text-align: center;">
-        <h3>Total Points: 
+        <h3><b>
+            Total Points:
             <span style="color: green;" v-if="totalattackerpoints > 0">
             @{{ totalattackerpoints }}
             </span>
@@ -131,7 +132,7 @@
             <span style="color: black;" v-if="totalattackerpoints == 0">
             @{{ totalattackerpoints }}
             </span>
-        </h3>
+        </b></h3>
     </div>
 </div>
                             

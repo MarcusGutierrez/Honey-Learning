@@ -148,9 +148,6 @@ class GameSessionsController extends Controller
                 //$pagepath = $request->session()->get('pagepath', null);
                 //return redirect()->route('play', ['gid' => 1]);
                 
-                if(session()->get('current_idx', null) == 3){
-                    session()->put('current_idx', 4);
-                }
                 
                 return redirect("/play/round/1");
             }
@@ -281,8 +278,8 @@ class GameSessionsController extends Controller
             auth()->logout();
             $request->session()->put('experiment_completed', true);
             
-            if(session()->get('current_idx', null) == 6)
-                session()->put('current_idx', 7);
+            if(session()->get('current_idx', null) == 7)
+                session()->put('current_idx', 8);
             
             return view('honey.results')->with($params);
         } else {

@@ -21,47 +21,27 @@
                     <tr>
                         <th style="border-right: 1px solid #000; border-bottom: 1px solid #000;"></th>
                         <th style="border-bottom: 1px solid #000;">
-                            @if ( $survey_type == "post")
-                                never
-                            @elseif ( $survey_type == "triad")
-                                strongly disagree
-                            @endif
+                            strongly disagree
                             <br>
                             1
                         </th>
                         <th style="border-bottom: 1px solid #000;">
-                            @if ( $survey_type == "post")
-                                rarely
-                            @elseif ( $survey_type == "triad")
-                                disagree
-                            @endif
+                            disagree
                             <br>
                             2
                         </th>
                         <th style="border-bottom: 1px solid #000;">
-                            @if ( $survey_type == "post")
-                                sometimes
-                            @elseif ( $survey_type == "triad")
-                                neither agree nor disagree
-                            @endif
+                            neither agree nor disagree
                             <br>
                             3
                         </th>
                         <th style="border-bottom: 1px solid #000;">
-                            @if ( $survey_type == "post")
-                                often
-                            @elseif ( $survey_type == "triad")
-                                agree
-                            @endif
+                            agree
                             <br>
                             4
                         </th>
                         <th style="border-bottom: 1px solid #000;">
-                            @if ( $survey_type == "post")
-                                always
-                            @elseif ( $survey_type == "triad")
-                                strongly agree
-                            @endif
+                            strongly agree
                             <br>
                             5
                         </th>

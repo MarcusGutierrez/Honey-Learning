@@ -20,12 +20,39 @@ class InstructionsController extends Controller
         return view('instruction.instruction');
     }
     
+    public function instruction1(){
+        if(session()->get('current_idx', null) == 0){
+            session()->put('current_idx', 1);
+        }
+        $this->create_section("instruction 1");
+        return view('instruction.instruction1');
+    }
+    
+    public function instruction2(){
+        $this->store_section("instruction 1");
+        if(session()->get('current_idx', null) == 1){
+            session()->put('current_idx', 2);
+        }
+        $this->create_section("instruction 2");
+        return view('instruction.instruction2');
+    }
+    
+    public function instruction3(){
+        $this->store_section("instruction 2");
+        if(session()->get('current_idx', null) == 2){
+            session()->put('current_idx', 3);
+        }
+        $this->create_section("instruction 3");
+        return view('instruction.instruction3');
+    }
+    
     public function consent(Request $request){
         $this->create_section("consent");
         return view('instruction.consent');
     }
     
     public function pregame(){
+        //dd(Auth::guard(null)->check());
         $this->create_section("pregame");
         return view('honey.pregame');
     }
@@ -55,12 +82,8 @@ class InstructionsController extends Controller
         $user->consented = true;
         $user->save();
         
-        if(session()->get('current_idx', null) == 0){
-            session()->put('current_idx', 1);
-        }
-        
         $this->store_section("consent");
-        return redirect('/instruction');
+        return redirect('/instruction/1');
     }
     
     public function ineligible(Request $request){

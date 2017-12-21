@@ -9,8 +9,7 @@ use JavaScript;
 class GamesController extends Controller {
 
     public function __construct() {
-        $this->middleware('preventBackHistory');
-        $this->middleware('auth');
+        $this->middleware('auth')->except('current');
         $this->middleware('consented');
     }
 
@@ -33,16 +32,9 @@ class GamesController extends Controller {
         
         if($type == 'background'){
             return view('instruction.background')->with($params);
-        }else if($type == 'post'){
-            if(session()->get('current_idx', null) == 4)
-                session()->put('current_idx', 5);
-        }else if($type == 'triad'){
-            if(session()->get('current_idx', null) == 5)
-                session()->put('current_idx', 6);
         }
         
         $questions = Question::where('type', $type)->get();
-
         return view('instruction.survey', compact('questions'))->with($params);
     }
 
@@ -61,6 +53,12 @@ class GamesController extends Controller {
         
         $reqQ = [];
         $errors = [];
+        if($type == 'background'){
+            $age = request('q2');
+            if($age != null && ctype_digit($age) == false){
+                $errors[] = "Question 2 must be a positive whole number.";
+            }
+        }
         foreach($questions as $question){
             //$reqQ['q'.$question->question_number] = 'required';
             if(request('q'.$question->question_number) == null){
@@ -86,25 +84,33 @@ class GamesController extends Controller {
         }
         
         if($type == 'background'){
+            if(session()->get('current_idx', null) == 8)
+                session()->put('current_idx', 9);
+            $this->store_section($type." survey");
             $request->session()->put('background_completed', true);
+            return redirect('/survey/triad');
         } else if($type == 'post'){
+            if(session()->get('current_idx', null) == 7)
+                session()->put('current_idx', 8);
             $this->store_section($type." survey");
             session()->put('post_completed', true);
-            return redirect('/survey/triad');
+            return redirect('/survey/background');
         }else if($type == 'triad'){
+            if(session()->get('current_idx', null) == 9)
+                session()->put('current_idx', 10);
             $this->store_section($type." survey");
             session()->put('triad_completed', true);
             return redirect('/results');
         }
         
-        return redirect('/next');
+        return redirect('/home');
     }
 
     public function concept(Request $request) {
-        $this->store_section("instruction");
+        $this->store_section("instruction 3");
         //session()->put('instruction_completed', true);
-        if(session()->get('current_idx', null) == 1){
-            session()->put('current_idx', 2);
+        if(session()->get('current_idx', null) == 3){
+            session()->put('current_idx', 4);
         }
         $this->create_section("concept");
         return view('instruction.concept');
@@ -160,8 +166,8 @@ class GamesController extends Controller {
         session()->put('concept_completed', true);
         session()->flash('message', 'Everything is correct. Thanks!');
         
-        if(session()->get('current_idx', null) == 2){
-            session()->put('current_idx', 3);
+        if(session()->get('current_idx', null) == 4){
+            session()->put('current_idx', 5);
         }
         
         $this->store_section("concept");

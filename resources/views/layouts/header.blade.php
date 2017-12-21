@@ -1,37 +1,34 @@
-@php
+<script language="JavaScript">
+    //Prevents use of back button
+    //Found at https://gist.github.com/w33tmaricich/7009931 on 12/20/2017
+    window.onload = function () {
+    if (typeof history.pushState === "function") {
+        history.pushState("jibberish", null, null);
+        window.onpopstate = function () {
+            history.pushState('newjibberish', null, null);
+            // Handle the back (or forward) buttons here
+            // Will NOT handle refresh, use onbeforeunload for this.
+        };
+    }
 
-$completion = 0;
-$user_id = session()->get('user_id', null);
-$ineligibility = session()->get('ineligible', false);
+    else {
+        var ignoreHashChange = true;
+        window.onhashchange = function () {
+            if (!ignoreHashChange) {
+                ignoreHashChange = true;
+                window.location.hash = Math.random();
+                // Detect and redirect change here
+                // Works in older FF and IE9
+                // * it does mess with your hash symbol (anchor?) pound sign
+                // delimiter on the end of the URL
+            }
+            else {
+                ignoreHashChange = false;   
+            }
+        };
+    }
 
-if($ineligibility == true || session()->get('experiment_completed', false) == true)
-    $completion = 100;
-else{
-    $completion = 0;
-    if(session()->get('consent_completed', false))
-        $completion += 10;
-    if(session()->get('background_completed', false))
-        $completion += 0;
-    if(session()->get('instruction_completed', false))
-        $completion += 10;
-    if(session()->get('concept_completed', false))
-        $completion += 10;
-    if(session()->get('practice_completed', false))
-        $completion += 5;
-    if(session()->get('session_completed', false))
-        $completion += 50;
-    else if(session()->get('session_id', false))
-        $completion += session()->get('round_number', 0);
-    if(session()->get('post_completed', false))
-        $completion += 5;
-    if(session()->get('triad_completed', false))
-        $completion += 10;
-}
-
-@endphp
-
-<script>
-        history.go = function(){};
+}   
 </script>
 
 
@@ -39,15 +36,5 @@ else{
   
     <div class="card-footer text-muted">
         <h2>Honey Intrusion</h2>
-        <!-- 
-        <div style="padding-bottom: 20px;" class="container">
-            <h4>Completion</h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-val      uemax="100" style="width:{{ $completion }}%">
-                    <span class="sr-only">70% Complete</span>
-                </div>
-            </div>
-        </div>
-        -->
     </div>
 </div>

@@ -9,12 +9,6 @@
         <div>
             @include('layouts.errors')
         </div>
-        <div>
-            @if(count($errors))
-                <h5>If you wish to leave the unanswered questions blank, press the 'Skip Remaining Survey' button</h5>
-                <a href='{{ url("/next") }}' id="nextbutton" class="btn btn-primary" style="margin-bottom: 20px;">Skip Remaining Survey</a>
-            @endif
-         </div>
         
         <div class="card-header">
             <h4>Background Survey</h4>
@@ -26,7 +20,7 @@
                 {{ csrf_field()}}
                 
                 <fieldset class="form-group row">
-                    <legend class="col-form-legend col-sm-10">What is your gender?</legend>
+                    <legend class="col-form-legend col-sm-10">1. What is your gender?</legend>
                     <div class="col-sm-10">
                         <div class="form-check">
                             <label class="form-check-label">
@@ -53,19 +47,22 @@
                 </fieldset>
                 
                 <fieldset class="form-group row">
-                    <legend class="col-form-legend col-sm-10">What is your age?</legend>
+                    <legend class="col-form-legend col-sm-10">2. What is your age?</legend>
                     <div class="col-sm-10">
                         <input class="field" name="q2" type="text" value="{{ old('q2') }}">
                     </div>
                 </fieldset>
                 
+                <!--
                 <fieldset class="form-group row">
                     <legend class="col-form-legend col-sm-10">What country do you live in?</legend>
                     <div class="col-sm-10">
                         <input class="field" name="q3" type="text" value="{{ old('q3') }}">
                     </div>
                 </fieldset>
+                -->
                 
+                <!--
                 <fieldset class="form-group row">
                     <legend class="col-form-legend col-sm-10">What is your race/ethnicity?</legend>
                     <div class="col-sm-10">
@@ -113,7 +110,9 @@
                         </div>
                     </div>
                 </fieldset>
+                -->
                 
+                <!--
                 <fieldset class="form-group row">
                     <legend class="col-form-legend col-sm-10">What is your highest completed form of education?</legend>
                     <div class="col-sm-10">
@@ -168,7 +167,9 @@
                         </div>
                     </div>
                 </fieldset>
+                -->
                 
+                <!--
                 <fieldset class="form-group row">
                     <legend class="col-form-legend col-sm-10">What is your annual income (in U.S. Dollars)?</legend>
                     <div class="col-sm-10">
@@ -216,42 +217,43 @@
                         </div>
                     </div>
                 </fieldset>
+                -->
                 
                 <fieldset class="form-group row">
-                    <legend class="col-form-legend col-sm-10">On what type of device did you complete this survey?</legend>
+                    <legend class="col-form-legend col-sm-10">3. On what type of device did you complete this experiment on?</legend>
                     <div class="col-sm-10">
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="q7"  value="desktop computer" 
-                                    {{ old('q7') == "desktop computer" ? 'checked="checked"' : '' }}>
+                                <input class="form-check-input" type="radio" name="q3"  value="desktop computer" 
+                                    {{ old('q3') == "desktop computer" ? 'checked="checked"' : '' }}>
                                 Desktop Computer
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="q7"  value="laptop mouse"
-                                    {{ old('q7') == "laptop mouse" ? 'checked="checked"' : '' }}>
+                                <input class="form-check-input" type="radio" name="q3"  value="laptop mouse"
+                                    {{ old('q3') == "laptop mouse" ? 'checked="checked"' : '' }}>
                                 Laptop Computer with Mouse
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="q7"  value="laptop touchpad"
-                                    {{ old('q7') == "laptop touchpad" ? 'checked="checked"' : '' }}>
+                                <input class="form-check-input" type="radio" name="q3"  value="laptop touchpad"
+                                    {{ old('q3') == "laptop touchpad" ? 'checked="checked"' : '' }}>
                                 Laptop Computer with Touchpad
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="q7"  value="tablet"
-                                    {{ old('q7') == "tablet" ? 'checked="checked"' : '' }}>
+                                <input class="form-check-input" type="radio" name="q3"  value="tablet"
+                                    {{ old('q3') == "tablet" ? 'checked="checked"' : '' }}>
                                 Tablet
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="q7"  value="mobile"
-                                    {{ old('q7') == "mobile" ? 'checked="checked"' : '' }}>
+                                <input class="form-check-input" type="radio" name="q3"  value="mobile"
+                                    {{ old('q3') == "mobile" ? 'checked="checked"' : '' }}>
                                 Mobile Phone
                             </label>
                         </div>

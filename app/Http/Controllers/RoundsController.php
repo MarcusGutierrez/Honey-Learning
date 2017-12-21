@@ -387,6 +387,9 @@ class RoundsController extends Controller
         $network_id = session()->get('network_id', null);
         $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
         if($is_practice == 1){
+            if(session()->get('current_idx', null) == 5){
+                session()->put('current_idx', 6);
+            }
             session()->put('practice_completed', true);
             return redirect('/pregame');
         }
@@ -400,6 +403,9 @@ class RoundsController extends Controller
             
             return redirect("/play/round/".$round_number);
         } else {
+            if(session()->get('current_idx', null) == 6){
+                session()->put('current_idx', 7);
+            }
             $this->store_section("game session");
             return redirect('/survey/post')->with('message', 'Please complete our post game survey');
         }

@@ -17,6 +17,12 @@ Route::get('/home', 'GamesController@current')->name('home');
 
 Route::get('/instruction', 'InstructionsController@instruction');
 
+Route::get('/instruction/1', 'InstructionsController@instruction1');
+
+Route::get('/instruction/2', 'InstructionsController@instruction2');
+
+Route::get('/instruction/3', 'InstructionsController@instruction3');
+
 //Route::get('/instruction/test', 'InstructionsController@show'); ////TESTING
 
 Route::get('/instruction/concept', 'GamesController@concept');
