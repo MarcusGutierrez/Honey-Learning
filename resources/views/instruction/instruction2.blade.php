@@ -15,31 +15,31 @@
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
                 The combination of nodes that can be "turned into" 
                 <span style="color: red;"><b>honeypots</b></span> is determined
-                by the defender's <b>budget</b>.  The cost to the
-                defender is the value of the node, shown in 
+                by the Defender's <b>budget</b>.  The cost to the
+                Defender is the value of the node, shown in 
                 <span style="color: green;"><b>green</b></span>. The combined 
-                value of the honeypots cannot exceed the defender's budget.
+                value of the honeypots cannot exceed the Defender's budget.
             </p>
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
-                In this case, the defender's budget is <b>40</b>. To turn 
+                In this case, the Defender's budget is <b>40</b>. To turn 
                 nodes 1 through 5 into 
                 <span style="color: red;"><b>honeypots</b></span> would cost the 
-                defender 15, 20, 10, 20, 15 points respectively. Therefore,
+                defender 15, 20, 10, 20, and 15 points respectively. Therefore,
                 the defender <i>cannot</i> turn all the nodes into 
-                <span style="color: red;"><b>honeypots</b></span>, but only
+                <span style="color: red;"><b>honeypots</b></span> but only
                 some combination of them. In the figure below, the possible
                 combinations of <span style="color: red;"><b>honeypots</b></span>
                 are:
                 <ul>
-                    <li>Nodes 1, 3, and 5. These add up to 40 cost, which is within the defender's budget</li>
-                    <li>Nodes 1 and 2, which adds up to 35, which is below the defender's budget </li>
-                    <li>Nodes 1 and 4, which adds up to 35</li>
-                    <li>Nodes 2 and 3 add up to 30</li>
-                    <li>Nodes 2 and 4 add up to 40</li>
-                    <li>Nodes 2 and 5 add up to 35</li>
-                    <li>Nodes 3 and 4 add up to 30</li>
-                    <li>Nodes 4 and 5 add up to 35</li>
+                    <li>Nodes 1, 3, and 5. These cost 40 altogether, which is within the Defender's budget</li>
+                    <li>Nodes 1 and 2, cost 35 altogether, which is below the Defender's budget </li>
+                    <li>Nodes 1 and 4 cost 35</li>
+                    <li>Nodes 2 and 3 cost 30</li>
+                    <li>Nodes 2 and 4 cost 40</li>
+                    <li>Nodes 2 and 5 cost 35</li>
+                    <li>Nodes 3 and 4 cost 30</li>
+                    <li>Nodes 4 and 5 cost 35</li>
                 </ul>
             </p>
             

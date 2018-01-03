@@ -15,20 +15,19 @@
             <h4>How Do I Know If My Attack Was Successful?</h4>
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
                 After each attack decision you make, you will receive 
-                <b>feedback</b> regarding your outcome. The figures below show 
+                <b>feedback</b>. The figures below show 
                 the case of a successful attack (<b>Figure 2</b>) and the case 
                 of an unsuccessful attack (<b>Figure 3</b>). 
             </p>
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
-                In the example below, if you decided to attack node 1 and it was a
-                <span style="color: green;"><b>real node</b></span>, you earned 
+                In the example below, if you attacked node 1 and it was a
+                <span style="color: green;"><b>real node</b></span>, you would have earned 
                 15 points, denoted in 
-                <span style="color: green;"><b>green</b></span> (<b>Figure 1</b>). If you decided
-                to attack node 2 and it were a
-                <span style="color: red;"><b>honeypot</b></span>, you lost 15 
+                <span style="color: green;"><b>green</b></span> (<b>Figure 1</b>). If you attacked node 2 and it was a
+                <span style="color: red;"><b>honeypot</b></span>, you would have lost 15 
                 points, denoted in <span style="color: red;"><b>red</b></span> (<b>Figure 3</b>). 
-                Therefore, when making the decision which node to attack, you 
+                Therefore, when deciding which node to attack, you 
                 should consider the value.
             </p>
             

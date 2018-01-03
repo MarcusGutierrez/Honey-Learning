@@ -18,7 +18,7 @@
         {{ csrf_field()}}
 
         <fieldset class="form-group row">
-            <legend class="col-form-legend col-sm-10">1. What is the <b>maximum number</b> of nodes that the defender can turn into <b>honeypots</b> in the above scenario?</legend>
+            <legend class="col-form-legend col-sm-10">1. What is the <b>maximum number</b> of nodes that the Defender can turn into <b>honeypots</b> in the above scenario?</legend>
             <div class="col-sm-10">
                 <div class="form-check">
                     <label class="form-check-label">
@@ -53,7 +53,7 @@
         </fieldset>	
 
         <fieldset class="form-group row">
-            <legend class="col-form-legend col-sm-10">2. How many points will be <b>lost</b> if you attack <b>node 4</b> and it were a honeypot?</legend>
+            <legend class="col-form-legend col-sm-10">2. How many points will be <b>lost</b> if you attack <b>node 4</b> and it is a honeypot?</legend>
             <div class="col-sm-10">
                 <div class="form-check">
                     <label class="form-check-label">
