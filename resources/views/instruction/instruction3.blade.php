@@ -21,14 +21,13 @@
             </p>
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
-                In the example below, if the 
-                node you decided to attack was a 
+                In the example below, if you decided to attack node 1 and it was a
                 <span style="color: green;"><b>real node</b></span>, you earned 
-                20 points, denoted in 
-                <span style="color: green;"><b>green</b></span>. If the node you 
-                decided to attack was a 
-                <span style="color: red;"><b>honeypot</b></span>, you lost 10 
-                points, denoted in <span style="color: red;"><b>red</b></span>. 
+                15 points, denoted in 
+                <span style="color: green;"><b>green</b></span> (<b>Figure 1</b>). If you decided
+                to attack node 2 and it were a
+                <span style="color: red;"><b>honeypot</b></span>, you lost 15 
+                points, denoted in <span style="color: red;"><b>red</b></span> (<b>Figure 3</b>). 
                 Therefore, when making the decision which node to attack, you 
                 should consider the value.
             </p>
