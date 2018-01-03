@@ -21,10 +21,6 @@
                 value of the honeypots cannot exceed the defender's budget.
             </p>
             
-            <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction2.png')}}">
-            <span style="text-align: center"><p class="card-text" style="font-size: 1.2em;"><u><b>Figure 2.  </b>Feedback after <span style="color: green;"><b>successful</b></span> attack decision</u></p></span>
-            <br>
-            
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
                 In this case, the defender's budget is <b>40</b>. To turn 
                 nodes 1 through 5 into 
@@ -46,6 +42,12 @@
                     <li>Nodes 4 and 5 add up to 35</li>
                 </ul>
             </p>
+            
+            <br>
+            <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction1.png')}}">
+            <span style="text-align: center"><p class="card-text" style="font-size: 1.2em; "><u><b>Figure 1.  </b>Game Interface</u></p></span>
+            <br>
+            
             <a href='{{ url("/instruction/3") }}' id="nextbutton" class="btn btn-primary">Continue</a>
         </div>
     </div>

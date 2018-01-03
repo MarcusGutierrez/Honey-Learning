@@ -11,10 +11,6 @@
         </div>
         <div class="card-block">
             
-            <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction1.png')}}">
-            <span style="text-align: center"><p class="card-text" style="font-size: 1.2em; "><u><b>Figure 1.  </b>Game Interface</u></p></span>
-            <br>
-            
             <h4><ul>What Decisions Can I Make?</ul></h4>
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em;">
                 <b>Figure 1</b> below shows one round of the game. Each circle denotes 
@@ -59,6 +55,11 @@
                 decision is "<span style="color: blue;"><b>Pass</b></span>", 
                 and will be given 0 points for that round.
             </p>
+            
+            <br>
+            <img class="d-block img-fluid" style="" src="{{URL::asset('/images/instruction1.png')}}">
+            <span style="text-align: center"><p class="card-text" style="font-size: 1.2em; "><u><b>Figure 1.  </b>Game Interface</u></p></span>
+            <br>
             
             <a href='{{ url("/instruction/2") }}' id="nextbutton" class="btn btn-primary">Continue</a>
         </div>
