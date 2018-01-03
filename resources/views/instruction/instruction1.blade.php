@@ -25,7 +25,7 @@
                 shown in  <span style="color: green;"><b>green</b></span> <b>(positive number)</b> in 
                 <b>Figure 1</b>. These points reflect how <b>valuable</b> the 
                 information in the node are. The more  points, the more 
-                potentially valuable the nodes is.
+                potentially valuable the nodes are.
             </p>
             
             <p class="card-text" style="text-align: justify; text-justify: inner-word; font-size: 1.15em; padding-left: 2em;">
