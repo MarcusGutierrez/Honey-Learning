@@ -27,6 +27,8 @@ class GamehistoryController extends Controller
             $gamehistory->node_id = request('atk_target');
             $gamehistory->attacker_points = request('atk_points');
             $gamehistory->defender_points = request('def_points');
+            $gamehistory->passed = request('atk_passed');
+            $gamehistory->timed_out = request('atk_timedout');
             $gamehistory->triggered_honeypot = request('honeypotted');
             $gamehistory->move_time = format(request('time_attacker_moved'));
             //$gamehistory->move_time = 1502905735535;

@@ -57838,6 +57838,8 @@ new Vue({
         numberofround: 1,
         attackermoved: false,
         defendermoved: false,
+        attackerpassed: false,
+        attackertimedout: false,
 
         //Attacker params
         attackerbudget: 0,
@@ -57931,6 +57933,8 @@ new Vue({
                 atk_target: vm.gamehistory.attacker_action,
                 //time_defender_moved : vm.gamehistory.time_defender_moved,
                 //time_attacker_moved: vm.gamehistory.time_attacker_moved,
+                atk_passed: vm.attackerpassed,
+                atk_timedout: vm.attackertimedout,
                 time_attacker_moved: Date.now(),
                 def_points: vm.gamehistory.defender_points,
                 atk_points: vm.attackerpoints,
@@ -57987,44 +57991,43 @@ new Vue({
             //axios.post('/defender/uni/1');
 
             timer = setInterval(function () {
-                if (vm.timer == vm.TIME_LIMIT) {}
-                /*if(vm.defenderaction === ''){
-                    vm.makeDefenderMove();
-                }*/
 
+                vm.timer -= 1;
 
-                /*if(vm.timer == vm.TIME_LIMIT){
-                    EventListeners.$emit('enable-pass-button');
-                }*/
+                if (vm.timer == 0) {
+                    if (vm.attackermoved == false) {
+                        EventListeners.$emit('set_nomoveallowed', true);
+                        vm.attacker_tentative_move = 0;
+                        vm.attackeraction = 0;
+                        //EventListners.$emit(tentative);
+                        vm.gamehistory.time_attacker_moved = Date.now();
+                        vm.gamehistory.attacker_action = vm.attacker_tentative_move;
+                        vm.attackermoved = true;
+                        vm.attackerpassed = true;
+                        vm.attackertimedout = true;
 
-                if (vm.timer > 0) {
-                    vm.timer -= 1;
-                } else {
-                    vm.attacker_tentative_move = 0;
-                    vm.attackermoved == true;
-                    //EventListners.$emit(tentative)
-                    EventListeners.$emit('change-to-attacked', 0);
-                    EventListeners.$emit('attackerMovedconfirmed', vm.attacker_tentative_move, vm.newattackneighbors, vm.tentative_time_attacker_moved);
-                    EventListeners.$emit('movemade', vm.attackeraction);
-                    EventListeners.$emit('set_nomoveallowed', true);
+                        EventListeners.$emit('change-to-attacked', 0);
+                        EventListeners.$emit('attackerMovedconfirmed', vm.attacker_tentative_move, vm.newattackneighbors, vm.tentative_time_attacker_moved);
+                        EventListeners.$emit('movemade', vm.attackeraction);
+                    } else {}
                 }
 
-                if (vm.attackermoved == true || vm.attacker_tentative_move !== '' && vm.timer == 0) {
+                if (vm.attackermoved == true) {
                     // the attack is possible if it's inside possivle attack set
 
                     $("#nodebuttons").addClass("disable");
-                    if (vm.timer == 0) {
-                        vm.attackermoved = true;
-                        vm.attackeraction = 0;
+                    /*if(vm.timer==0){
+                        //vm.attackermoved = true;
+                        //vm.attackeraction = 0;
                         //vm.newattackneighbors = neighbors; 
                         vm.gamehistory.time_attacker_moved = Date.now();
                         vm.gamehistory.attacker_action = vm.attacker_tentative_move;
-                    }
+                    }*/
 
                     //vm.gamehistory.defender_action = vm.defenderaction;
                     vm.gamehistory.attacker_action = vm.attackeraction;
-                    var possibleindex = vm.isInPossibleAttackSet(vm.possibleattackset, vm.attackeraction);
-                    var attackindex = vm.isInAttackSet(vm.currentattackset, vm.attackeraction);
+                    //var possibleindex = vm.isInPossibleAttackSet(vm.possibleattackset, vm.attackeraction);
+                    //var attackindex = vm.isInAttackSet(vm.currentattackset, vm.attackeraction);
 
                     /*if(possibleindex > -1 || attackindex > -1){
                         vm.attackermoved = false;
@@ -58042,10 +58045,10 @@ new Vue({
                         $("#confirmbutton").addClass("visible");
 
                         //END HERE!
-                        axios.post('/round/store').then(function (response) {
-                            console.log(response);
+                        axios.post('/round/store/').then(function (response) {
+                            //console.log(response)
                         }).catch(function (error) {
-                            console.log(error);
+                            //console.log(error);
                         });
 
                         return clearInterval(timer);
@@ -58230,6 +58233,8 @@ new Vue({
             }
             vm.gamehistory.attacker_action = attackeraction;
             vm.attacker_tentative_move = attackeraction;
+
+            if (attackeraction == 0) vm.attackerpassed = 1;else vm.attackerpassed = 0;
 
             //save to database
             vm.saveToDataBase();

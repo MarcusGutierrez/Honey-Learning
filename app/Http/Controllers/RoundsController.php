@@ -261,6 +261,7 @@ class RoundsController extends Controller
                     $round->session_id = $session_id;
                     $round->network_id = $network_id;
                     $round->round_number = $round_number;
+                    $round->cumulative_score = 0;
                     $round->defender_move = $defDB;
                     $round->round_start = current_time();
                     $round->save();
@@ -336,6 +337,8 @@ class RoundsController extends Controller
         $round_number = session()->get('round_number');
         $round_amount = \honeysec\Session::find($session_id)->round_amount;
         $round = \honeysec\Round::findWithNumber($session_id, $round_number);
+        
+        $round->cumulative_score = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
         $round->round_end = current_time();
         $round->save();
         
