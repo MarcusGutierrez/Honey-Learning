@@ -598,10 +598,10 @@ new Vue({
 
                         //END HERE!
                         axios.post('/round/store').then(function (response){
-                            console.log(response);
+                            //console.log(response);
                         })
                         .catch(function (error) {
-                            console.log(error);
+                            //console.log(error);
                         });
 
                         return clearInterval(timer);
