@@ -342,6 +342,8 @@ class RoundsController extends Controller
         $round->round_end = current_time();
         $round->save();
         
+        dd("Hello World");
+        
         $request->session()->forget('round_id');
         //console.log("STORE TEST: ".$round_id);
         if($round_number == $round_amount) { //END session
