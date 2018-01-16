@@ -336,18 +336,12 @@ class RoundsController extends Controller
         $session_id = session()->get('session_id');
         $round_number = session()->get('round_number');
         
-        dd("1");
-        
         $round_amount = \honeysec\Session::find($session_id)->round_amount;
         $round = \honeysec\Round::findWithNumber($session_id, $round_number);
-        
-        dd("2");
         
         $round->cumulative_score = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
         $round->round_end = current_time();
         $round->save();
-        
-        dd("3");
         
         $request->session()->forget('round_id');
         //console.log("STORE TEST: ".$round_id);

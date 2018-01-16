@@ -58045,7 +58045,7 @@ new Vue({
                         $("#confirmbutton").addClass("visible");
 
                         //END HERE!
-                        axios.post('/round/store/').then(function (response) {
+                        axios.post('/round/store').then(function (response) {
                             console.log(response);
                         }).catch(function (error) {
                             console.log(error);
