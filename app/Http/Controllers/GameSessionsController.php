@@ -54,6 +54,7 @@ class GameSessionsController extends Controller
             $game_session->session_start = current_time();
             $game_session->defender_type = $this->get_defender_name($def_type);
             $game_session->round_amount = 50;
+            $game_session->round_amount = 50;
             $game_session->user_id = $request->session()->get('user_id', null);
             //$game_session->session_start = date('Y/m/d h:i:s', time());
             if($game_session->save()){ //game session started
@@ -220,13 +221,15 @@ class GameSessionsController extends Controller
     {
         $session_id = $request->session()->get('session_id', false);
         $completed = $request->session()->get('session_completed', false);
-        $def_type = $this->get_defender_name($request->session()->get('defender_type', false));
+        $defender_type = $request->session()->get('defender_type', false);
+        $def_type = $this->get_defender_name($defender_type);
         $network_id = $request->session()->get('network_id', false);
         $round_number = $request->session()->get('round_number', false);
         
-        if($completed == true) {
+        if($completed == true) { 
             $params = array();
-            $params['total_points'] = \honeysec\Session::totalAttackerPoints($session_id);
+            $total_points = \honeysec\Session::totalAttackerPoints($session_id);
+            $params['total_points'] = $total_points;
             $params['total_possible'] = \honeysec\Session::totalPossibleAttackerPoints($session_id);
             $params['honeypots_triggered'] = \honeysec\Session::find($session_id)->moves->sum('triggered_honeypot');
             $params['honeypots_total'] = \honeysec\Session::totalHoneypots($session_id);
@@ -234,9 +237,24 @@ class GameSessionsController extends Controller
             $params['defender_type'] = $def_type;
             $params['session_code'] = "a".substr(md5($session_id."b73"), 0, 8)."7";
             
+            $converted_payment = 0.0;
+            $conversion = 0.0;
+            if($defender_type == 'def1')
+                $conversion = 0.004;
+            else if ($defender_type == 'def2')
+                $conversion = 0.006;
+            else if ($defender_type == 'def3')
+                $conversion = 0.008;
+            $bonus_payment = max(0.0, ($conversion * $total_points));
+            $converted_payment = 1.0 + $bonus_payment;
+            
+            $params['bonus_payment'] = $bonus_payment;
+            
             $game_session = \honeysec\Session::find($request->session()->get('session_id', null));
             if($request->session()->get('session_completed', false) == true) {
                 $game_session->completed = 1;
+                
+                $game_session->payment_conversion = $converted_payment;
             }
             $game_session->session_end = current_time();
             $game_session->save();

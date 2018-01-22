@@ -20,12 +20,14 @@
     </p>
 
     <p style="text-align: justify; text-justify: inner-word; font-size: 1.1em;">
-        You will make decisions for 50 rounds of the game. After completing the game, 
-        you will also be asked to answer 3 short questionnaires. This study is 
-        expected to take no more than 30 minutes. You will be paid $2.50 for fully completing 
-        the experiment. You will also be awarded $0.01 for every point 
-        accumulated in the game. Because every point counts, you need to pay 
-        attention to every decision while aiming to avoid honeypots.
+        You will make decisions for 50 rounds of the game. After completing the 
+        game, you will also be asked to answer 3 short questionnaires. This 
+        study is expected to take no more than 20 minutes. You will be paid $1 
+        for fully completing the experiment. You will also be awarded a bonus 
+        payment based points you accumulate in the game: total points will be 
+        converted to dollar values at the end of the game. Because every point 
+        counts, you need to pay attention to every decision while aiming to 
+        avoid honeypots.
     </p>
 </div>
 

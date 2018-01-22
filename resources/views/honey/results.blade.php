@@ -12,6 +12,7 @@
 
         <h1>Games Results</h1>
         <h4>Total Points: {{ $total_points }}</h4>
+        <h4>A total bonus payment of ${{ $bonus_payment }} will be added to the base payment
         <h4>Triggered Honeypots: {{ $honeypots_triggered }}</h4>
         <h4>Number of Passes: {{ $total_passes }}</h4>
         <h4>Completion Code: {{ $session_code }}</h4>
