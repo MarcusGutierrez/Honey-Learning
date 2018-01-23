@@ -57592,6 +57592,11 @@ Vue.component('node', {
             // in the parent only update the move as tentative
 
             if (vm.nomoveallowed == false) {
+                $("#nodebuttons").addClass("disable");
+                $('#nextbutton').removeClass("visible");
+                $('#nextbutton').removeClass("disable");
+                $("#confirmbutton").addClass("visible");
+
                 EventListeners.$emit('change-to-tentative', vm.id);
 
                 if (vm.classObject.possible == true || vm.previous_class === '') {
@@ -57608,6 +57613,14 @@ Vue.component('node', {
 
                 EventListeners.$emit('attackerMovedconfirmed', vm.nid, 0, 0);
                 EventListeners.$emit('movemade', vm.nid);
+                EventListeners.$emit('stoptimer');
+
+                //END HERE!
+                axios.post('/round/store').then(function (response) {
+                    //console.log(response);
+                }).catch(function (error) {
+                    //console.log(error);
+                });
             }
         },
         savePrevClass: function savePrevClass() {
@@ -57992,10 +58005,9 @@ new Vue({
 
             timer = setInterval(function () {
 
-                vm.timer -= 1;
-
-                if (vm.timer == 0) {
+                if (vm.timer == 1) {
                     if (vm.attackermoved == false) {
+                        vm.timer = 0;
                         EventListeners.$emit('set_nomoveallowed', true);
                         vm.attacker_tentative_move = 0;
                         vm.attackeraction = 0;
@@ -58005,6 +58017,11 @@ new Vue({
                         vm.attackermoved = true;
                         vm.attackerpassed = true;
                         vm.attackertimedout = true;
+
+                        $("#nodebuttons").addClass("disable");
+                        $('#nextbutton').removeClass("visible");
+                        $('#nextbutton').removeClass("disable");
+                        $("#confirmbutton").addClass("visible");
 
                         EventListeners.$emit('change-to-attacked', 0);
                         EventListeners.$emit('attackerMovedconfirmed', vm.attacker_tentative_move, vm.newattackneighbors, vm.tentative_time_attacker_moved);
@@ -58034,26 +58051,29 @@ new Vue({
                         //vm.defendermoved = false;
                         EventListeners.$emit('movemade',vm.attackeraction);
                     }*/
-
                     if (vm.attackAttempts == 0) {
+                        return clearInterval(timer);
+                    }
+                    /*
+                    if(vm.attackAttempts == 0){
                         //vm.timer = 'Done...!'
                         //EventListeners.$emit('last-round-update');
-
-                        $("#nodebuttons").addClass("disable");
+                         $("#nodebuttons").addClass("disable");
                         $('#nextbutton').removeClass("visible");
                         $('#nextbutton').removeClass("disable");
                         $("#confirmbutton").addClass("visible");
-
-                        //END HERE!
-                        axios.post('/round/store').then(function (response) {
+                         //END HERE!
+                        axios.post('/round/store').then(function (response){
                             //console.log(response);
-                        }).catch(function (error) {
+                        })
+                        .catch(function (error) {
                             //console.log(error);
                         });
-
-                        return clearInterval(timer);
-                    }
+                         return clearInterval(timer);
+                    }*/
                 }
+
+                vm.timer -= 1;
             }, 1000);
         },
 
@@ -58221,6 +58241,11 @@ new Vue({
             vm.attackAttempts -= 1;
             //alert(vm.attackAttempts);
             $("#nodebuttons").addClass("disable");
+        });
+
+        // Event when attacker made a move and we need to set the attackermoved : true;
+        EventListeners.$on('stoptimer', function () {
+            clearInterval(vm.timer);
         });
 
         //event listener when both defender and atatcker completed their moves
