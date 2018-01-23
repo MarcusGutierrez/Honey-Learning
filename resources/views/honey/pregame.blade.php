@@ -12,10 +12,14 @@
                 From here on, the points 
                 will count towards your final bonus payment.  Please pay 
                 attention to each decision.
+                
+                <br>
+                <br>
+                
+                Please <b>do <i>not</i></b> refresh the page during the 
+                game. Doing so will disqualify you from receiving a bonus 
+                payment.
             </h3>
-            
-            
-            
             <br>
             
             <form method="POST" action="/pregame/store">
