@@ -129,7 +129,10 @@
             <span style="color: red;" v-if="attackerpoints < 0">
             @{{ attackerpoints }}
             </span>
-            <span style="color: black;" v-if="attackerpoints == 0">
+            <span style="color: black;" v-if="attackerpoints == 0 && attackerpassed == true">
+            @{{ attackerpoints }}
+            </span>
+            <span style="color: black;" v-if="attackerpoints == 0 && attackerpassed == false">
             </span>
         </b></h3>
         <h3><b>
