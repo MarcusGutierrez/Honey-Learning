@@ -122,6 +122,17 @@
     </div>
     <div style="text-align: center;">
         <h3><b>
+            Current Round Points:
+            <span style="color: green;" v-if="attackerpoints > 0">
+            @{{ attackerpoints }}
+            </span>
+            <span style="color: red;" v-if="attackerpoints < 0">
+            @{{ attackerpoints }}
+            </span>
+            <span style="color: black;" v-if="attackerpoints == 0">
+            </span>
+        </b></h3>
+        <h3><b>
             Total Points:
             <span style="color: green;" v-if="totalattackerpoints > 0">
             @{{ totalattackerpoints }}
