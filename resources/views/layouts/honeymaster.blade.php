@@ -60,7 +60,16 @@
 
             .disable {
                 pointer-events: none;
-                opacity: 0.4;
+                opacity: 0.35;
+            }
+            
+            
+            .disable .attacked_honeypot {
+                opacity: 0.9;
+            }
+            
+            .disable .attacked_regular {
+                opacity: 0.9;
             }
 
 
