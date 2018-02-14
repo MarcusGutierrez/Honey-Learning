@@ -523,8 +523,8 @@ class RoundsController extends Controller
         $session_completed = session()->get('session_completed', false);
         
         if($session_completed == false) {
-            if(session()->get('round_number') >= \honeysec\Session::find(session()->get('session_id', null))->round_amount)
-                    dd("WHAT!?!?");
+            //if(session()->get('round_number') >= \honeysec\Session::find(session()->get('session_id', null))->round_amount)
+                   // dd("WHAT!?!?");
             
             $def = session()->get('defender_type');
             $network_id = session()->get('network_id');
