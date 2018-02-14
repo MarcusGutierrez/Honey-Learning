@@ -55,8 +55,8 @@ class GamesController extends Controller {
         $errors = [];
         if($type == 'background'){
             $age = request('q2');
-            if($age != null && ctype_digit($age) == false){
-                $errors[] = "Question 2 must be a positive whole number.";
+            if($age != null && (ctype_digit($age) == false || (ctype_digit($age) && ($age < 18 || $age > 99)))){
+                $errors[] = "Question 2 must be a valid age between 18 and 99.";
             }
         }
         foreach($questions as $question){
