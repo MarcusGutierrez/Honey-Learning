@@ -548,6 +548,11 @@ class RoundsController extends Controller
                 $r->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $r->round_number);
                 $r->save();
             }
+            $last_round = $rounds->last();
+            if($last_round->round_end == null){
+                $last_round->round_end = $last->moves->first()->move_time;
+                $last_round->save();
+            }
             
             if(session()->get('current_idx', null) == 6){
                 session()->put('current_idx', 7);
