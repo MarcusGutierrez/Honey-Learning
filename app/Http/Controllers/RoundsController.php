@@ -322,9 +322,6 @@ class RoundsController extends Controller
     
     public function round_create(Request $request){
         $session_completed = session()->get('session_completed', false);
-        //$session_completed = false;
-        if($session_completed == true)
-            dd("SESSION TEST");
         
         $defender_type = session()->get('defender_type', null);
         $network_id = session()->get('network_id', null);
@@ -547,7 +544,6 @@ class RoundsController extends Controller
                 session()->put('current_idx', 7);
             }
             $this->store_section("game session");
-            return redirect("/play");
             return redirect('/survey/post')->with('message', 'Please complete our post game survey');
         }
     }
