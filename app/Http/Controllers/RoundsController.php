@@ -521,12 +521,15 @@ class RoundsController extends Controller
         $session_completed = session()->get('session_completed', false);
         
         if($session_completed == false) {
+            if(session()->get('round_number') > \honeysec\Session::find(session()->get('session_id', null))->round_amount)
+                    dd("WHAT!?!?");
+            
             $def = session()->get('defender_type');
             $network_id = session()->get('network_id');
             $session_id = session()->get('session_id');
             $round_number = session()->get('round_number');
             
-            //return redirect("/play/round/".$round_number);
+            
             return redirect("/play");
         } else {
             $session_id = session()->get('session_id', null);
