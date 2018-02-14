@@ -30,6 +30,11 @@ class Session extends Model
         return static::find($session_id)->moves->take($round_number)->pluck('attacker_points')->sum();
     }
     
+    public static function lastMoveNumber($session_id)
+    {
+        return static::find($session_id)->moves->last()->round->round_number;
+    }
+    
     public static function totalPossibleAttackerPoints($session_id)
     {
         $totalvalue = 0;

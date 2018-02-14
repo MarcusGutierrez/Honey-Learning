@@ -323,7 +323,8 @@ class RoundsController extends Controller
     public function round_create(Request $request){
         $round_amount = \honeysec\Session::find(session()->get('session_id'))->round_amount;
         $round_number = session()->get('round_number', null);
-        $session_completed = $round_number > $round_amount;
+        $last_move = \honeysec\Session::lastMoveNumber($session_id);
+        $session_completed = $last_move >= $round_amount;
         
         $defender_type = session()->get('defender_type', null);
         $network_id = session()->get('network_id', null);
