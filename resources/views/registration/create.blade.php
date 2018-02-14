@@ -24,10 +24,10 @@
         game, you will also be asked to answer 3 short questionnaires. This 
         study is expected to take no more than 20 minutes. You will be paid $1 
         for fully completing the experiment. You will also be awarded a bonus 
-        payment based points you accumulate in the game: total points will be 
-        converted to dollar values at the end of the game. Because every point 
-        counts, you need to pay attention to every decision while aiming to 
-        avoid honeypots.
+        payment based on the number of points you accumulate in the game. Your 
+        total points will be converted to dollar values at the end of the game. 
+        Because every point counts, you need to pay attention to every decision 
+        while aiming to avoid honeypots.
     </p>
 </div>
 
