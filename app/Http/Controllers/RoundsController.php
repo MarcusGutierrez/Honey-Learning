@@ -321,7 +321,9 @@ class RoundsController extends Controller
     }*/
     
     public function round_create(Request $request){
-        $session_completed = $request->session()->get('session_completed', false);
+        $session_completed = session()->get('session_completed', false);
+        
+        dd("SESSION TEST".$session_completed);
         $defender_type = session()->get('defender_type', null);
         $network_id = session()->get('network_id', null);
         if($session_completed == false){
@@ -521,7 +523,7 @@ class RoundsController extends Controller
         $session_completed = session()->get('session_completed', false);
         
         if($session_completed == false) {
-            if(session()->get('round_number') > \honeysec\Session::find(session()->get('session_id', null))->round_amount)
+            if(session()->get('round_number') >= \honeysec\Session::find(session()->get('session_id', null))->round_amount)
                     dd("WHAT!?!?");
             
             $def = session()->get('defender_type');
