@@ -159,16 +159,12 @@ Vue.component('node',{
                     EventListeners.$emit('change-to-attacked',vm.id);
 
                     EventListeners.$emit('attackerMovedconfirmed', vm.nid, 0, 0);
+                    
                     EventListeners.$emit('movemade', vm.nid);
+                    
                     EventListeners.$emit('stoptimer', );
                     
-                     //END HERE!
-                    axios.post('/round/store').then(function (response){
-                        //console.log(response);
-                    })
-                    .catch(function (error) {
-                        //console.log(error);
-                    });
+                    EventListeners.$emit('round_store', );
                 }
             },
 
@@ -400,6 +396,8 @@ new Vue({
     data : {
         //props : ['user_id'],
         //instance: -1,
+        canStoreRound : false,
+        roundID : round_id,
         user_id : 1,
         attacker_tentative_move : '', // reset the variable when you start a round
         tentative_time_attacker_moved : '', 
@@ -500,13 +498,21 @@ new Vue({
                     atk_target: vm.gamehistory.attacker_action,
                     //time_defender_moved : vm.gamehistory.time_defender_moved,
                     //time_attacker_moved: vm.gamehistory.time_attacker_moved,
+                    round_id : vm.roundID,
                     atk_passed : vm.attackerpassed,
                     atk_timedout : vm.attackertimedout,
                     time_attacker_moved : Date.now(),
                     def_points: vm.gamehistory.defender_points,
                     atk_points: vm.attackerpoints,
                     honeypotted: vm.gamehistory.triggered_honeypot
-            }).then(response => this.returndata = response.data);
+            })//.then(response => this.returndata = response.data);
+            .then(function (response){
+                //console.log(response);
+                //vm.canStoreRound = true;
+            })
+            .catch(function (error) {
+               // console.log(error);
+            });
         },
 
         saveToDataBaseTentative: function(){
@@ -578,6 +584,8 @@ new Vue({
                         EventListeners.$emit('change-to-attacked',0);
                         EventListeners.$emit('attackerMovedconfirmed', vm.attacker_tentative_move, vm.newattackneighbors, vm.tentative_time_attacker_moved);
                         EventListeners.$emit('movemade',vm.attackeraction);
+                        
+                        EventListeners.$emit('round_store', );
                     }else{
                         
                     }
@@ -810,6 +818,21 @@ new Vue({
         // Event when attacker made a move and we need to set the attackermoved : true;
         EventListeners.$on('stoptimer', function(){
             clearInterval(vm.timer);
+        });
+        
+        
+        EventListeners.$on('round_store', function(){
+            
+            //if(vm.canStoreRound === true){
+            axios.post('/round/store', {
+                round_id : vm.roundID,
+                attacker_points : vm.attackerpoints
+            }).then(function (response){
+                //console.log(response);
+            })
+            .catch(function (error) {
+                //console.log(error);
+            });
         });
 		
 

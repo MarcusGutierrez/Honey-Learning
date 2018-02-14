@@ -149,6 +149,14 @@
             @{{ totalattackerpoints }}
             </span>
         </b></h3>
+        <h3><b>
+            Round ID:
+            <span style="color: black;">
+            @php
+            echo session()->get('round_id', 'WHAT');
+            @endphp
+            </span>
+        </b></h3>
     </div>
 </div>
                             
@@ -156,6 +164,18 @@
     var atk_attempts = {{ $atk_attempts }};
     var total_value = {{ $total_value }};
     var total_attacker_points = {{ $total_attacker_points }};
+    var round_id = {{ $round_id }};
+    
+    //check for navigation time API support
+    //if (window.performance) {
+        //console.info("window.performance work's fine on this browser");
+    //}
+    if (performance.navigation.type == 1) {
+        //console.info( "This page is reloaded" );
+        alert("Please do not reload the page during the game. This could affect payment or prevent you from completing the experiment.");
+    } else {
+        //console.info( "This page is not reloaded");
+    }
 </script>
 
 <script src="{{ asset('js/honeyapp.js') }}" ></script>

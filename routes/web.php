@@ -71,7 +71,9 @@ Route::post('/honeytotal', 'RoundsController@network_params');
 
 Route::get('/honey/games/{did}/{gid}', 'RoundsController@defround')->name('defgame');
 
-Route::get('/play/round/{rid}', 'RoundsController@round_create'); //Store round
+//Route::get('/play/round/{rid}', 'RoundsController@round_create');
+
+Route::get('/play', 'RoundsController@round_create');
 
 Route::get('/play/practice', 'RoundsController@practice_round'); //Store round
 

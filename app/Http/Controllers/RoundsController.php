@@ -225,13 +225,14 @@ class RoundsController extends Controller
         return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'));
     }
     
-    public function round_create(Request $request, $round_number){
+    /*public function round_create(Request $request, $round_number){
         $session_completed = $request->session()->get('session_completed', false);
         $defender_type = session()->get('defender_type', null);
         $network_id = session()->get('network_id', null);
         if($session_completed == false){
             
             $session_id = session()->get('session_id');
+            $round_id = session()->get('round_id');
             $round_amount = \honeysec\Session::find($session_id)->round_amount;
             $correct_round = $request->session()->get('round_number');
             
@@ -250,25 +251,38 @@ class RoundsController extends Controller
 
 
 
-                $session_id = $request->session()->get('session_id');
-                $round_id = $request->session()->get('round_id');
-                $round_number = $request->session()->get('round_number');
+                $session_id = $request->session()->get('session_id', null);
+                $round_id = $request->session()->get('round_id', null);
+                //$round_number = $request->session()->get('round_number', null);
 
-                $is_round = \honeysec\Round::where('session_id', $session_id)->get()->where('round_number', $round_number)->first();
+                //$is_round = \honeysec\Round::where('session_id', $session_id)->get()->where('round_number', $round_number)->first();
+                $is_round = \honeysec\Round::findWithNumber($session_id, $round_number);
 
                 if($is_round == null){ //Create round if it has not been created yet
+                    $old_cumulative = 0;
+                    if($round_number > 1)
+                        $old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number - 1)->cumulative_score;
+                    
                     $round = new \honeysec\Round;
                     $round->session_id = $session_id;
                     $round->network_id = $network_id;
                     $round->round_number = $round_number;
-                    $round->cumulative_score = 0;
+                    $round->cumulative_score = $old_cumulative;
                     $round->defender_move = $defDB;
                     $round->round_start = current_time();
                     $round->save();
                     
-                    $r = \honeysec\Round::where('session_id', $session_id)->where('round_number', $round_number)->first();
-                    $round_id = $r->round_id;
-                    $request->session()->put('round_id', $round_id);
+                    $round_id = $round->round_id;
+                    session()->put('round_id', $round_id);
+                }else{ //round exists
+                    if(\honeysec\Round::find($round_id)->moves->count() > 0){
+                        $new_round_number = \honeysec\Session::find($session_id)->moves->last()->round->round_number + 1;
+                        session()->put('round_number', $new_round_number);
+                        session()->flash('message' , "ERROR CORRECTED: ".$correct_round);
+                        return redirect("/play/round/".$new_round_number);
+                    }else{ //REFRESHED
+                        
+                    }
                 }
 
             } else {
@@ -285,12 +299,108 @@ class RoundsController extends Controller
             $totalValue = Honey_Node::inGameID($network_id)->valueSum();
             
             $rounds = array();
+            $rounds['round_id'] = $round_id;
             $rounds['round_number'] = $round_number;
             $rounds['lastround'] = $lastround;
             $rounds['max_round'] = $round_amount;
             
             $rounds['atk_attempts'] = $atkAttempts;
             $rounds['total_value'] = $totalValue;
+            $rounds['round_id'] = $round_id;
+            if(session()->get('session_id', false)){
+                $rounds['total_attacker_points'] = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
+            }else
+                $rounds['total_attacker_points'] = 0;
+
+            //return $this->defround($request, $defender_type, $network_id);
+            return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'))->with($rounds);
+        } else {
+            $request->session()->flash('message' , "Game Session completed");
+            return redirect("/session/destroy");
+        }
+    }*/
+    
+    public function round_create(Request $request){
+        $session_completed = $request->session()->get('session_completed', false);
+        $defender_type = session()->get('defender_type', null);
+        $network_id = session()->get('network_id', null);
+        if($session_completed == false){
+            
+            $session_id = session()->get('session_id');
+            $round_amount = \honeysec\Session::find($session_id)->round_amount;
+            
+            
+            $honey_network = Honey_Network::find($network_id);
+            $honey_nodes = Honey_Node::inGameID($network_id)->get();
+
+            $hpArr = $this->defender_move($request, $defender_type, $network_id);
+
+            $defDB = "";
+            foreach($hpArr as $i){
+                $honey_nodes[$i]['is_honeypot'] = 1;
+                $defDB .= $honey_nodes[$i]['node_id']."-";
+            }
+            $defDB = substr($defDB, 0, strlen($defDB) - 1);
+
+
+
+            $session_id = $request->session()->get('session_id', null);
+            $round_id = $request->session()->get('round_id', null);
+            $round_number = $request->session()->get('round_number', 1);
+            
+            if($round_number > 1){
+                $round_number = \honeysec\Session::find($session_id)->moves->last()->round->round_number + 1;
+            }
+
+            //$is_round = \honeysec\Round::where('session_id', $session_id)->get()->where('round_number', $round_number)->first();
+            $is_round = \honeysec\Round::findWithNumber($session_id, $round_number);
+
+            if($is_round == null){ //Create round if it has not been created yet
+                $old_cumulative = 0;
+                if($round_number > 1)
+                    $old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number - 1)->cumulative_score;
+
+                $round = new \honeysec\Round;
+                $round->session_id = $session_id;
+                $round->network_id = $network_id;
+                $round->round_number = $round_number;
+                $round->cumulative_score = $old_cumulative;
+                $round->defender_move = $defDB;
+                $round->round_start = current_time();
+                $round->save();
+
+                $round_id = $round->round_id;
+                session()->put('round_id', $round_id);
+            }else{ //round exists
+                if(\honeysec\Round::find($round_id)->moves->count() > 0){
+                    $new_round_number = \honeysec\Session::find($session_id)->moves->last()->round->round_number + 1;
+                    session()->put('round_number', $new_round_number);
+                    //session()->flash('message' , "ERROR CORRECTED: ".$correct_round);
+                    return redirect("/play");
+                }else{ //REFRESHED
+
+                }
+            }
+
+            
+            
+            $lastround = false;
+            if($round_number == $round_amount){
+                $lastround = true;
+            }
+            
+            $atkAttempts = Honey_Network::find($network_id)->atk_attempts;
+            $totalValue = Honey_Node::inGameID($network_id)->valueSum();
+            
+            $rounds = array();
+            $rounds['round_id'] = $round_id;
+            $rounds['round_number'] = $round_number;
+            $rounds['lastround'] = $lastround;
+            $rounds['max_round'] = $round_amount;
+            
+            $rounds['atk_attempts'] = $atkAttempts;
+            $rounds['total_value'] = $totalValue;
+            $rounds['round_id'] = $round_id;
             if(session()->get('session_id', false)){
                 $rounds['total_attacker_points'] = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
             }else
@@ -337,14 +447,21 @@ class RoundsController extends Controller
         $round_number = session()->get('round_number');
         
         $round_amount = \honeysec\Session::find($session_id)->round_amount;
-        $round = \honeysec\Round::findWithNumber($session_id, $round_number);
+        //$round = \honeysec\Round::find(session()->get('round_id', null));
+        $round = \honeysec\Round::find(request('round_id'));
         
-        $round->cumulative_score = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
+        $old_cumulative = 0;
+        if(\honeysec\Round::findWithNumber($session_id, $round_number-1) != null)
+            $old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number-1)->cumulative_score;
+        
+        $new_points = request('attacker_points');
+        $round->cumulative_score = $old_cumulative + $new_points;
+        
         $round->round_end = current_time();
-        $round->save();
         
-        $request->session()->forget('round_id');
-        //console.log("STORE TEST: ".$round_id);
+        
+        
+        
         if($round_number == $round_amount) { //END session
             $request->session()->put('session_completed', true);
             return "completed";
@@ -362,7 +479,7 @@ class RoundsController extends Controller
                 $user_id = session()->get('user_id', null);
                 $session_id = session()->get('session_id', null);
                 $nodes = \honeysec\Honey_Network::find(session()->get('network_id', null))->nodes;
-                $last_round = \honeysec\Session::where('session_id', $session_id)->first()->rounds->where('round_number', $round_number)->first()->moves;
+                $last_round = $round->moves;
                 
                 for($i = 0; $i < count($LLR_latest_arm); $i++){
                     $LLR_m[$LLR_latest_arm[$i]] += 1;
@@ -381,8 +498,11 @@ class RoundsController extends Controller
                 session()->put('LLR_theta', $LLR_theta);
             }
             
-            $round_number++;
-            session()->put('round_number', $round_number);
+            
+            $round->save();
+            //$round_number++;
+            //session()->put('round_number', $round_number);
+            
             return $round_number;
         }
     }
@@ -403,9 +523,11 @@ class RoundsController extends Controller
         if($session_completed == false) {
             $def = session()->get('defender_type');
             $network_id = session()->get('network_id');
+            $session_id = session()->get('session_id');
             $round_number = session()->get('round_number');
             
-            return redirect("/play/round/".$round_number);
+            //return redirect("/play/round/".$round_number);
+            return redirect("/play");
         } else {
             if(session()->get('current_idx', null) == 6){
                 session()->put('current_idx', 7);

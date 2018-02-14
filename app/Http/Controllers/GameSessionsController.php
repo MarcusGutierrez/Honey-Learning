@@ -150,7 +150,7 @@ class GameSessionsController extends Controller
                 //return redirect()->route('play', ['gid' => 1]);
                 
                 
-                return redirect("/play/round/1");
+                return redirect("/play");
             }
         } else {
             $request->session()->flash('message' , 'Cannot create new session when current session is running');

@@ -22,15 +22,7 @@ class Session extends Model
     
     public static function totalAttackerPoints($session_id)
     {
-        $sum = 0;
-        $rounds = static::find($session_id)->rounds;
-        if($rounds != null){
-            foreach($rounds as $round){
-                if($round->moves->last() != null)
-                    $sum += $round->moves->last()->attacker_points;
-            }
-        }
-        return $sum;
+        return static::find($session_id)->moves->pluck('attacker_points')->sum();
     }
     
     public static function totalPossibleAttackerPoints($session_id)

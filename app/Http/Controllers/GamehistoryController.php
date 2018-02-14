@@ -12,8 +12,9 @@ class GamehistoryController extends Controller
     public function storehoneymove(Request $request){
         
         //$user_id = $request->session()->get('user_id');
-        $network_id = $request->session()->get('network_id', null);
-        $round_id = $request->session()->get('round_id', null);
+        $network_id = session()->get('network_id', null);
+        //$round_id = session()->get('round_id', null);
+        
         $is_practice = \honeysec\Honey_Network::find($network_id)->is_practice;
         //$session_id = $request->session()->get('session_id');
         
@@ -21,7 +22,7 @@ class GamehistoryController extends Controller
             $gamehistory = new \honeysec\Honey_History;
             //$gamehistory->user_id = $user_id;
             //$gamehistory->network_id = $network_id;
-            $gamehistory->round_id = $round_id;
+            $gamehistory->round_id = request('round_id');
             //$gamehistory->session_id = $session_id;
             $gamehistory->attack_attempt = request('atk_attempt');
             $gamehistory->node_id = request('atk_target');
