@@ -550,7 +550,7 @@ class RoundsController extends Controller
             }
             $last_round = $rounds->last();
             if($last_round->round_end == null){
-                $last_round->round_end = $last->moves->first()->move_time;
+                $last_round->round_end = $last_round->moves->first()->move_time;
                 $last_round->save();
             }
             
