@@ -465,6 +465,7 @@ class RoundsController extends Controller
         
         if($round_number >= $round_amount) { //END session
             session()->put('session_completed', true);
+            session()->save();
             return "completed";
         } else {
             $def = session()->get('defender_type');
