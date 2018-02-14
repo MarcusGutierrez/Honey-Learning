@@ -14,8 +14,17 @@ class AddRoundMoveUnique extends Migration
     public function up()
     {
         Schema::table('round', function (Blueprint $table){
+            $table->dropForeign('round_session_id_foreign');
+            $table->dropForeign('round_network_id_foreign');
             $table->dropUnique('round_session_id_network_id_round_number_unique');
             $table->unique(array('session_id', 'round_number'), 'round_unique');
+            
+            $table->foreign('session_id')
+                    ->references('session_id')->on('sessions')
+                    ->onDelete('cascade');
+            $table->foreign('network_id')
+                    ->references('network_id')->on('honey_network')
+                    ->onDelete('cascade');
         });
         Schema::table('honey_attack_move', function (Blueprint $table){
             $table->dropForeign('honey_attack_move_round_id_foreign');
