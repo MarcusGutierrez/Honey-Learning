@@ -357,15 +357,11 @@ class RoundsController extends Controller
             $is_round = \honeysec\Round::findWithNumber($session_id, $round_number);
 
             if($is_round == null){ //Create round if it has not been created yet
-                $old_cumulative = 0;
-                if($round_number > 1)
-                    $old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number - 1)->cumulative_score;
-
                 $round = new \honeysec\Round;
                 $round->session_id = $session_id;
                 $round->network_id = $network_id;
                 $round->round_number = $round_number;
-                $round->cumulative_score = $old_cumulative;
+                $round->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $round_number);
                 $round->defender_move = $defDB;
                 $round->round_start = current_time();
                 $round->save();
@@ -373,14 +369,17 @@ class RoundsController extends Controller
                 $round_id = $round->round_id;
                 session()->put('round_id', $round_id);
             }else{ //round exists
-                if(\honeysec\Round::find($round_id)->moves->count() > 0){
+                session()->put('round_id', $is_round->round_id);
+                session()->put('round_number', $is_round->round_number);
+                $is_round->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $round_number);
+                /*if(\honeysec\Round::find($round_id)->moves->count() > 0){
                     $new_round_number = \honeysec\Session::find($session_id)->moves->last()->round->round_number + 1;
                     session()->put('round_number', $new_round_number);
                     //session()->flash('message' , "ERROR CORRECTED: ".$correct_round);
                     return redirect("/play");
                 }else{ //REFRESHED
 
-                }
+                }*/
             }
 
             
