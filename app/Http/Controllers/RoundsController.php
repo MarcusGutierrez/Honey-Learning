@@ -452,18 +452,18 @@ class RoundsController extends Controller
         //$round = \honeysec\Round::find(session()->get('round_id', null));
         $round = \honeysec\Round::find(request('round_id'));
         
-        $old_cumulative = 0;
-        if(\honeysec\Round::findWithNumber($session_id, $round_number-1) != null)
-            $old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number-1)->cumulative_score;
+        //$old_cumulative = 0;
+        //if(\honeysec\Round::findWithNumber($session_id, $round_number-1) != null)
+            //$old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number-1)->cumulative_score;
         
-        $new_points = request('attacker_points');
-        $round->cumulative_score = $old_cumulative + $new_points;
+        //$new_points = request('attacker_points');
+        $round->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $round_number);
         
         $round->round_end = current_time();
         
         
         if($round_number >= $round_amount) { //END session
-            $request->session()->put('session_completed', true);
+            session()->put('session_completed', true);
             return "completed";
         } else {
             $def = session()->get('defender_type');
@@ -518,7 +518,7 @@ class RoundsController extends Controller
             return redirect('/pregame');
         }
         
-        $session_completed = $request->session()->get('session_completed', false);
+        $session_completed = session()->get('session_completed', false);
         
         if($session_completed == false) {
             $def = session()->get('defender_type');

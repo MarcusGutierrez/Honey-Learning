@@ -149,14 +149,6 @@
             @{{ totalattackerpoints }}
             </span>
         </b></h3>
-        <h3><b>
-            Round ID:
-            <span style="color: black;">
-            @php
-            echo session()->get('round_id', 'WHAT');
-            @endphp
-            </span>
-        </b></h3>
     </div>
 </div>
                             
