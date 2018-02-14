@@ -446,12 +446,12 @@ class RoundsController extends Controller
     }
     
     public function round_store(Request $request){
-        $session_id = session()->get('session_id');
-        $round_number = \honeysec\Round::find(request('round_id'))->round_number;
+        $session_id = session()->get('session_id', null);
+        $round_number = session()->get('round_number', null);
         
         $round_amount = \honeysec\Session::find($session_id)->round_amount;
         //$round = \honeysec\Round::find(session()->get('round_id', null));
-        $round = \honeysec\Round::find(request('round_id'));
+        //$round = \honeysec\Round::find(request('round_id'));
         
         //$old_cumulative = 0;
         //if(\honeysec\Round::findWithNumber($session_id, $round_number-1) != null)
