@@ -520,7 +520,10 @@ class RoundsController extends Controller
             return redirect('/pregame');
         }
         
-        $session_completed = session()->get('session_completed', false);
+        //$session_completed = session()->get('session_completed', false);
+        $round_amount = \honeysec\Session::find(session()->get('session_id'))->round_amount;
+        $round_number = session()->get('round_number', null);
+        $session_completed = $round_number >= $round_amount;
         
         if($session_completed == false) {
             //if(session()->get('round_number') >= \honeysec\Session::find(session()->get('session_id', null))->round_amount)
