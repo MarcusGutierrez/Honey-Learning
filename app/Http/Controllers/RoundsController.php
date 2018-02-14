@@ -347,7 +347,7 @@ class RoundsController extends Controller
 
             $session_id = $request->session()->get('session_id', null);
             $round_id = $request->session()->get('round_id', null);
-            $round_number = $request->session()->get('round_number', 1);
+            $round_number = $request->session()->get('round_number', null);
             
             $moves = \honeysec\Session::find($session_id)->moves;
             if($moves->count() > 0){
