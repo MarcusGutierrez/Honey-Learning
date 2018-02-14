@@ -350,6 +350,7 @@ class RoundsController extends Controller
             
             if($round_number > 1){
                 $round_number = \honeysec\Session::find($session_id)->moves->last()->round->round_number + 1;
+                session()->put('round_number', $round_number);
             }
 
             //$is_round = \honeysec\Round::where('session_id', $session_id)->get()->where('round_number', $round_number)->first();
@@ -445,7 +446,7 @@ class RoundsController extends Controller
     
     public function round_store(Request $request){
         $session_id = session()->get('session_id');
-        $round_number = session()->get('round_number');
+        $round_number = \honeysec\Round::find(request('round_id'))->round_number;
         
         $round_amount = \honeysec\Session::find($session_id)->round_amount;
         //$round = \honeysec\Round::find(session()->get('round_id', null));
@@ -461,9 +462,7 @@ class RoundsController extends Controller
         $round->round_end = current_time();
         
         
-        
-        
-        if($round_number == $round_amount) { //END session
+        if($round_number >= $round_amount) { //END session
             $request->session()->put('session_completed', true);
             return "completed";
         } else {

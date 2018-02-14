@@ -54,7 +54,6 @@ class GameSessionsController extends Controller
             $game_session->session_start = current_time();
             $game_session->defender_type = $this->get_defender_name($def_type);
             $game_session->round_amount = 50;
-            $game_session->round_amount = 50;
             $game_session->user_id = $request->session()->get('user_id', null);
             //$game_session->session_start = date('Y/m/d h:i:s', time());
             if($game_session->save()){ //game session started
