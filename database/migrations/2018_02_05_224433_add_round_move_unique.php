@@ -14,7 +14,7 @@ class AddRoundMoveUnique extends Migration
     public function up()
     {
         Schema::table('round', function (Blueprint $table){
-            $table->dropUnique('round_unique');
+            $table->dropUnique('round_session_id_network_id_round_number_unique');
             $table->unique(array('session_id', 'round_number'), 'round_unique');
         });
         Schema::table('honey_attack_move', function (Blueprint $table){
