@@ -433,6 +433,7 @@ class RoundsController extends Controller
         
         $rounds['atk_attempts'] = $atkAttempts;
         $rounds['total_value'] = $totalValue;
+        $rounds['round_id'] = 0;
         if(session()->get('session_id', false)){
             $rounds['total_attacker_points'] = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
         }else
