@@ -457,7 +457,7 @@ class RoundsController extends Controller
             //$old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number-1)->cumulative_score;
         
         //$new_points = request('attacker_points');
-        $round->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $round_number);
+        //$round->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $round_number);
         
         $round->round_end = current_time();
         
@@ -529,6 +529,13 @@ class RoundsController extends Controller
             //return redirect("/play/round/".$round_number);
             return redirect("/play");
         } else {
+            $session_id = session()->get('session_id', null);
+            $rounds = \honeysec\Session::find($session_id)->rounds;
+            foreach($rounds as $r){
+                $r->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $r->round_number);
+                $r->save();
+            }
+            
             if(session()->get('current_idx', null) == 6){
                 session()->put('current_idx', 7);
             }
