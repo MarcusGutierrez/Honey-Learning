@@ -108,7 +108,7 @@ class RegistrationController extends Controller
         $page_path[] = "/instruction/3"; //3
         $page_path[] = "/instruction/concept"; //4
         $page_path[] = "/play/practice"; //5
-        $page_path[] = "/play/round/"; //6
+        $page_path[] = "/play"; //6
         $page_path[] = "/survey/post"; //7
         $page_path[] = "/survey/background"; //8
         $page_path[] = "/survey/triad"; //9
