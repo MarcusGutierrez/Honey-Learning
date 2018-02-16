@@ -153,8 +153,7 @@ class GameSessionsController extends Controller
             }
         } else {
             $request->session()->flash('message' , 'Cannot create new session when current session is running');
-            $round_number = $request->session()->get('round_number', 1);
-            return redirect("/play/round/".$round_number);
+            return redirect("/play");
         }
     }
     
@@ -301,7 +300,7 @@ class GameSessionsController extends Controller
             return view('honey.results')->with($params);
         } else {
             $request->session()->flash('message' , 'Please complete your session before reviewing the results page');
-            return redirect("/play/round/".$round_number);
+            return redirect("/play");
         }
     }
 

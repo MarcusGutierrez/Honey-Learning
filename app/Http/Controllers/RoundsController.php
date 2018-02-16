@@ -557,6 +557,9 @@ class RoundsController extends Controller
             if(session()->get('current_idx', null) == 6){
                 session()->put('current_idx', 7);
             }
+            
+            session()->put('session_completed', true);
+            
             $this->store_section("game session");
             return redirect('/survey/post')->with('message', 'Please complete our post game survey');
         }
