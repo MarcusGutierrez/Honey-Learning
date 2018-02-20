@@ -79,4 +79,19 @@
 
 </div>
 
+<script>
+document.onkeydown = function(){
+
+    if(window.event && window.event.keyCode == 9) { // Capture and remap TAB
+        window.event.keyCode = 9;
+    }
+
+    if(window.event && window.event.keyCode == 9) { // New action for TAB
+        //alert('The TAB key was pressed');
+        return false; 
+    }
+}
+
+</script>
+
 @endsection('content')

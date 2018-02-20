@@ -37,6 +37,7 @@
                         @foreach ($honey_nodes as $node)
                         
                             <node
+                                id="node_{{ $node->node_id }}"
                                 :id="{{ $node->node_id }}"
                                 :val="{{ $node->value }}"
                                 :defcost="{{ $node->defender_cost }}"

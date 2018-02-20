@@ -57592,7 +57592,7 @@ Vue.component('node', {
             // in the parent only update the move as tentative
 
             if (vm.nomoveallowed == false) {
-                $("#nodebuttons").addClass("disable");
+                //$("#nodebuttons").addClass("disable");
                 $('#nextbutton').removeClass("visible");
                 $('#nextbutton').removeClass("disable");
                 $("#confirmbutton").addClass("visible");
@@ -57785,6 +57785,8 @@ Vue.component('node', {
                 vm.classObject.attacked_honeypot = true;
                 vm.classObject.attacked_regular = false;
                 vm.owner = 1;
+            } else {
+                vm.classObject.disable = true;
             }
         });
 
@@ -57793,6 +57795,8 @@ Vue.component('node', {
                 vm.classObject.attacked_honeypot = false;
                 vm.classObject.attacked_regular = true;
                 vm.owner = 1;
+            } else {
+                vm.classObject.disable = true;
             }
         });
 
@@ -58019,7 +58023,7 @@ new Vue({
                         vm.attackerpassed = true;
                         vm.attackertimedout = true;
 
-                        $("#nodebuttons").addClass("disable");
+                        //$("#nodebuttons").addClass("disable");
                         $('#nextbutton').removeClass("visible");
                         $('#nextbutton').removeClass("disable");
                         $("#confirmbutton").addClass("visible");
@@ -58035,7 +58039,7 @@ new Vue({
                 if (vm.attackermoved == true) {
                     // the attack is possible if it's inside possivle attack set
 
-                    $("#nodebuttons").addClass("disable");
+                    //$("#nodebuttons").addClass("disable");
                     /*if(vm.timer==0){
                         //vm.attackermoved = true;
                         //vm.attackeraction = 0;
@@ -58243,7 +58247,7 @@ new Vue({
             vm.attackerbudget -= vm.attackerbudget / vm.attackAttempts;
             vm.attackAttempts -= 1;
             //alert(vm.attackAttempts);
-            $("#nodebuttons").addClass("disable");
+            //$("#nodebuttons").addClass("disable");
         });
 
         // Event when attacker made a move and we need to set the attackermoved : true;
