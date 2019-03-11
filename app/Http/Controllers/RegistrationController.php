@@ -69,6 +69,8 @@ class RegistrationController extends Controller
         $pure_count = Session::where('defender_type', 'pure highest')->count();
         $fixed_count = Session::where('defender_type', 'fixed equilibria')->count();
         $bandit_count = Session::where('defender_type', 'LLR Bandit')->count();
+        $bresponse_count = Session::where('defender_type', 'Best Response')->count();
+        
         $min_count = min($pure_count, $fixed_count, $bandit_count);
         $min_arr = array();
         
@@ -78,6 +80,8 @@ class RegistrationController extends Controller
             $min_arr[] = "def2";
         if($bandit_count == $min_count)
             $min_arr[] = "def3";
+        if($bresponse_count == $min_count)
+            $min_arr[] = "def4";
         
         $rand_val = mt_rand(0, mt_getrandmax() -1) / mt_getrandmax();
         foreach($min_arr as $idx => $item){
@@ -98,6 +102,7 @@ class RegistrationController extends Controller
             $def = 'def3';
         */
         
+        $def = "def4";
         
         session()->put('defender_type', $def); //set session defender type
         

@@ -125,6 +125,95 @@ class RoundsController extends Controller
         }
     }
     
+    
+    private function br_action_index($idx) {
+        switch($idx){
+            case -1:
+                return [];
+            case 0:
+                return [1, 2];
+            case 1:
+                return [1, 3, 4];
+            case 2:
+                return [1, 5];
+            case 3:
+                return [2, 3];
+            case 4:
+                return [2, 4];
+            case 5:
+                return [2, 5];
+            case 6:
+                return [3, 5];
+            case 7:
+                return [4, 5];
+            default:
+                return [];
+        }
+    }
+    
+    
+    
+    
+    /* 
+     * Grabs the stored output from the tsbr-online executable to play as the
+     * current round's defense. In the event that executable is not finsihed
+     * computing, this function will wait 5 millisecond intervals at a time. If
+     * the executable takes longer than 2 seconds, it will time-out and not play
+     * a defense.
+     * 
+     * @warning best response will likely overwrite the session variable even
+     * after killed
+     */
+    private function Best_Response($network_id) {
+        $round_number = session()->get('round_number');
+        $session_id = session()->get('session_id');
+        
+        
+        $made_moves = \honeysec\Session::find($session_id)->moves->count() > 0;
+        if($made_moves){
+            $last_move = \honeysec\Session::find($session_id)->moves->last();
+            $triggered_honeypot = $last_move->triggered_honeypot;
+            $captured_node = $triggered_honeypot == 1 ? ($last_move->node_id - 1) : -1;
+        }
+        
+        $path = session()->get('br_path', null);
+        $look_ahead = session()->get('br_look_ahead', 1);
+        $sampled_states = session()->get('br_sampled_states', 100);
+        $history_length = session()->get('br_history_length', 0);
+        $history = session()->get('br_history', "");
+        
+        if(isset($captured_node))
+            $history .= " ".$captured_node;
+        
+        $cmd = $path;
+        $cmd .= " ".$look_ahead;
+        $cmd .= " ".$sampled_states;
+        $cmd .= " ".$history_length;
+        $cmd .= $history;
+        session()->put('cmd', $cmd);
+        
+        //dd($cmd);
+        
+        $output = null;
+        exec($cmd, $output);
+        while(!isset($output))
+            usleep(500);
+        
+        $output_idx = str_replace("Final Best Action = ", "", $output[0]);
+        $cmd = session()->get('cmd');
+        
+        //dd($output_idx);
+        
+        $history .= " ".$output_idx;
+        session()->put('br_history', $history);
+        
+        $history_length = session()->get('br_history_length', 0);
+        session()->put('br_history_length', $history_length + 1);
+        
+        return $this->br_action_index($output_idx);
+    }
+    
+    
     private function uniRand($network_id){
         $hpArr = array();
         $game = Honey_Network::find($network_id);
@@ -196,6 +285,9 @@ class RoundsController extends Controller
             case "def3":
                 $honey_nodes = $this->LLR_Bandit($network_id);
                 break;
+            case "def4":
+                $honey_nodes = $this->Best_Response($network_id);
+                break;
             default:
                 $honey_nodes = array();
         }
@@ -225,100 +317,6 @@ class RoundsController extends Controller
         return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'));
     }
     
-    /*public function round_create(Request $request, $round_number){
-        $session_completed = $request->session()->get('session_completed', false);
-        $defender_type = session()->get('defender_type', null);
-        $network_id = session()->get('network_id', null);
-        if($session_completed == false){
-            
-            $session_id = session()->get('session_id');
-            $round_id = session()->get('round_id');
-            $round_amount = \honeysec\Session::find($session_id)->round_amount;
-            $correct_round = $request->session()->get('round_number');
-            
-            if($correct_round == $round_number){
-                $honey_network = Honey_Network::find($network_id);
-                $honey_nodes = Honey_Node::inGameID($network_id)->get();
-
-                $hpArr = $this->defender_move($request, $defender_type, $network_id);
-
-                $defDB = "";
-                foreach($hpArr as $i){
-                    $honey_nodes[$i]['is_honeypot'] = 1;
-                    $defDB .= $honey_nodes[$i]['node_id']."-";
-                }
-                $defDB = substr($defDB, 0, strlen($defDB) - 1);
-
-
-
-                $session_id = $request->session()->get('session_id', null);
-                $round_id = $request->session()->get('round_id', null);
-                //$round_number = $request->session()->get('round_number', null);
-
-                //$is_round = \honeysec\Round::where('session_id', $session_id)->get()->where('round_number', $round_number)->first();
-                $is_round = \honeysec\Round::findWithNumber($session_id, $round_number);
-
-                if($is_round == null){ //Create round if it has not been created yet
-                    $old_cumulative = 0;
-                    if($round_number > 1)
-                        $old_cumulative = \honeysec\Round::findWithNumber($session_id, $round_number - 1)->cumulative_score;
-                    
-                    $round = new \honeysec\Round;
-                    $round->session_id = $session_id;
-                    $round->network_id = $network_id;
-                    $round->round_number = $round_number;
-                    $round->cumulative_score = $old_cumulative;
-                    $round->defender_move = $defDB;
-                    $round->round_start = current_time();
-                    $round->save();
-                    
-                    $round_id = $round->round_id;
-                    session()->put('round_id', $round_id);
-                }else{ //round exists
-                    if(\honeysec\Round::find($round_id)->moves->count() > 0){
-                        $new_round_number = \honeysec\Session::find($session_id)->moves->last()->round->round_number + 1;
-                        session()->put('round_number', $new_round_number);
-                        session()->flash('message' , "ERROR CORRECTED: ".$correct_round);
-                        return redirect("/play/round/".$new_round_number);
-                    }else{ //REFRESHED
-                        
-                    }
-                }
-
-            } else {
-                $request->session()->flash('message' , "Current round: ".$correct_round);
-                return redirect("/play/round/".$correct_round);
-            }
-            
-            $lastround = false;
-            if($round_number == $round_amount){
-                $lastround = true;
-            }
-            
-            $atkAttempts = Honey_Network::find($network_id)->atk_attempts;
-            $totalValue = Honey_Node::inGameID($network_id)->valueSum();
-            
-            $rounds = array();
-            $rounds['round_id'] = $round_id;
-            $rounds['round_number'] = $round_number;
-            $rounds['lastround'] = $lastround;
-            $rounds['max_round'] = $round_amount;
-            
-            $rounds['atk_attempts'] = $atkAttempts;
-            $rounds['total_value'] = $totalValue;
-            $rounds['round_id'] = $round_id;
-            if(session()->get('session_id', false)){
-                $rounds['total_attacker_points'] = \honeysec\Session::totalAttackerPoints(session()->get('session_id', null));
-            }else
-                $rounds['total_attacker_points'] = 0;
-
-            //return $this->defround($request, $defender_type, $network_id);
-            return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'))->with($rounds);
-        } else {
-            $request->session()->flash('message' , "Game Session completed");
-            return redirect("/session/destroy");
-        }
-    }*/
     
     public function round_create(Request $request){
         $session_id = session()->get('session_id');
@@ -334,7 +332,6 @@ class RoundsController extends Controller
         if($session_completed == false){
             
             $round_amount = \honeysec\Session::find($session_id)->round_amount;
-            
             
             $honey_network = Honey_Network::find($network_id);
             $honey_nodes = Honey_Node::inGameID($network_id)->get();
@@ -379,14 +376,6 @@ class RoundsController extends Controller
                 session()->put('round_id', $is_round->round_id);
                 session()->put('round_number', $is_round->round_number);
                 $is_round->cumulative_score = \honeysec\Session::totalAttackerPointsRound($session_id, $round_number);
-                /*if(\honeysec\Round::find($round_id)->moves->count() > 0){
-                    $new_round_number = \honeysec\Session::find($session_id)->moves->last()->round->round_number + 1;
-                    session()->put('round_number', $new_round_number);
-                    //session()->flash('message' , "ERROR CORRECTED: ".$correct_round);
-                    return redirect("/play");
-                }else{ //REFRESHED
-
-                }*/
             }
 
             
@@ -413,6 +402,11 @@ class RoundsController extends Controller
             }else
                 $rounds['total_attacker_points'] = 0;
 
+            
+            $cmd = session()->get('cmd');
+            session()->flash('message' , $cmd);
+            //dd($cmd);
+            
             //return $this->defround($request, $defender_type, $network_id);
             return view('honey.honey_one', compact('honey_network'), compact('honey_nodes'))->with($rounds);
         } else {
@@ -451,6 +445,7 @@ class RoundsController extends Controller
     }
     
     public function round_store(Request $request){
+        
         $session_id = session()->get('session_id', null);
         $round_number = session()->get('round_number', null);
         
@@ -503,8 +498,35 @@ class RoundsController extends Controller
                 session()->put('LLR_m', $LLR_m);
                 session()->put('LLR_rewards', $LLR_rewards);
                 session()->put('LLR_theta', $LLR_theta);
+                
+            } else if($def == 'def4') {
+                $move = $round->moves->first();
+                
+                // set as the attacked node if captured, otherwise set to -1
+                $captured_node = ($move->triggered_honeypot == 1) ? $move->node_id - 1 : -1;
+                
+                //session()->put('br_mutex', true);
+                
+                // update history length argument
+                //$history_length = session()->get('br_history_length');
+                //$history_length = $round_number;
+                //$this->bresponse_history_length = $round_number;
+                //session()->forget('br_history_length');
+                //session()->put('br_history_length', $history_length);
+                
+                // update history argument
+                //$history = session()->get('br_history');
+                //$history .= $captured_node." ";
+                //session()->forget('br_history');
+                //session()->put('br_history', $history);
+                //$this->bresponse_history .= $captured_node." ";
+                
+                //$this->bresponse_savedHistory = true;
+                //session()->put('br_history_saved', true);
+                
+                // call executable at the end of the round
+                //$this->call_Best_Response();
             }
-            
             
             $round->save();
             //$round_number++;
@@ -531,8 +553,6 @@ class RoundsController extends Controller
         $session_completed = $round_number >= $round_amount;
         
         if($session_completed == false) {
-            //if(session()->get('round_number') >= \honeysec\Session::find(session()->get('session_id', null))->round_amount)
-                   // dd("WHAT!?!?");
             
             $def = session()->get('defender_type');
             $network_id = session()->get('network_id');

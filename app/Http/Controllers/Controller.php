@@ -24,4 +24,6 @@ class Controller extends BaseController
         $section->time_completed = current_time();
         $section->save();
     }
+    
+
 }

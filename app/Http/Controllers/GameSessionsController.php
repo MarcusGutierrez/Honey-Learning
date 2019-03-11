@@ -21,13 +21,13 @@ class GameSessionsController extends Controller
     
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         //
     }
+    
     
     private function get_defender_name($def_type){
         if($def_type == "def1")
@@ -36,6 +36,8 @@ class GameSessionsController extends Controller
             return "fixed equilibria";
         else if($def_type == "def3")
             return "LLR Bandit";
+        else if($def_type == "def4")
+            return "Best Response";
         return null;
     }
     
@@ -138,16 +140,22 @@ class GameSessionsController extends Controller
                     session()->put('LLR_m', $LLR_m);
                     session()->put('LLR_max_value', $LLR_max_value);
                     
+                } 
+                else if($def_type == "def4"){ //Best Response
+                    $bresponse_path = "C:\\Users\\Marcus\\OneDrive\\Documents\\bresponse.exe";
+                    $bresponse_look_ahead = 1;
+                    $bresponse_sampled_states = 500;
+                    $bresponse_history_length = 0;
+                    $bresponse_history = "";
+                    
+                    session()->put('br_path', $bresponse_path);
+                    session()->put('br_look_ahead', $bresponse_look_ahead);
+                    session()->put('br_sampled_states', $bresponse_sampled_states);
+                    session()->put('br_history_length', $bresponse_history_length);
+                    session()->put('br_history', $bresponse_history);
+                    
+                    //$this->call_Best_Response();
                 }
-                
-                //dd($LLR_combinations);
-                //$round_hash = str_replace("%","_", rawurlencode(bcrypt($request->session()->get('user_id', null))));
-
-                //$request->session()->pull('pagepath', null); //empty page path
-                //$request->session()->push('pagepath', "/play/defender/".$def_type."/network/".$network_id."/round/1");
-                //$pagepath = $request->session()->get('pagepath', null);
-                //return redirect()->route('play', ['gid' => 1]);
-                
                 
                 return redirect("/play");
             }
@@ -243,6 +251,8 @@ class GameSessionsController extends Controller
                 $conversion = 0.006;
             else if ($defender_type == 'def3')
                 $conversion = 0.008;
+            else if ($defender_type == 'def4')
+                $conversion = 0.005;
             $bonus_payment = max(0.0, ($conversion * $total_points));
             $converted_payment = 1.0 + $bonus_payment;
             

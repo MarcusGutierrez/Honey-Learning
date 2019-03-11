@@ -120,6 +120,12 @@ class SessionsController extends Controller
         session()->forget('LLR_theta');
         session()->forget('LLR_m');
         session()->forget('LLR_max_value');
+        
+        session()->forget('br_look_ahead');
+        session()->forget('br_sampled_states');
+        session()->forget('br_history_length');
+        session()->forget('br_history');
+        session()->forget('br_output');
 
         session()->flash('message' , 'You are successfully logged out');
 
