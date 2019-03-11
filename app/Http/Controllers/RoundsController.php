@@ -404,7 +404,7 @@ class RoundsController extends Controller
 
             
             $cmd = session()->get('cmd');
-            session()->flash('message' , $cmd);
+            //session()->flash('message' , $cmd);
             //dd($cmd);
             
             //return $this->defround($request, $defender_type, $network_id);
