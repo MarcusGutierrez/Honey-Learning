@@ -125,7 +125,6 @@ class SessionsController extends Controller
         session()->forget('br_sampled_states');
         session()->forget('br_history_length');
         session()->forget('br_history');
-        session()->forget('br_output');
 
         session()->flash('message' , 'You are successfully logged out');
 

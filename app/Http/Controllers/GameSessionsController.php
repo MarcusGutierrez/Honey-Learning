@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use honeysec\User;
 
+use Config;
+
 class GameSessionsController extends Controller
 {
     
@@ -38,6 +40,10 @@ class GameSessionsController extends Controller
             return "LLR Bandit";
         else if($def_type == "def4")
             return "Best Response";
+        else if($def_type == "def5")
+            return "Prob BR";
+        else if($def_type == "def6")
+            return "FTRL";
         return null;
     }
     
@@ -142,9 +148,9 @@ class GameSessionsController extends Controller
                     
                 } 
                 else if($def_type == "def4"){ //Best Response
-                    $bresponse_path = "C:\\Users\\Marcus\\OneDrive\\Documents\\bresponse.exe";
-                    $bresponse_look_ahead = 1;
-                    $bresponse_sampled_states = 500;
+                    $bresponse_path = config('defenders.br_path');
+                    $bresponse_look_ahead = config('defenders.br_lookahead');
+                    $bresponse_sampled_states = config('defenders.br_sampledstates');
                     $bresponse_history_length = 0;
                     $bresponse_history = "";
                     
@@ -155,6 +161,34 @@ class GameSessionsController extends Controller
                     session()->put('br_history', $bresponse_history);
                     
                     //$this->call_Best_Response();
+                } else if($def_type == "def5") { //Probabalistic Best Response
+                    $bresponse_path = config('defenders.pbr_path');
+                    $bresponse_look_ahead = config('defenders.pbr_lookahead');
+                    $bresponse_sampled_states = config('defenders.pbr_sampledstates');
+                    $bresponse_history_length = 0;
+                    $bresponse_history = "";
+                    
+                    session()->put('br_path', $bresponse_path);
+                    session()->put('br_look_ahead', $bresponse_look_ahead);
+                    session()->put('br_sampled_states', $bresponse_sampled_states);
+                    session()->put('br_history_length', $bresponse_history_length);
+                    session()->put('br_history', $bresponse_history);
+                } else if($def_type == "def6") { //Follow the Regularized Leader
+                    $d = config('defenders.ftrl_d');
+                    $m = config('defenders.ftrl_m');
+                    $eps = config('defenders.ftrl_eps');
+                    $gamma = config('defenders.ftrl_gamma');
+                    $x = array_fill(0, $d, ($m/$d));
+                    $L = array_fill(0, $d, 0);
+                    $bias = 0.0;
+                    
+                    session()->put('ftrl_x', $x);
+                    session()->put('ftrl_L', $L);
+                    session()->put('ftrl_eps', $eps);
+                    session()->put('ftrl_gamma', $gamma);
+                    session()->put('ftrl_bias', $bias);
+                    session()->put('ftrl_d', $d);
+                    session()->put('ftrl_m', $m);
                 }
                 
                 return redirect("/play");
@@ -245,14 +279,18 @@ class GameSessionsController extends Controller
             
             $converted_payment = 0.0;
             $conversion = 0.0;
-            if($defender_type == 'def1')
+            if($defender_type == 'def1') //Pure Defender
                 $conversion = 0.004;
-            else if ($defender_type == 'def2')
+            else if ($defender_type == 'def2') //Equilibrium
                 $conversion = 0.006;
-            else if ($defender_type == 'def3')
+            else if ($defender_type == 'def3') //LLR
                 $conversion = 0.008;
-            else if ($defender_type == 'def4')
+            else if ($defender_type == 'def4') //Best Response
                 $conversion = 0.005;
+            else if ($defender_type == 'def5') //Probablistic Best Response
+                $conversion = 0.005;
+            else if ($defender_type == 'def6') //FTRL
+                $conversion = 0.007;
             $bonus_payment = max(0.0, ($conversion * $total_points));
             $converted_payment = 1.0 + $bonus_payment;
             
@@ -299,6 +337,15 @@ class GameSessionsController extends Controller
             session()->forget('LLR_theta');
             session()->forget('LLR_m');
             session()->forget('LLR_max_value');
+            
+            
+            session()->forget('ftrl_x');
+            session()->forget('ftrl_L');
+            session()->forget('ftrl_eps');
+            session()->forget('ftrl_gamma');
+            session()->forget('ftrl_bias');
+            session()->forget('ftrl_d');
+            session()->forget('ftrl_m');
             
             
             auth()->logout();

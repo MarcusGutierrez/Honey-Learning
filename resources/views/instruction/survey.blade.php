@@ -52,7 +52,7 @@
                         
                     @endforeach
                     
-                    @if ( $survey_type == "post" && ($defender_type == 'def1' || $defender_type == 'def2' || $defender_type == 'def3'))
+                    @if ( $survey_type == "post")
                         
                         @php
                             $question = \honeysec\Question::where('type', $defender_type)->first();

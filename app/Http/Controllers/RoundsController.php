@@ -126,32 +126,6 @@ class RoundsController extends Controller
     }
     
     
-    private function br_action_index($idx) {
-        switch($idx){
-            case -1:
-                return [];
-            case 0:
-                return [1, 2];
-            case 1:
-                return [1, 3, 4];
-            case 2:
-                return [1, 5];
-            case 3:
-                return [2, 3];
-            case 4:
-                return [2, 4];
-            case 5:
-                return [2, 5];
-            case 6:
-                return [3, 5];
-            case 7:
-                return [4, 5];
-            default:
-                return [];
-        }
-    }
-    
-    
     
     
     /* 
@@ -210,7 +184,7 @@ class RoundsController extends Controller
         $history_length = session()->get('br_history_length', 0);
         session()->put('br_history_length', $history_length + 1);
         
-        return $this->br_action_index($output_idx);
+        return $this->action_index($output_idx);
     }
     
     
@@ -285,8 +259,11 @@ class RoundsController extends Controller
             case "def3":
                 $honey_nodes = $this->LLR_Bandit($network_id);
                 break;
-            case "def4":
+            case "def4": case "def5":
                 $honey_nodes = $this->Best_Response($network_id);
+                break;
+            case "def6":
+                $honey_nodes = $this->ftrl_pullArm();
                 break;
             default:
                 $honey_nodes = array();
@@ -344,7 +321,6 @@ class RoundsController extends Controller
                 $defDB .= $honey_nodes[$i]['node_id']."-";
             }
             $defDB = substr($defDB, 0, strlen($defDB) - 1);
-
 
 
             $session_id = $request->session()->get('session_id', null);
@@ -500,32 +476,7 @@ class RoundsController extends Controller
                 session()->put('LLR_theta', $LLR_theta);
                 
             } else if($def == 'def4') {
-                $move = $round->moves->first();
                 
-                // set as the attacked node if captured, otherwise set to -1
-                $captured_node = ($move->triggered_honeypot == 1) ? $move->node_id - 1 : -1;
-                
-                //session()->put('br_mutex', true);
-                
-                // update history length argument
-                //$history_length = session()->get('br_history_length');
-                //$history_length = $round_number;
-                //$this->bresponse_history_length = $round_number;
-                //session()->forget('br_history_length');
-                //session()->put('br_history_length', $history_length);
-                
-                // update history argument
-                //$history = session()->get('br_history');
-                //$history .= $captured_node." ";
-                //session()->forget('br_history');
-                //session()->put('br_history', $history);
-                //$this->bresponse_history .= $captured_node." ";
-                
-                //$this->bresponse_savedHistory = true;
-                //session()->put('br_history_saved', true);
-                
-                // call executable at the end of the round
-                //$this->call_Best_Response();
             }
             
             $round->save();

@@ -102,7 +102,7 @@ class RegistrationController extends Controller
             $def = 'def3';
         */
         
-        $def = "def4";
+        $def = "def6";
         
         session()->put('defender_type', $def); //set session defender type
         

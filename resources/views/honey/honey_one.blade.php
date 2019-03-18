@@ -15,7 +15,7 @@
                     @if ( $honey_network->is_practice == 1)
                         <h4 class="card-title">Practice Game: Please Make your selection by clicking on the node to Attack or “Pass”</h4>
                     @else 
-                        <h3 class="card-title">Game {{ $round_number }} / {{ $max_round }}</h3>
+                        <h3 class="card-title">Game <span v-cloak> {{ $round_number }} / {{ $max_round }} </span></h3>
                     @endif
                     
                     
@@ -58,16 +58,16 @@
                     </div>
                     
                     <div style="text-align: center;">
-                        <h3><b>Defender Budget:</b> {{ $honey_network->def_budget }}</h3>
+                        <h3><b>Defender Budget:</b> <span v-cloak>{{ $honey_network->def_budget }}</span></h3>
                     </div>
                     
                     <div style="text-align: center;">
                         <h3>
-                            <b>Time Remaining:</b> @{{ timer }}
-                            <span v-if="timer != 1">
+                            <b>Time Remaining:</b> <span v-cloak>@{{ timer }}</span>
+                            <span v-cloak v-if="timer != 1">
                                 seconds
                             </span>
-                            <span v-else>
+                            <span v-cloak v-else>
                                 second
                             </span>
                         </h3>
@@ -140,13 +140,13 @@
         -->
         <h3><b>
             Total Points:
-            <span style="color: green;" v-if="totalattackerpoints > 0">
+            <span v-cloak style="color: green;" v-if="totalattackerpoints > 0">
             @{{ totalattackerpoints }}
             </span>
-            <span style="color: red;" v-if="totalattackerpoints < 0">
+            <span v-cloak style="color: red;" v-if="totalattackerpoints < 0">
             @{{ totalattackerpoints }}
             </span>
-            <span style="color: black;" v-if="totalattackerpoints == 0">
+            <span v-cloak style="color: black;" v-if="totalattackerpoints == 0">
             @{{ totalattackerpoints }}
             </span>
         </b></h3>
