@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 
 use honeysec\User;
 
-use Config;
-
 class GameSessionsController extends Controller
 {
     
@@ -173,6 +171,7 @@ class GameSessionsController extends Controller
                     session()->put('br_sampled_states', $bresponse_sampled_states);
                     session()->put('br_history_length', $bresponse_history_length);
                     session()->put('br_history', $bresponse_history);
+                    
                 } else if($def_type == "def6") { //Follow the Regularized Leader
                     $d = config('defenders.ftrl_d');
                     $m = config('defenders.ftrl_m');

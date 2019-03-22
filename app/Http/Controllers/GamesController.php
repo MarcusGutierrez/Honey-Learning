@@ -4,7 +4,6 @@ namespace honeysec\Http\Controllers;
 
 use Illuminate\Http\Request;
 use honeysec\Question;
-use JavaScript;
 
 class GamesController extends Controller {
 

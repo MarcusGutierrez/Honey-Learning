@@ -3,9 +3,9 @@
 namespace honeysec\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+//use Illuminate\Support\Facades\Hash;
 use honeysec\Honey_Network;
-use honeysec\Honey_Node;
+//use honeysec\Honey_Node;
 
 class RoundsController extends Controller
 {
@@ -22,7 +22,7 @@ class RoundsController extends Controller
         $network_id = $request->session()->get('network_id', -1);
         
         $atkAttempts = Honey_Network::find($network_id)->atk_attempts;
-        $totalValue = Honey_Node::inGameID($network_id)->valueSum();
+        $totalValue = Honey_Network::find($network_id)->nodes->pluck('value')->sum();
 
         $params = array();
         $params['atk_attempts'] = $atkAttempts;
@@ -99,10 +99,11 @@ class RoundsController extends Controller
             $LLR_m = session()->get('LLR_m', null);
             
             foreach($nodes as $key => $arm){
-                if($arm->defender_cost == 0)
+                if($arm->defender_cost == 0){
                     continue;
+                }
                 
-                $numerator = ($L + 1)*log($round_number);
+                $numerator = ($LLR_L + 1)*log($round_number);
                 $LLR_values[$key] = $LLR_theta[$key] + sqrt($numerator / $LLR_m[$key]);
             }
             $max_combination = array();
@@ -139,7 +140,7 @@ class RoundsController extends Controller
      * after killed
      */
     private function Best_Response($network_id) {
-        $round_number = session()->get('round_number');
+        //$round_number = session()->get('round_number');
         $session_id = session()->get('session_id');
         
         
@@ -191,8 +192,7 @@ class RoundsController extends Controller
     private function uniRand($network_id){
         $hpArr = array();
         $game = Honey_Network::find($network_id);
-        $honey_nodes = Honey_Node::inGameID($network_id)->get();
-        $numNodes = Honey_Node::inGameID($network_id)->get()->count();
+        $numNodes = $game->nodes->count();
         $hp = mt_rand(1, $numNodes - 1);
         //$honey_nodes[$hp]['is_honeypot'] = 1;
         //return $honey_nodes;
@@ -203,8 +203,7 @@ class RoundsController extends Controller
     private function highestValue($network_id){
         $hpArr = array();
         $game = Honey_Network::find($network_id);
-        $honey_nodes = Honey_Node::inGameID($network_id)->get();
-        $numNodes = Honey_Node::inGameID($network_id)->get()->count();
+        $honey_nodes = $game->nodes;
         
         $budget = $game->def_budget;
         
@@ -248,7 +247,7 @@ class RoundsController extends Controller
     
     private function defender_move(Request $request, $defender_type, $network_id)
     {
-        $data = null;
+        //$data = null;
         switch($defender_type){
             case "def1":
                 $honey_nodes = $this->highestValue($network_id);
@@ -283,7 +282,7 @@ class RoundsController extends Controller
     
     public function defround(Request $request, $defender_type, $network_id){
         $honey_network = Honey_Network::find($network_id);
-        $honey_nodes = Honey_Node::inGameID($network_id)->get();
+        $honey_nodes = $honey_network->nodes;
         
         $hpArr = $this->defender_move($request, $defender_type, $network_id);
         
@@ -311,7 +310,7 @@ class RoundsController extends Controller
             $round_amount = \honeysec\Session::find($session_id)->round_amount;
             
             $honey_network = Honey_Network::find($network_id);
-            $honey_nodes = Honey_Node::inGameID($network_id)->get();
+            $honey_nodes = $honey_network->nodes;
 
             $hpArr = $this->defender_move($request, $defender_type, $network_id);
 
@@ -362,7 +361,7 @@ class RoundsController extends Controller
             }
             
             $atkAttempts = Honey_Network::find($network_id)->atk_attempts;
-            $totalValue = Honey_Node::inGameID($network_id)->valueSum();
+            $totalValue = Honey_Network::find($network_id)->nodes->pluck('value')->sum();
             
             $rounds = array();
             $rounds['round_id'] = $round_id;
@@ -379,7 +378,7 @@ class RoundsController extends Controller
                 $rounds['total_attacker_points'] = 0;
 
             
-            $cmd = session()->get('cmd');
+            //$cmd = session()->get('cmd');
             //session()->flash('message' , $cmd);
             //dd($cmd);
             
@@ -400,8 +399,8 @@ class RoundsController extends Controller
         $request->session()->put('network_id', $honey_network->network_id);
         $request->session()->put('round_id', 0);
         
-        $atkAttempts = Honey_Network::find($honey_network)->atk_attempts;
-        $totalValue = Honey_Node::inGameID($honey_network)->valueSum();
+        $atkAttempts = $honey_network->atk_attempts;
+        $totalValue = $honey_network->nodes->pluck('value')->sum();
         
         $rounds = array();
         $rounds['round_number'] = 1;
@@ -454,7 +453,7 @@ class RoundsController extends Controller
                 $LLR_rewards = session()->get('LLR_rewards', null);
                 
                 $max_value = session()->get('LLR_max_value', null);
-                $user_id = session()->get('user_id', null);
+                //$user_id = session()->get('user_id', null);
                 $session_id = session()->get('session_id', null);
                 $nodes = \honeysec\Honey_Network::find(session()->get('network_id', null))->nodes;
                 $last_round = $round->moves;
@@ -505,7 +504,7 @@ class RoundsController extends Controller
         
         if($session_completed == false) {
             
-            $def = session()->get('defender_type');
+            //$def = session()->get('defender_type');
             $network_id = session()->get('network_id');
             $session_id = session()->get('session_id');
             $round_number = session()->get('round_number');

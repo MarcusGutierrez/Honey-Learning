@@ -49,7 +49,7 @@ return [
 
     'ftrl_d' => env('FTRL_D', 5), //The total number of basic arms to select
 
-    'ftrl_d' => env('FTRL_M', 2), //The average number of basic arms to select
+    'ftrl_m' => env('FTRL_M', 2), //The average number of basic arms to select
     
     'ftrl_eps' => env('FTRL_EPS', 1.0), //Error epsilon
     
