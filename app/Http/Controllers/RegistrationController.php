@@ -2,13 +2,9 @@
 
 namespace honeysec\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-
 use honeysec\User;
 use honeysec\Session;
 
-use Illuminate\Support\Facades\Hash;
 
 
 
@@ -38,6 +34,11 @@ class RegistrationController extends Controller
     		]);        
         $input_id = strtolower(request('turk_id'));
         $user = User::where('turk_id', $input_id)->first();
+        
+        $completed_turkers = \honeysec\User::whereRaw('LENGTH(turk_id) > 12')
+            ->whereRaw('`turk_id` LIKE \'a%\'')
+            ->whereRaw('turk_id REGEXP \'[A-Za-z0-9]+$\'')
+            ->where('completed_experiments', '>=', '1')->pluck('id');
 
         if($user === null){
             // create the user and save
@@ -59,6 +60,15 @@ class RegistrationController extends Controller
         session()->put('user_id', $user->id);
         session()->put('consented', $user->consented);
         
+        if($completed_turkers->contains($user->id)) {
+            $this->create_section("consent");
+            
+            //Turker already completed experiment, do not let them continue
+            session()->flash('message' , 'You have already completed this experiment. You may not continue.');
+            
+            return redirect('/ineligible');
+        }
+        
         /*
         $taken = \honeysec\User::takenSurvey($user->id, 'pre');
         if($taken)
@@ -71,10 +81,7 @@ class RegistrationController extends Controller
          * (13+ characters, starting with the letter 'a' and only alphanumeric)
          * that have also completed the experiment
          */
-        $completed_turkers = \honeysec\User::whereRaw('LENGTH(turk_id) > 12')
-                            ->whereRaw('`turk_id` LIKE \'a%\'')
-                            ->whereRaw('turk_id REGEXP \'[A-Za-z0-9]+$\'')
-                            ->where('completed_experiments', 1)->pluck('id');
+        
         
         /*$pure_count = Session::where('defender_type', 'pure highest')
                         ->whereIn('user_id', $completed_turkers)

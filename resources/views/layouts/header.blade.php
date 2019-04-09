@@ -35,6 +35,6 @@
 <div class="card text-center" style="position: relative;">
   
     <div class="card-footer text-muted">
-        <h2>Honey Intrusion</h2>
+        <h2>Honeypot Intrusion</h2>
     </div>
 </div>

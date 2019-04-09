@@ -25,7 +25,7 @@
                 In this case, the Defender's budget is <b>40</b>. To turn 
                 nodes 1 through 5 into 
                 <span style="color: red;"><b>honeypots</b></span> would cost the 
-                defender 15, 20, 10, 20, and 15 points respectively. Therefore,
+                defender 15, 20, 10, 20, and 15 points respectively (80 total). Therefore,
                 the defender <i>cannot</i> turn all the nodes into 
                 <span style="color: red;"><b>honeypots</b></span> but only
                 some combination of them. In the figure below, the possible

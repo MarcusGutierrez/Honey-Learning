@@ -290,10 +290,10 @@ class GameSessionsController extends Controller
                 $conversion = 0.005;
             else if ($defender_type == 'def6') //FTRL
                 $conversion = 0.007;
-            $bonus_payment = max(0.0, ($conversion * $total_points));
+            $bonus_payment = round(max(0.0, ($conversion * $total_points)), 2);
             $converted_payment = 1.0 + $bonus_payment;
             
-            $params['bonus_payment'] = $bonus_payment;
+            $params['bonus_payment'] = number_format((float)$bonus_payment, 2, '.', '');;
             
             $game_session = \honeysec\Session::find($request->session()->get('session_id', null));
             if($request->session()->get('session_completed', false) == true) {
