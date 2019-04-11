@@ -44,10 +44,10 @@ class RegistrationController extends Controller
          * (13+ characters, starting with the letter 'a' and only alphanumeric)
          * that have also completed the experiment
          */
-        $completed_turkers = \honeysec\User::whereRaw('LENGTH(turk_id) > 9')
+        $completed_turkers = \honeysec\User::whereRaw('LENGTH(turk_id) > 10')
             ->whereRaw('`turk_id` LIKE \'a%\'')
             ->whereRaw('`turk_id` REGEXP \'[A-Za-z0-9]+$\'')
-            ->where('completed_experiments', '>=', '1')->pluck('id');
+            ->has('sessions', '>', '0')->pluck('id');
 
         if($user === null){
             // create the user and save
