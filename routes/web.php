@@ -9,6 +9,8 @@ Auth::routes();
 
 Route::get('/', 'RegistrationController@create')->name('login');
 
+Route::get('/def{def_num}', 'RegistrationController@create')->name('login');
+
 //Route::get('/home', 'GamesController@index')->name('home');
 
 //Route::get('/next', 'GamesController@next')->name('next');

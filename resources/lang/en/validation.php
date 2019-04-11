@@ -101,6 +101,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'turk_id' => [
+            'regex' => 'The :attribute must start with the letter \'a\'',
+        ],
     ],
 
     /*
@@ -114,6 +117,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'turk_id' => 'Worker ID',
+    ],
 
 ];
