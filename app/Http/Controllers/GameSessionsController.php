@@ -61,6 +61,7 @@ class GameSessionsController extends Controller
             $game_session->defender_type = $this->get_defender_name($def_type);
             $game_session->round_amount = 50;
             $game_session->user_id = $request->session()->get('user_id', null);
+            $game_session->completion_code = $game_session->computeCompletionCode();
             //$game_session->session_start = date('Y/m/d h:i:s', time());
             if($game_session->save()){ //game session started
                 $session_id = \honeysec\Session::latest($request->session()->get('user_id', null)); //acquire current session ID
@@ -274,7 +275,8 @@ class GameSessionsController extends Controller
             $params['honeypots_total'] = \honeysec\Session::totalHoneypots($session_id);
             $params['total_passes'] = \honeysec\Session::totalPasses($session_id);
             $params['defender_type'] = $def_type;
-            $params['session_code'] = "a".substr(md5($session_id."b73"), 0, 8)."7";
+            //$params['session_code'] = "a".substr(md5($session_id."b73"), 0, 8)."7";
+            $params['session_code'] = \honeysec\Session::find($session_id)->completion_code;
             
             $converted_payment = 0.0;
             $conversion = 0.0;

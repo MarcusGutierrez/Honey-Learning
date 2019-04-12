@@ -87,4 +87,9 @@ class Session extends Model
     {
         return $this->hasManyThrough('\honeysec\Honey_History', '\honeysec\Round', 'session_id', 'round_id');
     }
+    
+    public function computeCompletionCode()
+    {
+        return "a".substr(md5($this->session_id."b73"), 0, 8)."7";
+    }
 }

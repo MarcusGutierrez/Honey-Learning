@@ -77,6 +77,22 @@ class User extends Authenticatable
         return false;
     }
     
+    public static function findByTurk($turk_id)
+    {
+        return static::where('turk_id', $turk_id)->firstOrFail();
+    }
+    
+    public function getCompletionCode()
+    {
+        if($this->sessions->count() > 0){
+            $session_id = $this->sessions->first()->session_id;
+            $completion_code = "a".substr(md5($session_id."b73"), 0, 8)."7";
+            return $completion_code;
+        } else {
+            return null;
+        }
+    }
+    
     public function sessions()
     {
         return $this->hasMany('honeysec\Session');

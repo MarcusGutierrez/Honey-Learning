@@ -34,7 +34,7 @@ class RegistrationController extends Controller
     {
     	//validate the user
     	$this->validate(request(), [
-    		'turk_id' => 'bail|required|alpha_num|regex:/^a/|min:6'
+    		'turk_id' => 'bail|required|alpha_num|regex:/^[aA]/|min:6'
     	]);        
         $input_id = strtolower(request('turk_id'));
         $user = User::where('turk_id', $input_id)->first();
